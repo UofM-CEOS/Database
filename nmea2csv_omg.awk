@@ -1,8 +1,8 @@
-#! /opt/local/bin/gawk -f
+#! /usr/bin/gawk -f
 # $Id$
 # Author: Sebastian Luque
 # Created: 2014-01-30T21:50:04+0000
-# Last-Updated: 2014-02-01T00:21:44+0000
+# Last-Updated: 2014-07-30T18:41:14+0000
 #           By: Sebastian Luque
 # copyright (c) 2014 Sebastian P. Luque
 #
@@ -68,11 +68,11 @@ $1 ~ /\$INGGA/ {
     lat_deg=substr($3, 1, 2)
     lat_dec=substr($3, 3) / 60
     lat=lat_deg + lat_dec
-    lat=($4="N") ? lat : sprintf("-%s", lat)
+    lat=($4 == "N") ? lat : sprintf("-%s", lat)
     lon_deg=substr($5, 1, 3)
-    lon_dec=substr($5, 4)
+    lon_dec=substr($5, 4) / 60
     lon=lon_deg + lon_dec
-    lon=($6="E") ? sprintf("-%s", lon) : lon
+    lon=($6 == "E") ? lon : sprintf("-%s", lon)
     altitude=$10
     next
 }
