@@ -2,18 +2,18 @@
 # $Id: $
 # Author: Sebastian Luque
 # Created: 2014-02-09T03:05:41+0000
-# Last-Updated: 2014-07-30T21:37:58+0000
+# Last-Updated: 2014-07-31T16:15:18+0000
 #           By: Sebastian Luque
 # -------------------------------------------------------------------------
 # Commentary:
 #
 # See the pgloader configuration file for details.
 #
-# The MET output this year is very different from 2011.  It even contains
-# gas analyzer data.  Therefore, these files will be the source of data for
-# several different tables in the database.  For the meteorology_series
-# tables this means the following fields (based on the TOA5 header
-# therein):
+# This is for converting the MET table files from the data logger to a
+# single CSV file for input into the gases database.  This file is the
+# source of data for several different tables in the database.  For the
+# meteorology_series table this means the following fields (based on the
+# TOA5 header therein):
 #
 # TIMESTAMP     -> time 
 # Patm_Avg      -> atmospheric_pressure
@@ -29,17 +29,14 @@
 
 BEGIN {
     FS=OFS=","
-    ncols=38			# number of columns
-    year=2013
     print "time,record_no,program_version,battery_voltage",
 	"logger_temperature,atmospheric_pressure,air_temperature",
-	"relative_humidity,surface_temperature,wind_speed,wind_direction",
-	"wind_direction_sd,PAR,pitch,roll,latitude,longitude,SOG,COG",
-	"cp_CO2_fraction","cp_H2O_fraction,cp_pressure,cp_temperature",
-	"battery_voltage_sd,logger_temperature_sd,atmospheric_pressure_sd",
-	"air_temperature_sd,relative_humidity_sd,surface_temperature_sd",
-	"PAR_sd,latitude_sd,longitude_sd,SOG_sd,COG_sd,cp_CO2_fraction_sd",
-	"cp_H2O_fraction_sd,cp_pressure_sd,cp_temperature_sd"
+	"relative_humidity,surface_temperature,cp_CO2_fraction",
+	"cp_H2O_fraction,cp_pressure,cp_temperature,wind_speed,wind_direction",
+	"wind_direction_sd,battery_voltage_sd,logger_temperature_sd",
+	"atmospheric_pressure_sd,air_temperature_sd,relative_humidity_sd",
+	"surface_temperature_sd,cp_CO2_fraction_sd,cp_H2O_fraction_sd",
+	"cp_pressure_sd,cp_temperature_sd"
 }
 
 FNR > 4
