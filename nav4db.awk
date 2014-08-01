@@ -2,7 +2,7 @@
 # $Id: $
 # Author: Sebastian Luque
 # Created: 2014-02-10T23:24:53+0000
-# Last-Updated: 2014-08-01T19:14:57+0000
+# Last-Updated: 2014-08-01T19:16:06+0000
 #           By: Sebastian Luque
 # -------------------------------------------------------------------------
 # Commentary: 
@@ -16,7 +16,7 @@
 BEGIN {
     FS=OFS=","
     ncols=17
-    year=2013
+    year=2014
     print "time_logger,time_gps,record_no,program_version,latitude",
 	"longitude,speed_over_ground,course_over_ground,status_gps,gps_mode",
 	"heading,pitch,roll,acceleration_x,acceleration_y,acceleration_z"
