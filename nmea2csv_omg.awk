@@ -2,7 +2,7 @@
 # $Id$
 # Author: Sebastian Luque
 # Created: 2014-01-30T21:50:04+0000
-# Last-Updated: 2014-07-30T18:41:14+0000
+# Last-Updated: 2014-08-25T21:35:27+0000
 #           By: Sebastian Luque
 # copyright (c) 2014 Sebastian P. Luque
 #
@@ -36,6 +36,10 @@
 #
 # See pgloader configuration on net82 computer to load the output flat file
 # onto the navigation_series table of our gases database.
+#
+# Example call (file written to current directory):
+#
+# nmea2csv.awk *.13E > nav_full.csv
 # -------------------------------------------------------------------------
 # Code:
 
@@ -95,4 +99,4 @@ $1 ~ /\$INVTG/ {
 # allout-layout: (1 + : 0)
 # End:
 # 
-# nmea2csv_omg.awk ends here
+# nmea2csv.awk ends here

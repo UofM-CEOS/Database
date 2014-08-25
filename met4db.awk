@@ -2,7 +2,7 @@
 # $Id: $
 # Author: Sebastian Luque
 # Created: 2014-02-09T03:05:41+0000
-# Last-Updated: 2014-07-31T16:15:18+0000
+# Last-Updated: 2014-08-25T21:31:56+0000
 #           By: Sebastian Luque
 # -------------------------------------------------------------------------
 # Commentary:
@@ -23,7 +23,10 @@
 # W_s_WVc(1)    -> Mean horizontal wind speed
 # W_s_WVc(2)    -> Unit vector mean wind direction
 # W_s_WVc(3)    -> Standard deviation of wind direction
-# 
+#
+# Example call (file written to current directory):
+#
+# met4db.awk *.dat > met_all.csv
 # -------------------------------------------------------------------------
 # Code:
 

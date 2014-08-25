@@ -2,7 +2,7 @@
 # $Id: $
 # Author: Sebastian Luque
 # Created: 2014-02-10T23:24:53+0000
-# Last-Updated: 2014-08-01T19:16:06+0000
+# Last-Updated: 2014-08-25T21:32:52+0000
 #           By: Sebastian Luque
 # -------------------------------------------------------------------------
 # Commentary: 
@@ -10,6 +10,10 @@
 # See the pgloader configuration file for details.
 #
 # This prepares the NAV files from this year for loading into database.
+#
+# Example call (file written in current directory):
+#
+# nav4db.awk *.dat > NAV_all.csv
 # -------------------------------------------------------------------------
 # Code:
 
