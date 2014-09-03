@@ -1,5 +1,5 @@
 #! /usr/bin/gawk -f
-# $Id: $
+# $Id$
 # Author: Sebastian P. Luque
 # Created: 2014-05-02T03:01:07+0000
 # Last-Updated: 2014-08-25T21:40:30+0000
