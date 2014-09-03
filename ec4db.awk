@@ -1,8 +1,8 @@
 #! /usr/bin/gawk -f
-# $Id: $
+# $Id$
 # Author: Sebastian Luque
 # Created: 2014-02-12T04:33:42+0000
-# Last-Updated: 2014-08-25T21:30:31+0000
+# Last-Updated: 2014-09-03T04:37:57+0000
 #           By: Sebastian Luque
 # -------------------------------------------------------------------------
 # Commentary: 
@@ -18,7 +18,7 @@
 
 BEGIN {
     FS=OFS=","
-    ec_dir="/home/sluque/Data/ArcticNet/2013/Tower/EC"
+    ec_dir="/home/sluque/Data/ArcticNet/2014/EC"
     logger_ofile=ec_dir "/logger.csv"
     motion_ofile=ec_dir "/motion.csv"
     wind1_analog_ofile=ec_dir "/wind1_analog.csv"
