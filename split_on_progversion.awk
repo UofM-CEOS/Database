@@ -1,8 +1,8 @@
 #! /usr/bin/gawk -f
-# $Id: $
+# $Id$
 # Author: Sebastian Luque
 # Created: 2014-09-03T17:58:13+0000
-# Last-Updated: 2014-09-03T19:47:05+0000
+# Last-Updated: 2014-09-03T21:27:33+0000
 #           By: Sebastian Luque
 # -------------------------------------------------------------------------
 # Commentary: 
@@ -26,16 +26,19 @@ FNR == 1 {
     for (i=2; i < fnn; i++) {
 	prefix=prefix "_" prefix_arr[i]
     }
+    next
 }
 
 FNR > 1 {
     prog_version=sprintf("%.1f", gensub(/"/, "", "g", $PROGCOL))
     fn=prefix "_" prog_version ".csv"
-    if (FNR == 2) {
+    if (newprog != prog_version) {
 	print header > fn
-	print >> fn
-    } else { print >> fn }
+    }
+    newprog=prog_version
 }
+
+{ print >> fn }
 
 
 
