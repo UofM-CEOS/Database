@@ -2,8 +2,8 @@
 # $Id$
 # Author: Sebastian P. Luque
 # Created: 2014-05-02T03:01:07+0000
-# Last-Updated: 2014-08-25T21:40:30+0000
-#           By: Sebastian Luque
+# Last-Updated: 2014-09-17T17:04:40+0000
+#           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary: 
 #
@@ -21,6 +21,7 @@
 
 BEGIN {
     FS=OFS=","
+    fprefix="EC"
 }
 
 # FNR == 1 {
@@ -30,7 +31,7 @@ BEGIN {
 
 FNR > 1 {
     split($1, dt, /[: -]/)
-    fn=sprintf("EC_%s%s%s%s%s%s.csv", dt[1], dt[2], dt[3],
+    fn=sprintf("%s_%s%s%s%s%s%s.csv", fprefix, dt[1], dt[2], dt[3],
 	       dt[4], dt[5], dt[6])
     print > fn
 }
