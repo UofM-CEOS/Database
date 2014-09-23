@@ -1,5 +1,5 @@
 #! /bin/sh
-# $Id: $
+# $Id$
 # tables4db_cambridge_bay_2014.sh --- prepare tables for database
 # Author: Sebastian Luque
 # Created: 2014-09-17T21:40:18+0000
