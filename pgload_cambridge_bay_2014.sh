@@ -1,5 +1,5 @@
 #! /bin/sh
-# $Id: $
+# $Id$
 # Author: Sebastian Luque
 # Created: 2014-09-18T03:31:40+0000
 # Last-Updated: 2014-09-23T21:43:44+0000
