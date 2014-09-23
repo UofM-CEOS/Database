@@ -1,9 +1,8 @@
 #! /bin/sh
 # $Id$
-# tables4db_cambridge_bay_2014.sh --- prepare tables for database
 # Author: Sebastian Luque
 # Created: 2014-09-17T21:40:18+0000
-# Last-Updated: 2014-09-23T21:43:57+0000
+# Last-Updated: 2014-09-23T21:54:41+0000
 #           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary: 
