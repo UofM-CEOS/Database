@@ -1,0 +1,733 @@
+-- LOAD CSV
+--      FROM '/home/sluque/Data/Cambridge_Bay/2014/MET/MET_RAD_all_1.4.csv' 
+--         (
+--           "time",
+--           record_no,
+--           program_version,
+--           battery_voltage,
+--           logger_temperature,
+--           air_temperature,
+--           relative_humidity,
+--           atmospheric_pressure,
+--           surface_temperature,
+--           wind_speed,
+--           wind_direction,
+--           wind_direction_sd,
+--           K_down_voltage,
+--           PAR,
+--           K_down,
+--           K_up,
+--           LW_down_raw,
+--           LW_up_raw,
+--           temperature_instrument,
+--           temperature_instrument_kelvin,
+--           LW_down,
+--           LW_up,
+--           K_net,
+--           LW_net,
+--           albedo,
+--           radiation_net,
+--           heat_ctl
+--         )
+--      INTO postgresql://sluque:Gases01@localhost:5433/gases?meteorology_series
+--         (
+--           logging_group_id integer using "46",
+--           "time",
+--           air_temperature,
+--           relative_humidity,
+--           atmospheric_pressure,
+--           surface_temperature,
+--           wind_speed,
+--           wind_direction,
+--           wind_direction_sd
+--         )
+--      WITH skip header=1,
+--           fields optionally enclosed by '"',
+--           fields escaped by double-quote,
+--           fields terminated by ','
+--      SET client_encoding to 'utf-8',
+--           standard_conforming_strings to 'on';
+
+
+-- LOAD CSV
+--      FROM '/home/sluque/Data/Cambridge_Bay/2014/MET/MET_RAD_all_1.5.csv' 
+--         (
+--           "time",
+--           record_no,
+--           program_version,
+--           battery_voltage,
+--           logger_temperature,
+--           air_temperature,
+--           relative_humidity,
+--           atmospheric_pressure,
+--           surface_temperature,
+--           wind_speed,
+--           wind_direction,
+--           wind_direction_sd,
+--           K_down_voltage,
+--           PAR,
+--           K_down,
+--           K_up,
+--           LW_down_raw,
+--           LW_up_raw,
+--           temperature_instrument,
+--           temperature_instrument_kelvin,
+--           LW_down,
+--           LW_up,
+--           K_net,
+--           LW_net,
+--           albedo,
+--           radiation_net,
+--           heat_ctl
+--         )
+--      INTO postgresql://sluque:Gases01@localhost:5433/gases?meteorology_series
+--         (
+--           logging_group_id integer using "47",
+--           "time",
+--           air_temperature,
+--           relative_humidity,
+--           atmospheric_pressure,
+--           surface_temperature,
+--           wind_speed,
+--           wind_direction,
+--           wind_direction_sd
+--         )
+--      WITH skip header=1,
+--           fields optionally enclosed by '"',
+--           fields escaped by double-quote,
+--           fields terminated by ','
+--      SET client_encoding to 'utf-8',
+--          standard_conforming_strings to 'on';
+
+
+-- LOAD CSV
+--      FROM '/home/sluque/Data/Cambridge_Bay/2014/MET/MET_RAD_all_1.6.csv' 
+--         (
+--           "time",
+--           record_no,
+--           program_version,
+--           battery_voltage,
+--           logger_temperature,
+--           air_temperature,
+--           relative_humidity,
+--           atmospheric_pressure,
+--           surface_temperature,
+--           wind_speed,
+--           wind_direction,
+--           wind_direction_sd,
+--           K_down_voltage,
+--           PAR,
+--           K_down,
+--           K_up,
+--           LW_down_raw,
+--           LW_up_raw,
+--           temperature_instrument,
+--           temperature_instrument_kelvin,
+--           LW_down,
+--           LW_up,
+--           K_net,
+--           LW_net,
+--           albedo,
+--           radiation_net,
+--           heat_ctl
+--         )
+--      INTO postgresql://sluque:Gases01@localhost:5433/gases?meteorology_series
+--         (
+--           logging_group_id integer using "48",
+--           "time",
+--           air_temperature,
+--           relative_humidity,
+--           atmospheric_pressure,
+--           surface_temperature,
+--           wind_speed,
+--           wind_direction,
+--           wind_direction_sd
+--         )
+--      WITH skip header=1,
+--           fields optionally enclosed by '"',
+--           fields escaped by double-quote,
+--           fields terminated by ','
+--      SET client_encoding to 'utf-8',
+--          standard_conforming_strings to 'on';
+
+
+-- LOAD CSV
+--      FROM '/home/sluque/Data/Cambridge_Bay/2014/MET/MET_RAD_all_1.7.csv' 
+--         (
+--           "time",
+--           record_no,
+--           program_version,
+--           battery_voltage,
+--           logger_temperature,
+--           air_temperature,
+--           relative_humidity,
+--           atmospheric_pressure,
+--           surface_temperature,
+--           wind_speed,
+--           wind_direction,
+--           wind_direction_sd,
+--           K_down_voltage,
+--           PAR,
+--           K_down,
+--           K_up,
+--           LW_down_raw,
+--           LW_up_raw,
+--           temperature_instrument,
+--           temperature_instrument_kelvin,
+--           LW_down,
+--           LW_up,
+--           K_net,
+--           LW_net,
+--           albedo,
+--           radiation_net,
+--           heat_ctl
+--         )
+--      INTO postgresql://sluque:Gases01@localhost:5433/gases?meteorology_series
+--         (
+--           logging_group_id integer using "49",
+--           "time",
+--           air_temperature,
+--           relative_humidity,
+--           atmospheric_pressure,
+--           surface_temperature,
+--           wind_speed,
+--           wind_direction,
+--           wind_direction_sd
+--         )
+--      WITH skip header=1,
+--           fields optionally enclosed by '"',
+--           fields escaped by double-quote,
+--           fields terminated by ','
+--      SET client_encoding to 'utf-8',
+--          standard_conforming_strings to 'on';
+
+
+-- LOAD CSV
+--      FROM '/home/sluque/Data/Cambridge_Bay/2014/MET/MET_RAD_all_1.8.csv' 
+--         (
+--           "time",
+--           record_no,
+--           program_version,
+--           battery_voltage,
+--           logger_temperature,
+--           air_temperature,
+--           relative_humidity,
+--           atmospheric_pressure,
+--           surface_temperature,
+--           wind_speed,
+--           wind_direction,
+--           wind_direction_sd,
+--           K_down_voltage,
+--           PAR,
+--           K_down,
+--           K_up,
+--           LW_down_raw,
+--           LW_up_raw,
+--           temperature_instrument,
+--           temperature_instrument_kelvin,
+--           LW_down,
+--           LW_up,
+--           K_net,
+--           LW_net,
+--           albedo,
+--           radiation_net,
+--           heat_ctl
+--         )
+--      INTO postgresql://sluque:Gases01@localhost:5433/gases?meteorology_series
+--         (
+--           logging_group_id integer using "50",
+--           "time",
+--           air_temperature,
+--           relative_humidity,
+--           atmospheric_pressure,
+--           surface_temperature,
+--           wind_speed,
+--           wind_direction,
+--           wind_direction_sd
+--         )
+--      WITH skip header=1,
+--           fields optionally enclosed by '"',
+--           fields escaped by double-quote,
+--           fields terminated by ','
+--      SET client_encoding to 'utf-8',
+--          standard_conforming_strings to 'on';
+
+
+-- LOAD CSV
+--      FROM '/home/sluque/Data/Cambridge_Bay/2014/MET/MET_RAD_all_1.4.csv' 
+--         (
+--           "time",
+--           record_no,
+--           program_version,
+--           battery_voltage,
+--           logger_temperature,
+--           air_temperature,
+--           relative_humidity,
+--           atmospheric_pressure,
+--           surface_temperature,
+--           wind_speed,
+--           wind_direction,
+--           wind_direction_sd,
+--           "K_down_voltage",
+--           "PAR",
+--           "K_down",
+--           "K_up",
+--           "LW_down_raw",
+--           "LW_up_raw",
+--           temperature_instrument,
+--           temperature_instrument_kelvin,
+--           "LW_down",
+--           "LW_up",
+--           "K_net",
+--           "LW_net",
+--           albedo,
+--           radiation_net,
+--           heat_ctl
+--         )
+--      INTO postgresql://sluque:Gases01@localhost:5433/gases?radiation_series
+--         (
+--           logging_group_id integer using "46",
+--           "time",
+--           "PAR",
+--           "K_down",
+--           "K_up",
+--           temperature_instrument,
+--           "LW_down",
+--           "LW_up"
+--         )
+--      WITH skip header = 1,
+--           fields optionally enclosed by '"',
+--           fields escaped by double-quote,
+--           fields terminated by ','
+--      SET client_encoding to 'utf-8',
+--          standard_conforming_strings to 'on';
+
+
+-- LOAD CSV
+--      FROM '/home/sluque/Data/Cambridge_Bay/2014/MET/MET_RAD_all_1.5.csv' 
+--         (
+--           "time",
+--           record_no,
+--           program_version,
+--           battery_voltage,
+--           logger_temperature,
+--           air_temperature,
+--           relative_humidity,
+--           atmospheric_pressure,
+--           surface_temperature,
+--           wind_speed,
+--           wind_direction,
+--           wind_direction_sd,
+--           "K_down_voltage",
+--           "PAR",
+--           "K_down",
+--           "K_up",
+--           "LW_down_raw",
+--           "LW_up_raw",
+--           temperature_instrument,
+--           temperature_instrument_kelvin,
+--           "LW_down",
+--           "LW_up",
+--           K_net,
+--           LW_net,
+--           albedo,
+--           radiation_net,
+--           heat_ctl
+--         )
+--      INTO postgresql://sluque:Gases01@localhost:5433/gases?radiation_series
+--         (
+--           logging_group_id integer using "47",
+--           "time",
+--           "PAR",
+--           "K_down",
+--           "K_up",
+--           temperature_instrument,
+--           "LW_down",
+--           "LW_up"
+--         )
+--      WITH skip header = 1,
+--           fields optionally enclosed by '"',
+--           fields escaped by double-quote,
+--           fields terminated by ','
+--      SET client_encoding to 'utf-8',
+--          standard_conforming_strings to 'on';
+
+
+-- LOAD CSV
+--      FROM '/home/sluque/Data/Cambridge_Bay/2014/MET/MET_RAD_all_1.6.csv' 
+--         (
+--           "time",
+--           record_no,
+--           program_version,
+--           battery_voltage,
+--           logger_temperature,
+--           air_temperature,
+--           relative_humidity,
+--           atmospheric_pressure,
+--           surface_temperature,
+--           wind_speed,
+--           wind_direction,
+--           wind_direction_sd,
+--           "K_down_voltage",
+--           "PAR",
+--           "K_down",
+--           "K_up",
+--           "LW_down_raw",
+--           "LW_up_raw",
+--           temperature_instrument,
+--           temperature_instrument_kelvin,
+--           "LW_down",
+--           "LW_up",
+--           K_net,
+--           LW_net,
+--           albedo,
+--           radiation_net,
+--           heat_ctl
+--         )
+--      INTO postgresql://sluque:Gases01@localhost:5433/gases?radiation_series
+--         (
+--           logging_group_id integer using "48",
+--           "time",
+--           "PAR",
+--           "K_down",
+--           "K_up",
+--           temperature_instrument,
+--           "LW_down",
+--           "LW_up"
+--         )
+--      WITH skip header = 1,
+--           fields optionally enclosed by '"',
+--           fields escaped by double-quote,
+--           fields terminated by ','
+--      SET client_encoding to 'utf-8',
+--          standard_conforming_strings to 'on';
+
+
+-- LOAD CSV
+--      FROM '/home/sluque/Data/Cambridge_Bay/2014/MET/MET_RAD_all_1.7.csv' 
+--         (
+--           "time",
+--           record_no,
+--           program_version,
+--           battery_voltage,
+--           logger_temperature,
+--           air_temperature,
+--           relative_humidity,
+--           atmospheric_pressure,
+--           surface_temperature,
+--           wind_speed,
+--           wind_direction,
+--           wind_direction_sd,
+--           "K_down_voltage",
+--           "PAR",
+--           "K_down",
+--           "K_up",
+--           "LW_down_raw",
+--           "LW_up_raw",
+--           temperature_instrument,
+--           temperature_instrument_kelvin,
+--           "LW_down",
+--           "LW_up",
+--           K_net,
+--           LW_net,
+--           albedo,
+--           radiation_net,
+--           heat_ctl
+--         )
+--      INTO postgresql://sluque:Gases01@localhost:5433/gases?radiation_series
+--         (
+--           logging_group_id integer using "49",
+--           "time",
+--           "PAR",
+--           "K_down",
+--           "K_up",
+--           temperature_instrument,
+--           "LW_down",
+--           "LW_up"
+--         )
+--      WITH skip header = 1,
+--           fields optionally enclosed by '"',
+--           fields escaped by double-quote,
+--           fields terminated by ','
+--      SET client_encoding to 'utf-8',
+--          standard_conforming_strings to 'on';
+
+
+-- LOAD CSV
+--      FROM '/home/sluque/Data/Cambridge_Bay/2014/MET/MET_RAD_all_1.8.csv' 
+--         (
+--           "time",
+--           record_no,
+--           program_version,
+--           battery_voltage,
+--           logger_temperature,
+--           air_temperature,
+--           relative_humidity,
+--           atmospheric_pressure,
+--           surface_temperature,
+--           wind_speed,
+--           wind_direction,
+--           wind_direction_sd,
+--           "K_down_voltage",
+--           "PAR",
+--           "K_down",
+--           "K_up",
+--           "LW_down_raw",
+--           "LW_up_raw",
+--           temperature_instrument,
+--           temperature_instrument_kelvin,
+--           "LW_down",
+--           "LW_up",
+--           K_net,
+--           LW_net,
+--           albedo,
+--           radiation_net,
+--           heat_ctl
+--         )
+--      INTO postgresql://sluque:Gases01@localhost:5433/gases?radiation_series
+--         (
+--           logging_group_id integer using "50",
+--           "time",
+--           "PAR",
+--           "K_down",
+--           "K_up",
+--           temperature_instrument,
+--           "LW_down",
+--           "LW_up"
+--         )
+--      WITH skip header = 1,
+--           fields optionally enclosed by '"',
+--           fields escaped by double-quote,
+--           fields terminated by ','
+--      SET client_encoding to 'utf-8',
+--          standard_conforming_strings to 'on';
+
+
+-- LOAD CSV
+--      FROM '/home/sluque/Data/Cambridge_Bay/2014/MET/MET_RAD_all_1.4.csv' 
+--         (
+--           "time",
+--           record_no,
+--           program_version,
+--           battery_voltage,
+--           logger_temperature,
+--           air_temperature,
+--           relative_humidity,
+--           atmospheric_pressure,
+--           surface_temperature,
+--           wind_speed,
+--           wind_direction,
+--           wind_direction_sd,
+--           "K_down_voltage",
+--           "PAR",
+--           "K_down",
+--           "K_up",
+--           "LW_down_raw",
+--           "LW_up_raw",
+--           temperature_instrument,
+--           temperature_instrument_kelvin,
+--           "LW_down",
+--           "LW_up",
+--           "K_net",
+--           "LW_net",
+--           albedo,
+--           radiation_net,
+--           heat_ctl
+--         )
+--      INTO postgresql://sluque:Gases01@localhost:5433/gases?logger_series
+--         (
+--           logging_group_id integer using "46",
+--           "time",
+--           battery_voltage,
+--           logger_temperature
+--         )
+--      WITH skip header = 1,
+--           fields optionally enclosed by '"',
+--           fields escaped by double-quote,
+--           fields terminated by ','
+--      SET client_encoding to 'utf-8',
+--          standard_conforming_strings to 'on';
+
+
+-- LOAD CSV
+--      FROM '/home/sluque/Data/Cambridge_Bay/2014/MET/MET_RAD_all_1.5.csv' 
+--         (
+--           "time",
+--           record_no,
+--           program_version,
+--           battery_voltage,
+--           logger_temperature,
+--           air_temperature,
+--           relative_humidity,
+--           atmospheric_pressure,
+--           surface_temperature,
+--           wind_speed,
+--           wind_direction,
+--           wind_direction_sd,
+--           "K_down_voltage",
+--           "PAR",
+--           "K_down",
+--           "K_up",
+--           "LW_down_raw",
+--           "LW_up_raw",
+--           temperature_instrument,
+--           temperature_instrument_kelvin,
+--           "LW_down",
+--           "LW_up",
+--           "K_net",
+--           "LW_net",
+--           albedo,
+--           radiation_net,
+--           heat_ctl
+--         )
+--      INTO postgresql://sluque:Gases01@localhost:5433/gases?logger_series
+--         (
+--           logging_group_id integer using "47",
+--           "time",
+--           battery_voltage,
+--           logger_temperature
+--         )
+--      WITH skip header = 1,
+--           fields optionally enclosed by '"',
+--           fields escaped by double-quote,
+--           fields terminated by ','
+--      SET client_encoding to 'utf-8',
+--          standard_conforming_strings to 'on';
+
+
+-- LOAD CSV
+--      FROM '/home/sluque/Data/Cambridge_Bay/2014/MET/MET_RAD_all_1.6.csv' 
+--         (
+--           "time",
+--           record_no,
+--           program_version,
+--           battery_voltage,
+--           logger_temperature,
+--           air_temperature,
+--           relative_humidity,
+--           atmospheric_pressure,
+--           surface_temperature,
+--           wind_speed,
+--           wind_direction,
+--           wind_direction_sd,
+--           "K_down_voltage",
+--           "PAR",
+--           "K_down",
+--           "K_up",
+--           "LW_down_raw",
+--           "LW_up_raw",
+--           temperature_instrument,
+--           temperature_instrument_kelvin,
+--           "LW_down",
+--           "LW_up",
+--           "K_net",
+--           "LW_net",
+--           albedo,
+--           radiation_net,
+--           heat_ctl
+--         )
+--      INTO postgresql://sluque:Gases01@localhost:5433/gases?logger_series
+--         (
+--           logging_group_id integer using "48",
+--           "time",
+--           battery_voltage,
+--           logger_temperature
+--         )
+--      WITH skip header = 1,
+--           fields optionally enclosed by '"',
+--           fields escaped by double-quote,
+--           fields terminated by ','
+--      SET client_encoding to 'utf-8',
+--          standard_conforming_strings to 'on';
+
+
+-- LOAD CSV
+--      FROM '/home/sluque/Data/Cambridge_Bay/2014/MET/MET_RAD_all_1.7.csv' 
+--         (
+--           "time",
+--           record_no,
+--           program_version,
+--           battery_voltage,
+--           logger_temperature,
+--           air_temperature,
+--           relative_humidity,
+--           atmospheric_pressure,
+--           surface_temperature,
+--           wind_speed,
+--           wind_direction,
+--           wind_direction_sd,
+--           "K_down_voltage",
+--           "PAR",
+--           "K_down",
+--           "K_up",
+--           "LW_down_raw",
+--           "LW_up_raw",
+--           temperature_instrument,
+--           temperature_instrument_kelvin,
+--           "LW_down",
+--           "LW_up",
+--           "K_net",
+--           "LW_net",
+--           albedo,
+--           radiation_net,
+--           heat_ctl
+--         )
+--      INTO postgresql://sluque:Gases01@localhost:5433/gases?logger_series
+--         (
+--           logging_group_id integer using "49",
+--           "time",
+--           battery_voltage,
+--           logger_temperature
+--         )
+--      WITH skip header = 1,
+--           fields optionally enclosed by '"',
+--           fields escaped by double-quote,
+--           fields terminated by ','
+--      SET client_encoding to 'utf-8',
+--          standard_conforming_strings to 'on';
+
+
+-- LOAD CSV
+--      FROM '/home/sluque/Data/Cambridge_Bay/2014/MET/MET_RAD_all_1.8.csv' 
+--         (
+--           "time",
+--           record_no,
+--           program_version,
+--           battery_voltage,
+--           logger_temperature,
+--           air_temperature,
+--           relative_humidity,
+--           atmospheric_pressure,
+--           surface_temperature,
+--           wind_speed,
+--           wind_direction,
+--           wind_direction_sd,
+--           "K_down_voltage",
+--           "PAR",
+--           "K_down",
+--           "K_up",
+--           "LW_down_raw",
+--           "LW_up_raw",
+--           temperature_instrument,
+--           temperature_instrument_kelvin,
+--           "LW_down",
+--           "LW_up",
+--           "K_net",
+--           "LW_net",
+--           albedo,
+--           radiation_net,
+--           heat_ctl
+--         )
+--      INTO postgresql://sluque:Gases01@localhost:5433/gases?logger_series
+--         (
+--           logging_group_id integer using "50",
+--           "time",
+--           battery_voltage,
+--           logger_temperature
+--         )
+--      WITH skip header = 1,
+--           fields optionally enclosed by '"',
+--           fields escaped by double-quote,
+--           fields terminated by ','
+--      SET client_encoding to 'utf-8',
+--          standard_conforming_strings to 'on';

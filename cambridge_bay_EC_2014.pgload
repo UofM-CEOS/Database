@@ -1,0 +1,363 @@
+-- LOAD CSV
+--      FROM '/home/sluque/Data/Cambridge_Bay/2014/EC/wind_1.4.csv' 
+--         (
+--           "time",
+--           record_no,
+--           program_version,
+--           wind_speed_u,
+-- 	  wind_speed_v,
+--           wind_speed_w,
+-- 	  air_temperature_sonic,
+-- 	  anemometer_status
+--         )
+--      INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_analog
+--         (
+--           logging_group_id integer using "51",
+-- 	  stream_type text using "analog",
+--           "time",
+--           wind_speed_u,
+-- 	  wind_speed_v,
+-- 	  wind_speed_w,
+--           air_temperature_sonic,
+-- 	  anemometer_status
+--         )
+--      WITH skip header = 1,
+--           fields optionally enclosed by '"',
+--           fields escaped by double-quote,
+--           fields terminated by ','
+--      SET client_encoding to 'utf-8',
+--          standard_conforming_strings to 'on';
+
+
+-- LOAD CSV
+--      FROM '/home/sluque/Data/Cambridge_Bay/2014/EC/wind_1.5.csv' 
+--         (
+--           "time",
+--           record_no,
+--           program_version,
+--           wind_speed_u,
+-- 	  wind_speed_v,
+--           wind_speed_w,
+-- 	  air_temperature_sonic,
+-- 	  anemometer_status
+--         )
+--      INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_analog
+--         (
+--           logging_group_id integer using "52",
+-- 	  stream_type text using "analog",
+--           "time",
+--           wind_speed_u,
+-- 	  wind_speed_v,
+-- 	  wind_speed_w,
+--           air_temperature_sonic,
+-- 	  anemometer_status
+--         )
+--      WITH skip header = 1,
+--           fields optionally enclosed by '"',
+--           fields escaped by double-quote,
+--           fields terminated by ','
+--      SET client_encoding to 'utf-8',
+--          standard_conforming_strings to 'on';
+
+
+-- LOAD CSV
+--      FROM '/home/sluque/Data/Cambridge_Bay/2014/EC/wind_1.6.csv' 
+--         (
+--           "time",
+--           record_no,
+--           program_version,
+--           wind_speed_u,
+-- 	  wind_speed_v,
+--           wind_speed_w,
+-- 	  air_temperature_sonic,
+-- 	  anemometer_status
+--         )
+--      INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_analog
+--         (
+--           logging_group_id integer using "53",
+-- 	  stream_type text using "analog",
+--           "time",
+--           wind_speed_u,
+-- 	  wind_speed_v,
+-- 	  wind_speed_w,
+--           air_temperature_sonic,
+-- 	  anemometer_status
+--         )
+--      WITH skip header = 1,
+--           fields optionally enclosed by '"',
+--           fields escaped by double-quote,
+--           fields terminated by ','
+--      SET client_encoding to 'utf-8',
+--          standard_conforming_strings to 'on';
+
+
+-- LOAD CSV
+--      FROM '/home/sluque/Data/Cambridge_Bay/2014/EC/wind_1.7.csv' 
+--         (
+--           "time",
+--           record_no,
+--           program_version,
+--           wind_speed_u,
+-- 	  wind_speed_v,
+--           wind_speed_w,
+-- 	  air_temperature_sonic,
+-- 	  anemometer_status
+--         )
+--      INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_analog
+--         (
+--           logging_group_id integer using "57",
+-- 	  stream_type text using "analog",
+--           "time",
+--           wind_speed_u,
+-- 	  wind_speed_v,
+-- 	  wind_speed_w,
+--           air_temperature_sonic,
+-- 	  anemometer_status
+--         )
+--      WITH skip header = 1,
+--           fields optionally enclosed by '"',
+--           fields escaped by double-quote,
+--           fields terminated by ','
+--      SET client_encoding to 'utf-8',
+--          standard_conforming_strings to 'on';
+
+
+-- LOAD CSV
+--      FROM '/home/sluque/Data/Cambridge_Bay/2014/EC/wind_1.8.csv' 
+--         (
+--           "time",
+--           record_no,
+--           program_version,
+--           wind_speed_u,
+-- 	  wind_speed_v,
+--           wind_speed_w,
+-- 	  air_temperature_sonic,
+-- 	  anemometer_status
+--         )
+--      INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_analog
+--         (
+--           logging_group_id integer using "58",
+-- 	  stream_type text using "analog",
+--           "time",
+--           wind_speed_u,
+-- 	  wind_speed_v,
+-- 	  wind_speed_w,
+--           air_temperature_sonic,
+-- 	  anemometer_status
+--         )
+--      WITH skip header = 1,
+--           fields optionally enclosed by '"',
+--           fields escaped by double-quote,
+--           fields terminated by ','
+--      SET client_encoding to 'utf-8',
+--          standard_conforming_strings to 'on';
+
+
+-- LOAD CSV
+--      FROM '/home/sluque/Data/Cambridge_Bay/2014/EC/open_path_1.4.csv' 
+--         (
+--           "time",
+--           record_no,
+--           program_version,
+-- 	  "op_CO2_density",
+-- 	  "op_H2O_density",
+-- 	  "op_CO2_absorptance",
+-- 	  "op_H2O_absorptance",
+-- 	  op_pressure,
+-- 	  op_temperature,
+-- 	  op_aux,
+-- 	  op_cooler_voltage,
+-- 	  op_analyzer_status,
+-- 	  op_bandwidth,
+-- 	  op_delay_interval
+--         )
+--      INTO postgresql://sluque:Gases01@localhost:5433/gases?open_path_series_noshroud
+--         (
+--           logging_group_id integer using "51",
+-- 	  is_shroud boolean using "false",
+--           "time",
+-- 	  "op_CO2_density",
+-- 	  "op_H2O_density",
+-- 	  "op_CO2_absorptance",
+-- 	  "op_H2O_absorptance",
+-- 	  op_pressure,
+-- 	  op_temperature,
+-- 	  op_cooler_voltage,
+-- 	  op_analyzer_status,
+-- 	  op_bandwidth,
+-- 	  op_delay_interval
+--         )
+--      WITH skip header = 1,
+--           fields optionally enclosed by '"',
+--           fields escaped by double-quote,
+--           fields terminated by ','
+--      SET client_encoding to 'utf-8',
+--          standard_conforming_strings to 'on';
+
+
+-- LOAD CSV
+--      FROM '/home/sluque/Data/Cambridge_Bay/2014/EC/open_path_1.5.csv' 
+--         (
+--           "time",
+--           record_no,
+--           program_version,
+-- 	  "op_CO2_density",
+-- 	  "op_H2O_density",
+-- 	  "op_CO2_absorptance",
+-- 	  "op_H2O_absorptance",
+-- 	  op_pressure,
+-- 	  op_temperature,
+-- 	  op_aux,
+-- 	  op_cooler_voltage,
+-- 	  op_analyzer_status,
+-- 	  op_bandwidth,
+-- 	  op_delay_interval
+--         )
+--      INTO postgresql://sluque:Gases01@localhost:5433/gases?open_path_series_noshroud
+--         (
+--           logging_group_id integer using "52",
+-- 	  is_shroud boolean using "false",
+--           "time",
+-- 	  "op_CO2_density",
+-- 	  "op_H2O_density",
+-- 	  "op_CO2_absorptance",
+-- 	  "op_H2O_absorptance",
+-- 	  op_pressure,
+-- 	  op_temperature,
+-- 	  op_cooler_voltage,
+-- 	  op_analyzer_status,
+-- 	  op_bandwidth,
+-- 	  op_delay_interval
+--         )
+--      WITH skip header = 1,
+--           fields optionally enclosed by '"',
+--           fields escaped by double-quote,
+--           fields terminated by ','
+--      SET client_encoding to 'utf-8',
+--          standard_conforming_strings to 'on';
+
+
+-- LOAD CSV
+--      FROM '/home/sluque/Data/Cambridge_Bay/2014/EC/open_path_1.6.csv' 
+--         (
+--           "time",
+--           record_no,
+--           program_version,
+-- 	  "op_CO2_density",
+-- 	  "op_H2O_density",
+-- 	  "op_CO2_absorptance",
+-- 	  "op_H2O_absorptance",
+-- 	  op_pressure,
+-- 	  op_temperature,
+-- 	  op_aux,
+-- 	  op_cooler_voltage,
+-- 	  op_analyzer_status,
+-- 	  op_bandwidth,
+-- 	  op_delay_interval
+--         )
+--      INTO postgresql://sluque:Gases01@localhost:5433/gases?open_path_series_noshroud
+--         (
+--           logging_group_id integer using "53",
+-- 	  is_shroud boolean using "false",
+--           "time",
+-- 	  "op_CO2_density",
+-- 	  "op_H2O_density",
+-- 	  "op_CO2_absorptance",
+-- 	  "op_H2O_absorptance",
+-- 	  op_pressure,
+-- 	  op_temperature,
+-- 	  op_cooler_voltage,
+-- 	  op_analyzer_status,
+-- 	  op_bandwidth,
+-- 	  op_delay_interval
+--         )
+--      WITH skip header = 1,
+--           fields optionally enclosed by '"',
+--           fields escaped by double-quote,
+--           fields terminated by ','
+--      SET client_encoding to 'utf-8',
+--          standard_conforming_strings to 'on';
+
+
+-- LOAD CSV
+--      FROM '/home/sluque/Data/Cambridge_Bay/2014/EC/open_path_1.7.csv' 
+--         (
+--           "time",
+--           record_no,
+--           program_version,
+-- 	  "op_CO2_density",
+-- 	  "op_H2O_density",
+-- 	  "op_CO2_absorptance",
+-- 	  "op_H2O_absorptance",
+-- 	  op_pressure,
+-- 	  op_temperature,
+-- 	  op_aux,
+-- 	  op_cooler_voltage,
+-- 	  op_analyzer_status,
+-- 	  op_bandwidth,
+-- 	  op_delay_interval
+--         )
+--      INTO postgresql://sluque:Gases01@localhost:5433/gases?open_path_series_noshroud
+--         (
+--           logging_group_id integer using "57",
+-- 	  is_shroud boolean using "false",
+--           "time",
+-- 	  "op_CO2_density",
+-- 	  "op_H2O_density",
+-- 	  "op_CO2_absorptance",
+-- 	  "op_H2O_absorptance",
+-- 	  op_pressure,
+-- 	  op_temperature,
+-- 	  op_cooler_voltage,
+-- 	  op_analyzer_status,
+-- 	  op_bandwidth,
+-- 	  op_delay_interval
+--         )
+--      WITH skip header = 1,
+--           fields optionally enclosed by '"',
+--           fields escaped by double-quote,
+--           fields terminated by ','
+--      SET client_encoding to 'utf-8',
+--          standard_conforming_strings to 'on';
+
+
+-- LOAD CSV
+--      FROM '/home/sluque/Data/Cambridge_Bay/2014/EC/open_path_1.8.csv' 
+--         (
+--           "time",
+--           record_no,
+--           program_version,
+-- 	  "op_CO2_density",
+-- 	  "op_H2O_density",
+-- 	  "op_CO2_absorptance",
+-- 	  "op_H2O_absorptance",
+-- 	  op_pressure,
+-- 	  op_temperature,
+-- 	  op_aux,
+-- 	  op_cooler_voltage,
+-- 	  op_analyzer_status,
+-- 	  op_bandwidth,
+-- 	  op_delay_interval
+--         )
+--      INTO postgresql://sluque:Gases01@localhost:5433/gases?open_path_series_noshroud
+--         (
+--           logging_group_id integer using "58",
+-- 	  is_shroud boolean using "false",
+--           "time",
+-- 	  "op_CO2_density",
+-- 	  "op_H2O_density",
+-- 	  "op_CO2_absorptance",
+-- 	  "op_H2O_absorptance",
+-- 	  op_pressure,
+-- 	  op_temperature,
+-- 	  op_cooler_voltage,
+-- 	  op_analyzer_status,
+-- 	  op_bandwidth,
+-- 	  op_delay_interval
+--         )
+--      WITH skip header = 1,
+--           fields optionally enclosed by '"',
+--           fields escaped by double-quote,
+--           fields terminated by ','
+--      SET client_encoding to 'utf-8',
+--          standard_conforming_strings to 'on';
