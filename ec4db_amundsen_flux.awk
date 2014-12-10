@@ -2,7 +2,7 @@
 # $Id$
 # Author: Sebastian Luque
 # Created: 2014-02-12T04:33:42+0000
-# Last-Updated: 2014-09-03T04:37:57+0000
+# Last-Updated: 2014-10-29T17:27:59+0000
 #           By: Sebastian Luque
 # -------------------------------------------------------------------------
 # Commentary: 
@@ -46,23 +46,25 @@ BEGIN {
     	"op_temperature" > op2_ofile
 }
 
-FNR > 4 {
+FNR > 4 {	# skip duplicates lines starting at 5th
     gsub(/"/, "")
     date_time=$1
     record_number=$2
     program_version=$3
-    print date_time, record_number, program_version, $4, $5, $6, $7, $8,
-    	$9 >> motion_ofile
-    print date_time, record_number, program_version, $10, $11, $12,
-	$13 >> wind1_analog_ofile
-    print date_time, record_number, program_version, $14, $15, $16, $17,
-    	$18, $19 >> wind1_serial_ofile
-    print date_time, record_number, program_version, $20, $21, $22, $23,
-    	$24 >> wind2_sdm_ofile
-    print date_time, record_number, program_version, $30, $25, $26, $27,
-    	$28 >> op1_ofile
-    print date_time, record_number, program_version, $36, $31, $32, $33,
-    	$34 >> op2_ofile
+    if (! x[date_time]++) {	# skip duplicates
+	print date_time, record_number, program_version, $4, $5, $6, $7, $8,
+	    $9 >> motion_ofile
+	print date_time, record_number, program_version, $10, $11, $12,
+	    $13 >> wind1_analog_ofile
+	print date_time, record_number, program_version, $14, $15, $16, $17,
+	    $18, $19 >> wind1_serial_ofile
+	print date_time, record_number, program_version, $20, $21, $22, $23,
+	    $24 >> wind2_sdm_ofile
+	print date_time, record_number, program_version, $30, $25, $26, $27,
+	    $28 >> op1_ofile
+	print date_time, record_number, program_version, $36, $31, $32, $33,
+	    $34 >> op2_ofile
+    }
 }
 
 
