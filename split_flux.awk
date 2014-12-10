@@ -2,8 +2,8 @@
 # $Id$
 # Author: Sebastian P. Luque
 # Created: 2014-05-02T03:01:07+0000
-# Last-Updated: 2014-09-17T17:04:40+0000
-#           By: Sebastian P. Luque
+# Last-Updated: 2014-12-10T23:56:19+0000
+#           By: Sebastian Luque
 # -------------------------------------------------------------------------
 # Commentary: 
 #
@@ -24,7 +24,7 @@ BEGIN {
     fprefix="EC"
 }
 
-# FNR == 1 {
+# NR == 1 {
 #     hdr=$0
 #     next
 # }
