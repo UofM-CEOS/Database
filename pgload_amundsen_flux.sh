@@ -2,8 +2,8 @@
 # $Id$
 # Author: Sebastian Luque
 # Created: 2014-02-05T22:44:42+0000
-# Last-Updated: 2014-09-23T21:43:40+0000
-#           By: Sebastian P. Luque
+# Last-Updated: 2014-11-29T22:26:09+0000
+#           By: Sebastian Luque
 # -------------------------------------------------------------------------
 # Commentary: 
 #
@@ -12,37 +12,43 @@
 # -------------------------------------------------------------------------
 # Code:
 
-# # Prepare data
-# ./tables4db.sh
+# Prepare data
+./tables4db_amundsen_flux.sh
 
 # Load tables
-pgloader -c pgloader_gases_2014.ini -v -s navigation_omg_series
-# pgloader -c pgloader_gases_2014.ini -v -s -V navigation_ceos_series
-# pgloader -c pgloader_gases_2014.ini -v -s -V navigation_ceos_motion_series
-# pgloader -c pgloader_gases_2014.ini -v -s meteorology_series
-# pgloader -c pgloader_gases_2014.ini -v -s meteorology_logger_series
-# pgloader -c pgloader_gases_2014.ini -v -s meteorology_closed_path_series
-# pgloader -c pgloader_gases_2014.ini -v -s -V open_path_series_1_avg
-# pgloader -c pgloader_gases_2014.ini -v -s -V open_path_series_2_avg
-# pgloader -c pgloader_gases_2014.ini -v -s -V wind3d_series_analog_avg
-# pgloader -c pgloader_gases_2014.ini -v -s -V wind3d_series_sdm_avg
-# pgloader -c pgloader_gases_2014.ini -v -s underway_series
-# pgloader -c pgloader_gases_2014.ini -v -s radiation_series
-# pgloader -c pgloader_gases_2014.ini -v -s radiation_logger_series
-# pgloader -c pgloader_gases_2014.ini -v -s -V open_path_series_main_A
-# pgloader -c pgloader_gases_2014.ini -v -s -V open_path_series_main_B
-# pgloader -c pgloader_gases_2014.ini -v -s -V open_path_series_aux_A
-# pgloader -c pgloader_gases_2014.ini -v -s -V open_path_series_aux_B
-# pgloader -c pgloader_gases_2014.ini -v -s -V motion_series_A
-# pgloader -c pgloader_gases_2014.ini -v -s -V motion_series_B
-# pgloader -c pgloader_gases_2014.ini -v -s -V wind3d_series_analog_A
-# pgloader -c pgloader_gases_2014.ini -v -s -V wind3d_series_analog_B
-# pgloader -c pgloader_gases_2014.ini -v -s -V wind3d_series_serial_A
-# pgloader -c pgloader_gases_2014.ini -v -s -V wind3d_series_serial_B
-# pgloader -c pgloader_gases_2014.ini -v -s -V wind3d_series_sdm_A
-# pgloader -c pgloader_gases_2014.ini -v -s -V wind3d_series_sdm_B
-# # Or all sections, if sure
-# pgloader -c pgloader_gases_2014.ini -v -s -V
+
+pgloader -D /var/tmp/pgloader_amundsen_2014 \
+    -S navigation_summary.log \
+    -L /var/tmp/pgloader_amundsen_2014/navigation_2014.log \
+    --log-min-messages debug --client-min-messages warning \
+    amundsen_Navigation_2014.pgload
+pgloader -D /var/tmp/pgloader_amundsen_2014 \
+    -S meteorology_summary.log \
+    -L /var/tmp/pgloader_amundsen_2014/meteorology_2014.log \
+    --log-min-messages debug --client-min-messages warning \
+    amundsen_MET_2014.pgload
+pgloader -D /var/tmp/pgloader_amundsen_2014 \
+    -S flux_avg_summary.log \
+    -L /var/tmp/pgloader_amundsen_2014/flux_avg_2014.log \
+    --log-min-messages debug --client-min-messages warning \
+    amundsen_FluxAvg_2014.pgload
+pgloader -D /var/tmp/pgloader_amundsen_2014 \
+    -S flux_summary.log \
+    -L /var/tmp/pgloader_amundsen_2014/flux_2014.log \
+    --log-min-messages debug --client-min-messages warning \
+    amundsen_Flux_2014.pgload
+pgloader -D /var/tmp/pgloader_amundsen_2014 \
+    -S rad_summary.log \
+    -L /var/tmp/pgloader_amundsen_2014/rad_2014.log \
+    --log-min-messages debug --client-min-messages warning \
+    amundsen_RAD_2014.pgload
+pgloader -D /var/tmp/pgloader_amundsen_2014 \
+    -S UWpCO2_summary.log \
+    -L /var/tmp/pgloader_amundsen_2014/UWpCO2_2014.log \
+    --log-min-messages debug --client-min-messages warning \
+    amundsen_UWpCO2_2014.pgload
+
+
 
 
 #_* Emacs local variables
