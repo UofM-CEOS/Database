@@ -2,7 +2,7 @@
 # $Id$
 # Author: Sebastian Luque
 # Created: 2014-02-07T17:50:24+0000
-# Last-Updated: 2014-08-25T21:37:24+0000
+# Last-Updated: 2014-10-24T22:32:17+0000
 #           By: Sebastian Luque
 # -------------------------------------------------------------------------
 # Commentary: 
@@ -19,7 +19,7 @@
 
 BEGIN {
     FS=OFS=","
-    ncols=26			# number of columns
+    ncols=28			# number of columns
 }
 
 FNR > 1 {
