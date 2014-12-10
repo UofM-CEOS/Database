@@ -2,7 +2,7 @@
 # $Id$
 # Author: Sebastian Luque
 # Created: 2014-02-12T04:33:42+0000
-# Last-Updated: 2014-08-25T21:30:18+0000
+# Last-Updated: 2014-10-29T16:53:04+0000
 #           By: Sebastian Luque
 # -------------------------------------------------------------------------
 # Commentary: 
@@ -43,14 +43,16 @@ FNR > 4 {
     date_time=$1
     record_number=$2
     program_version=$3
-    print date_time, record_number, program_version, $5, $6, $7,
-	$8 >> sonic1_analog_ofile
-    print date_time, record_number, program_version, $9, $10, $11,
-    	$12 >> sonic2_sdm_ofile
-    print date_time, record_number, program_version, $22, $13, $14, $15,
-    	$16, $17, $18, $19, $20, $21 >> op1_ofile
-    print date_time, record_number, program_version, $32, $23, $24, $25,
-    	$26, $27, $28, $29, $30, $31 >> op2_ofile
+    if (! x[date_time]++) {	# skip duplicates
+	print date_time, record_number, program_version, $5, $6, $7,
+	    $8 >> sonic1_analog_ofile
+	print date_time, record_number, program_version, $9, $10, $11,
+	    $12 >> sonic2_sdm_ofile
+	print date_time, record_number, program_version, $22, $13, $14, $15,
+	    $16, $17, $18, $19, $20, $21 >> op1_ofile
+	print date_time, record_number, program_version, $32, $23, $24, $25,
+	    $26, $27, $28, $29, $30, $31 >> op2_ofile
+    }
 }
 
 
