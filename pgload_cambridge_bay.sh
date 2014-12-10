@@ -2,8 +2,8 @@
 # $Id$
 # Author: Sebastian Luque
 # Created: 2014-09-18T03:31:40+0000
-# Last-Updated: 2014-09-23T21:43:44+0000
-#           By: Sebastian P. Luque
+# Last-Updated: 2014-12-10T23:53:29+0000
+#           By: Sebastian Luque
 # -------------------------------------------------------------------------
 # Commentary: 
 #
@@ -12,10 +12,10 @@
 # -------------------------------------------------------------------------
 # Code:
 
-# # Prepare data
-# ./tables4db_cambridge_bay_2014.sh
+# Prepare data
+./tables4db_cambridge_bay_2014.sh
 
-# Load tables
+# # Load tables
 
 # With the new pgloader, we only have the options to do one loading
 # specified in a single file, or all of them.  We choose to have two
@@ -32,6 +32,17 @@ pgloader -v -D /var/tmp/pgloader_cambridge_bay_2014 \
     -L /var/tmp/pgloader_cambridge_bay_2014/EC_2014.log \
     --log-min-messages debug --client-min-messages warning \
     cambridge_bay_EC_2014.pgload
+# Now adding snow/ice tables
+pgloader -v -D /var/tmp/pgloader_cambridge_bay_2014 \
+    -S snow_ice_summary.log \
+    -L /var/tmp/pgloader_cambridge_bay_2014/snow_ice_2014.log \
+    --log-min-messages debug --client-min-messages warning \
+    cambridge_bay_Ice_2014.pgload
+pgloader -v -D /var/tmp/pgloader_cambridge_bay_2014 \
+    -S snow_summary.log \
+    -L /var/tmp/pgloader_cambridge_bay_2014/snow_2014.log \
+    --log-min-messages debug --client-min-messages warning \
+    cambridge_bay_Snow_2014.pgload
 
 
 #_* Emacs local variables
