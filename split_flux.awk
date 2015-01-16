@@ -2,12 +2,13 @@
 # $Id$
 # Author: Sebastian P. Luque
 # Created: 2014-05-02T03:01:07+0000
-# Last-Updated: 2014-12-10T23:56:19+0000
+# Last-Updated: 2015-01-16T16:25:46+0000
 #           By: Sebastian Luque
 # -------------------------------------------------------------------------
 # Commentary: 
 #
-# Split large flux table into each period.
+# Split large flux table into each period.  A file prefix string is
+# prepended to construct the output file name.  Default is "EC".
 #
 # Example call (writing file in current directory):
 #
@@ -15,13 +16,13 @@
 #
 # Or piping from psql:
 #
-# \copy (SELECT * FROM flux_10h_2011) TO PROGRAM 'awk -f split_flux.awk -' CSV
+# \copy (SELECT * FROM flux_10h_2011) TO PROGRAM 'split_flux.awk -v fprefix=EC -' CSV
 # -------------------------------------------------------------------------
 # Code:
 
 BEGIN {
     FS=OFS=","
-    fprefix="EC"
+    if (! fprefix) fprefix="EC"
 }
 
 # NR == 1 {
