@@ -2,8 +2,8 @@
 # $Id$
 # Author: Sebastian P. Luque
 # Created: 2014-05-02T03:01:07+0000
-# Last-Updated: 2015-01-16T16:25:46+0000
-#           By: Sebastian Luque
+# Last-Updated: 2015-05-08T19:32:20+0000
+#           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary: 
 #
@@ -16,7 +16,7 @@
 #
 # Or piping from psql:
 #
-# \copy (SELECT * FROM flux_10h_2011) TO PROGRAM 'split_flux.awk -v fprefix=EC -' CSV
+# \copy (SELECT * FROM flux_10hz_2011) TO PROGRAM 'split_flux.awk -v fprefix=EC -' CSV
 # -------------------------------------------------------------------------
 # Code:
 
