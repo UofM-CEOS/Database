@@ -1,8 +1,7 @@
 #! /usr/bin/gawk -f
-# $Id$
 # Author: Sebastian Luque
 # Created: 2014-09-16T21:23:03+0000
-# Last-Updated: 2014-09-17T22:10:40+0000
+# Last-Updated: 2015-06-30T18:46:08+0000
 #           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary:
@@ -60,5 +59,3 @@ FNR > 4 {
 # Local variables:
 # allout-layout: (-2 + : 0)
 # End:
-# 
-# met4db.awk ends here

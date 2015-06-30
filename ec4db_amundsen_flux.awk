@@ -1,9 +1,8 @@
 #! /usr/bin/igawk -f
-# $Id$
 # Author: Sebastian Luque
 # Created: 2014-02-12T04:33:42+0000
-# Last-Updated: 2015-06-02T04:29:17+0000
-#           By: Sebastian Luque
+# Last-Updated: 2015-06-30T18:45:32+0000
+#           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary: 
 #
@@ -108,5 +107,3 @@ BEGIN {
 # Local variables:
 # allout-layout: (-2 + : 0)
 # End:
-# 
-# ec4db.awk ends here

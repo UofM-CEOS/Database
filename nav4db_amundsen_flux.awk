@@ -1,8 +1,7 @@
 #! /usr/bin/gawk -f
-# $Id$
 # Author: Sebastian Luque
 # Created: 2014-02-10T23:24:53+0000
-# Last-Updated: 2015-05-21T22:31:57+0000
+# Last-Updated: 2015-06-30T18:46:23+0000
 #           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary: 
@@ -46,5 +45,3 @@ BEGIN {
 # Local variables:
 # allout-layout: (-2 + : 0)
 # End:
-# 
-# nav4db.awk ends here

@@ -1,8 +1,7 @@
 #! /bin/sh
-# $Id: $
 # Author: Sebastian Luque
 # Created: 2014-08-28T22:17:42+0000
-# Last-Updated: 2015-06-30T16:57:43+0000
+# Last-Updated: 2015-06-30T18:47:59+0000
 #           By: Sebastian P. Luque
 # 
 # Commentary: 
@@ -45,8 +44,8 @@ AWKPATH=${AWKPATH} ./ec4db_amundsen_flux.awk ${FLUX}/*.dat | \
 ./observer_log_4db.awk ${LOGFILE3} > $(dirname ${LOGFILE3})/towerlog_4db.csv
 
 # Split based on program version (only EC in this year)
-./split_on_progversion.awk -v PROGCOL=2 ${FLUX}/flux.csv
-./split_on_progversion.awk -v PROGCOL=2 ${FLUX_AVG}/flux_avg.csv
+./split_progversion.awk -v PROGCOL=2 ${FLUX}/flux.csv
+./split_progversion.awk -v PROGCOL=2 ${FLUX_AVG}/flux_avg.csv
 
 
 
@@ -54,5 +53,3 @@ AWKPATH=${AWKPATH} ./ec4db_amundsen_flux.awk ${FLUX}/*.dat | \
 # Local variables:
 # allout-layout: (1 + : 0)
 # End:
-# 
-# tables4db_amundsen_flux.sh ends here

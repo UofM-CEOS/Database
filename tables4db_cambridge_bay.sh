@@ -1,9 +1,8 @@
 #! /bin/sh
-# $Id$
 # Author: Sebastian Luque
 # Created: 2014-09-17T21:40:18+0000
-# Last-Updated: 2014-12-10T23:59:17+0000
-#           By: Sebastian Luque
+# Last-Updated: 2015-06-30T18:48:08+0000
+#           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary: 
 #
@@ -21,10 +20,10 @@ ICE=${ROOTDIR}/IceTemp
 ./snowice4db.awk ${ICE}/*.dat > ${ICE}/IceTemp_all.csv
 
 # Split based on program version
-./split_on_progversion.awk -v PROGCOL=3 ${MET}/MET_RAD_all.csv
-./split_on_progversion.awk -v PROGCOL=3 ${EC}/open_path.csv
-./split_on_progversion.awk -v PROGCOL=3 ${EC}/wind.csv
-./split_on_progversion.awk -v PROGCOL=3 ${ICE}/IceTemp_all.csv
+./split_progversion.awk -v PROGCOL=3 ${MET}/MET_RAD_all.csv
+./split_progversion.awk -v PROGCOL=3 ${EC}/open_path.csv
+./split_progversion.awk -v PROGCOL=3 ${EC}/wind.csv
+./split_progversion.awk -v PROGCOL=3 ${ICE}/IceTemp_all.csv
 
 
 
@@ -32,5 +31,3 @@ ICE=${ROOTDIR}/IceTemp
 # Local variables:
 # allout-layout: (1 + : 0)
 # End:
-# 
-# tables4db_cambridge_bay_2014.sh ends here
