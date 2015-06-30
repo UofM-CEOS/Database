@@ -2,8 +2,8 @@
 # $Id$
 # Author: Sebastian Luque
 # Created: 2014-02-10T23:24:53+0000
-# Last-Updated: 2014-08-25T21:32:52+0000
-#           By: Sebastian Luque
+# Last-Updated: 2015-05-21T22:31:57+0000
+#           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary: 
 # 
@@ -19,14 +19,14 @@
 
 BEGIN {
     FS=OFS=","
-    ncols=17
-    year=2014
+    ncols=20
+    year=2010
     print "time_logger,time_gps,record_no,program_version,latitude",
 	"longitude,speed_over_ground,course_over_ground,status_gps,gps_mode",
 	"heading,pitch,roll,acceleration_x,acceleration_y,acceleration_z"
 }
 
-FNR > 4 {
+{
     gsub(/"/, "")
     if (length($4) != 6) next
     yyyy=sprintf("20%s", substr($4, 5, 2))
