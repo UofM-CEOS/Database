@@ -1,8 +1,7 @@
 #! /usr/bin/gawk -f
-# $Id$
 # Author: Sebastian P. Luque
 # Created: 2014-05-02T03:01:07+0000
-# Last-Updated: 2015-05-08T19:32:20+0000
+# Last-Updated: 2015-06-30T18:37:50+0000
 #           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary: 
@@ -16,7 +15,7 @@
 #
 # Or piping from psql:
 #
-# \copy (SELECT * FROM flux_10hz_2011) TO PROGRAM 'split_flux.awk -v fprefix=EC -' CSV
+# \copy (SELECT * FROM flux_10hz_2011) TO PROGRAM 'split_YYYYMMDDHHMMSS.awk -v fprefix=EC -' CSV
 # -------------------------------------------------------------------------
 # Code:
 
@@ -43,4 +42,4 @@ FNR > 1 {
 # allout-layout: (-2 + : 0)
 # End:
 # 
-# split_flux.awk ends here
+# split_YYYYMMDDHHMMSS.awk ends here
