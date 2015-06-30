@@ -1,0 +1,75 @@
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2014/NAV/OMG/Renamed/POSMV_all.csv' 
+        (
+          "time",
+          longitude,
+          latitude,
+          altitude,
+	  heading,
+          roll,
+	  pitch,
+	  heave,
+	  course_over_ground,
+	  speed_over_ground,
+	  sog_km
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?navigation_series
+        (
+          logging_group_id integer using "37",
+          "time",
+          longitude,
+          latitude,
+          altitude,
+	  heading,
+          roll,
+	  pitch,
+	  heave,
+	  course_over_ground,
+	  speed_over_ground
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+-- LOAD CSV
+--      FROM '/home/sluque/Data/ArcticNet/2014/NAV/Tower/NAV_all.csv' 
+--         (
+--           "time",
+-- 	  time_gps,
+-- 	  record_no,
+-- 	  program_version,
+--           latitude,
+--           longitude,
+--           speed_over_ground,
+-- 	  course_over_ground,
+-- 	  status_gps,
+-- 	  gps_mode,
+-- 	  heading,
+-- 	  pitch,
+--           roll,
+-- 	  acceleration_x,
+-- 	  acceleration_y,
+-- 	  acceleration_z
+--         )
+--      INTO postgresql://sluque:Gases01@localhost:5433/gases?navigation_series
+--         (
+--           logging_group_id integer using "36",
+--           "time",
+--           longitude,
+--           latitude,
+-- 	  speed_over_ground,
+-- 	  course_over_ground,
+-- 	  heading,
+-- 	  pitch,
+--           roll
+--         )
+--      WITH skip header = 1,
+--           fields optionally enclosed by '"',
+--           fields escaped by double-quote,
+--           fields terminated by ','
+--      SET client_encoding to 'utf-8',
+--          standard_conforming_strings to 'on';
