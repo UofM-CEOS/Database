@@ -1,9 +1,8 @@
 #! /bin/sh
-# $Id$
 # Author: Sebastian Luque
 # Created: 2014-09-18T03:31:40+0000
-# Last-Updated: 2014-12-10T23:53:29+0000
-#           By: Sebastian Luque
+# Last-Updated: 2015-06-30T18:47:07+0000
+#           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary: 
 #
@@ -49,5 +48,3 @@ pgloader -v -D /var/tmp/pgloader_cambridge_bay_2014 \
 # Local variables:
 # allout-layout: (1 + : 0)
 # End:
-# 
-# pgload_cambridge_bay_2014.sh ends here

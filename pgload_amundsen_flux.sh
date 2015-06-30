@@ -1,7 +1,7 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2014-02-05T22:44:42+0000
-# Last-Updated: 2015-06-30T16:57:30+0000
+# Last-Updated: 2015-06-30T18:46:58+0000
 #           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary: 
@@ -58,5 +58,3 @@ pgloader -D /var/tmp/pgloader_amundsen_2010 \
 # Local variables:
 # allout-layout: (1 + : 0)
 # End:
-# 
-# pgload_2014.sh ends here
