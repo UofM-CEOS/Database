@@ -1,8 +1,8 @@
 #! /usr/bin/igawk -f
 # Author: Sebastian Luque
 # Created: 2014-02-12T04:33:42+0000
-# Last-Updated: 2015-06-01T18:46:21+0000
-#           By: Sebastian Luque
+# Last-Updated: 2015-06-30T18:45:45+0000
+#           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary: 
 #
@@ -78,5 +78,3 @@ BEGIN {
 # Local variables:
 # allout-layout: (-2 + : 0)
 # End:
-# 
-# ec_avg_4db.awk ends here
