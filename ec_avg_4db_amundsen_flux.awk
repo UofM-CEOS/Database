@@ -1,8 +1,7 @@
-#! /usr/bin/gawk -f
-# $Id$
+#! /usr/bin/igawk -f
 # Author: Sebastian Luque
 # Created: 2014-02-12T04:33:42+0000
-# Last-Updated: 2014-10-29T16:53:04+0000
+# Last-Updated: 2015-06-01T18:46:21+0000
 #           By: Sebastian Luque
 # -------------------------------------------------------------------------
 # Commentary: 
@@ -10,49 +9,67 @@
 # This is used to produce several files to be loaded onto database, which
 # combines the data from the project.
 #
+# We assume the following file structure (2010 and possibly other years):
+#
+# [1]  ArrayID [D+]
+# [2]  year [YYYY]
+# [3]  day-of-year [DDD]
+# [4]  hour-minute [H*HMM]
+# [5]  seconds [S*S]
+# [6]  program version [D+]
+# [7]  cp CO2 fraction [D+]
+# [8]  cp H2O fraction [D+]
+# [9]  cp pressure [D+]
+# [10] cp temperature [D+]
+# [11] air temperature sonic [D+]
+# [12] op CO2 density [D+]
+# [13] op H2O density [D+]
+# [14] op pressure [D+]
+# [15] op temperature [D+]
+# [16] op CO2 fraction [D+]
+# [17] op H2O fraction [D+]
+# [18] atmospheric pressure [D+]
+# [19] op temperature base [D+]
+# [20] op temperature spar [D+]
+# [21] op temperature bulb [D+]
+#
 # Example call (output written to current directory):
 #
 # ec_avg_4db.awk *.dat
 # -------------------------------------------------------------------------
 # Code:
 
+@include doy2isodate.awk
+
 BEGIN {
     FS=OFS=","
-    avg_dir="/home/sluque/Data/ArcticNet/2014/LI-7500A"
-    sonic1_analog_ofile=avg_dir "/sonic1_analog.csv"
-    sonic2_sdm_ofile=avg_dir "/sonic2_sdm.csv"
-    # Open path (LI-7500A)
-    op1_ofile=avg_dir "/open_path_LI7500A_1.csv"
-    op2_ofile=avg_dir "/open_path_LI7500A_2.csv"
-    print "time,record_number,program_version,wind_speed_u,wind_speed_v",
-	"wind_speed_w,air_temperature_sonic" > sonic1_analog_ofile
-    print "time,record_number,program_version,wind_speed_u,wind_speed_v",
-    	"wind_speed_w,air_temperature_sonic" > sonic2_sdm_ofile
-    print "time,record_number,program_version,op_analyzer_status",
-    	"op_CO2_fraction,op_H2O_fraction,op_CO2_density,op_H2O_density",
-	"op_CO2_absorptance,op_H2O_absorptance,op_pressure",
-    	"op_temperature,op_cooler_voltage" > op1_ofile
-    print "time,record_number,program_version,op_analyzer_status",
-    	"op_CO2_fraction,op_H2O_fraction,op_CO2_density,op_H2O_density",
-	"op_CO2_absorptance,op_H2O_absorptance,op_pressure",
-    	"op_temperature,op_cooler_voltage" > op2_ofile
+    ncols=21
+    print "time,program_version,cp_CO2_fraction,cp_H2O_fraction",
+	"cp_pressure,cp_temperature,air_temperature_sonic",
+	"op_CO2_density,op_H2O_density,op_pressure,op_temperature",
+	"op_CO2_fraction,op_H2O_fraction,atmospheric_pressure",
+	"op_temperature_base,op_temperature_spar,op_temperature_bulb"
 }
 
-FNR > 4 {
+{
+    # Skip messed up rows
     gsub(/"/, "")
-    date_time=$1
-    record_number=$2
-    program_version=$3
-    if (! x[date_time]++) {	# skip duplicates
-	print date_time, record_number, program_version, $5, $6, $7,
-	    $8 >> sonic1_analog_ofile
-	print date_time, record_number, program_version, $9, $10, $11,
-	    $12 >> sonic2_sdm_ofile
-	print date_time, record_number, program_version, $22, $13, $14, $15,
-	    $16, $17, $18, $19, $20, $21 >> op1_ofile
-	print date_time, record_number, program_version, $32, $23, $24, $25,
-	    $26, $27, $28, $29, $30, $31 >> op2_ofile
+    # These are bad logger time stamps
+    if ((length($4) < 3 || length($4) > 4) ||
+	(length($5) < 1 || length($5) > 2)) {
+	next
+    } else {			# fix the rest
+	$4=sprintf("%04i", $4)
+	$5=sprintf("%02i", $5)
     }
+    # These are bad year/DOY
+    if ((length($2) != 4) || ($3 < 0 || $3 > 366)) {next}
+    # Now retrieve what we need
+    time_logger=sprintf("%s %02i:%02i:%02i", doy2isodate($2, $3),
+			substr($4, 1, 2), substr($4, 3, 2), $5)
+    printf "%s,%s,", time_logger, $6
+    for (i=7; i <= (ncols - 1); i++) { printf "%s,", $i }
+    print $ncols
 }
 
 
