@@ -1,7 +1,7 @@
-#! /usr/bin/gawk -f
+#! /usr/bin/igawk -f
 # Author: Sebastian Luque
 # Created: 2014-02-09T03:05:41+0000
-# Last-Updated: 2015-06-30T18:46:02+0000
+# Last-Updated: 2015-06-30T22:03:55+0000
 #           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary:
@@ -23,13 +23,13 @@
 # W_s_WVc(2)    -> Unit vector mean wind direction
 # W_s_WVc(3)    -> Standard deviation of wind direction
 #
-# In 2010 (perhaps others too), it was:
+# In 2010 (perhaps others too), it was (no header):
 #
 # [1]  arrayID
 # [2]  year [YYYY]
 # [3]  day of year [DDD]
-# [4]  hour-minute [HHMM]
-# [5]  seconds [SS]
+# [4]  hour-minute [H*HMM]
+# [5]  seconds [S*S]
 # [6]  program version [D+]
 # [7]  battery voltage [D+]
 # [8]  panel temperature [D+]
@@ -57,19 +57,40 @@
 # -------------------------------------------------------------------------
 # Code:
 
+@include doy2isodate.awk
+
 BEGIN {
     FS=OFS=","
-    print "time,record_no,program_version,battery_voltage",
+    ncols=25
+    print "time,program_version,battery_voltage",
 	"logger_temperature,atmospheric_pressure,air_temperature",
-	"relative_humidity,surface_temperature,cp_CO2_fraction",
-	"cp_H2O_fraction,cp_pressure,cp_temperature,wind_speed,wind_direction",
-	"wind_direction_sd,battery_voltage_sd,logger_temperature_sd",
-	"atmospheric_pressure_sd,air_temperature_sd,relative_humidity_sd",
-	"surface_temperature_sd,cp_CO2_fraction_sd,cp_H2O_fraction_sd",
-	"cp_pressure_sd,cp_temperature_sd"
+	"relative_humidity,surface_temperature,wind_speed,wind_direction",
+	"wind_direction_sd,PAR,pitch,roll,battery_voltage_sd",
+	"logger_temperature_sd,atmospheric_pressure_sd,air_temperature_sd",
+	"relative_humidity_sd,surface_temperature_sd,PAR_sd"
 }
 
-FNR > 4
+{
+    # Skip messed up rows
+    gsub(/"/, "")
+    # These are bad logger time stamps
+    if ((length($4) < 3 || length($4) > 4) ||
+	(length($5) < 1 || length($5) > 2)) {
+	next
+    } else {			# fix the rest
+	$4=sprintf("%04i", $4)
+	$5=sprintf("%02i", $5)
+    }
+    # These are bad DOY/year
+    if ((length($2) != 4) || ($3 < 0 || $3 > 366)) {next}
+    # Now retrieve what we need
+    time_logger=sprintf("%s %02i:%02i:%02i", doy2isodate($2, $3),
+			substr($4, 1, 2), substr($4, 3, 2), $5)
+    printf "%s,%s,", time_logger, $6
+    for (i=7; i <= (ncols - 1); i++) { printf "%s,", $i }
+    print $ncols
+}
+
 
 
 ##_ + Emacs Local Variables

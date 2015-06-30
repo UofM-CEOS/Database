@@ -1,141 +1,302 @@
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/EC/open_path_LI7500A_1_1.0.csv' 
+     FROM '/home/sluque/Data/ArcticNet/2010/Flux/flux_3.0.csv' 
         (
           "time",
-	  record_no,
 	  program_version,
-	  op_analyzer_status,
-	  "op_CO2_density",
-	  "op_H2O_density",
-	  op_pressure,
-	  op_temperature
-        )
-     INTO postgresql://sluque:Gases01@localhost:5433/gases?open_path_series_noshroud
-        (
-          logging_group_id integer using "42",
-	  is_shroud boolean using "f",
-          "time",
-	  op_analyzer_status,
-	  "op_CO2_density",
-	  "op_H2O_density",
-	  op_pressure,
-	  op_temperature
-        )
-     WITH skip header = 1,
-          fields optionally enclosed by '"',
-          fields escaped by double-quote,
-          fields terminated by ','
-     SET client_encoding to 'utf-8',
-         standard_conforming_strings to 'on';
-
-
-LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/EC/open_path_LI7500A_1_2.1.csv' 
-        (
-          "time",
-	  record_no,
-	  program_version,
-	  op_analyzer_status,
-	  "op_CO2_density",
-	  "op_H2O_density",
-	  op_pressure,
-	  op_temperature
-        )
-     INTO postgresql://sluque:Gases01@localhost:5433/gases?open_path_series_noshroud
-        (
-          logging_group_id integer using "43",
-	  is_shroud boolean using "f",
-          "time",
-	  op_analyzer_status,
-	  "op_CO2_density",
-	  "op_H2O_density",
-	  op_pressure,
-	  op_temperature
-        )
-     WITH skip header = 1,
-          fields optionally enclosed by '"',
-          fields escaped by double-quote,
-          fields terminated by ','
-     SET client_encoding to 'utf-8',
-         standard_conforming_strings to 'on';
-
-
-LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/EC/open_path_LI7500A_2_1.0.csv' 
-        (
-          "time",
-	  record_no,
-	  program_version,
-	  op_analyzer_status,
-	  "op_CO2_density",
-	  "op_H2O_density",
-	  op_pressure,
-	  op_temperature
-        )
-     INTO postgresql://sluque:Gases01@localhost:5433/gases?open_path_series_noshroud
-        (
-          logging_group_id integer using "44",
-	  is_shroud boolean using "f",
-          "time",
-	  op_analyzer_status,
-	  "op_CO2_density",
-	  "op_H2O_density",
-	  op_pressure,
-	  op_temperature
-        )
-     WITH skip header = 1,
-          fields optionally enclosed by '"',
-          fields escaped by double-quote,
-          fields terminated by ','
-     SET client_encoding to 'utf-8',
-         standard_conforming_strings to 'on';
-
-
-LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/EC/open_path_LI7500A_2_2.1.csv' 
-        (
-          "time",
-	  record_no,
-	  program_version,
-	  op_analyzer_status,
-	  "op_CO2_density",
-	  "op_H2O_density",
-	  op_pressure,
-	  op_temperature
-        )
-     INTO postgresql://sluque:Gases01@localhost:5433/gases?open_path_series_noshroud
-        (
-          logging_group_id integer using "45",
-	  is_shroud boolean using "f",
-          "time",
-	  op_analyzer_status,
-	  "op_CO2_density",
-	  "op_H2O_density",
-	  op_pressure,
-	  op_temperature
-        )
-     WITH skip header = 1,
-          fields optionally enclosed by '"',
-          fields escaped by double-quote,
-          fields terminated by ','
-     SET client_encoding to 'utf-8',
-         standard_conforming_strings to 'on';
-
-
-LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/EC/wind1_analog_1.0.csv' 
-        (
-          "time",
-	  record_no,
-	  program_version,
+	  acceleration_x,
+	  acceleration_y,
+	  acceleration_z,
+	  rate_x,
+	  rate_y,
+	  rate_z,
 	  wind_speed_u,
 	  wind_speed_v,
 	  wind_speed_w,
-	  air_temperature_sonic
+	  air_temperature_sonic,
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  "op_CO2_absorptance",
+	  "op_H2O_absorptance",
+	  op_pressure,
+	  op_temperature,
+	  op_cooler_voltage,
+	  op_analyzer_status,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status,
+	  wind_speed_u_ser,
+	  wind_speed_v_ser,
+	  wind_speed_w_ser,
+	  air_temperature_sonic_ser,
+	  sound_speed_ser,
+	  anemometer_status_ser,
+	  atmospheric_pressure_fast,
+	  op_temperature_base,
+	  op_temperature_spar,
+	  op_temperature_bulb,
+	  cp_mode,
+	  "op_CO2_density_sh",
+	  "op_H2O_density_sh",
+	  op_pressure_sh,
+	  op_analyzer_status_sh
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?motion_series
+        (
+          logging_group_id integer using "73",
+          "time",
+	  acceleration_x,
+	  acceleration_y,
+	  acceleration_z,
+	  rate_x,
+	  rate_y,
+	  rate_z
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2010/Flux/flux_3.1.csv' 
+        (
+          "time",
+	  program_version,
+	  acceleration_x,
+	  acceleration_y,
+	  acceleration_z,
+	  rate_x,
+	  rate_y,
+	  rate_z,
+	  wind_speed_u,
+	  wind_speed_v,
+	  wind_speed_w,
+	  air_temperature_sonic,
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  "op_CO2_absorptance",
+	  "op_H2O_absorptance",
+	  op_pressure,
+	  op_temperature,
+	  op_cooler_voltage,
+	  op_analyzer_status,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status,
+	  wind_speed_u_ser,
+	  wind_speed_v_ser,
+	  wind_speed_w_ser,
+	  air_temperature_sonic_ser,
+	  sound_speed_ser,
+	  anemometer_status_ser,
+	  atmospheric_pressure_fast,
+	  op_temperature_base,
+	  op_temperature_spar,
+	  op_temperature_bulb,
+	  cp_mode,
+	  "op_CO2_density_sh",
+	  "op_H2O_density_sh",
+	  op_pressure_sh,
+	  op_analyzer_status_sh
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?motion_series
+        (
+          logging_group_id integer using "74",
+          "time",
+	  acceleration_x,
+	  acceleration_y,
+	  acceleration_z,
+	  rate_x,
+	  rate_y,
+	  rate_z
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2010/Flux/flux_3.2.csv' 
+        (
+          "time",
+	  program_version,
+	  acceleration_x,
+	  acceleration_y,
+	  acceleration_z,
+	  rate_x,
+	  rate_y,
+	  rate_z,
+	  wind_speed_u,
+	  wind_speed_v,
+	  wind_speed_w,
+	  air_temperature_sonic,
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  "op_CO2_absorptance",
+	  "op_H2O_absorptance",
+	  op_pressure,
+	  op_temperature,
+	  op_cooler_voltage,
+	  op_analyzer_status,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status,
+	  wind_speed_u_ser,
+	  wind_speed_v_ser,
+	  wind_speed_w_ser,
+	  air_temperature_sonic_ser,
+	  sound_speed_ser,
+	  anemometer_status_ser,
+	  atmospheric_pressure_fast,
+	  op_temperature_base,
+	  op_temperature_spar,
+	  op_temperature_bulb,
+	  cp_mode,
+	  "op_CO2_density_sh",
+	  "op_H2O_density_sh",
+	  op_pressure_sh,
+	  op_analyzer_status_sh
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?motion_series
+        (
+          logging_group_id integer using "75",
+          "time",
+	  acceleration_x,
+	  acceleration_y,
+	  acceleration_z,
+	  rate_x,
+	  rate_y,
+	  rate_z
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2010/Flux/flux_3.3.csv' 
+        (
+          "time",
+	  program_version,
+	  acceleration_x,
+	  acceleration_y,
+	  acceleration_z,
+	  rate_x,
+	  rate_y,
+	  rate_z,
+	  wind_speed_u,
+	  wind_speed_v,
+	  wind_speed_w,
+	  air_temperature_sonic,
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  "op_CO2_absorptance",
+	  "op_H2O_absorptance",
+	  op_pressure,
+	  op_temperature,
+	  op_cooler_voltage,
+	  op_analyzer_status,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status,
+	  wind_speed_u_ser,
+	  wind_speed_v_ser,
+	  wind_speed_w_ser,
+	  air_temperature_sonic_ser,
+	  sound_speed_ser,
+	  anemometer_status_ser,
+	  atmospheric_pressure_fast,
+	  op_temperature_base,
+	  op_temperature_spar,
+	  op_temperature_bulb,
+	  cp_mode,
+	  "op_CO2_density_sh",
+	  "op_H2O_density_sh",
+	  op_pressure_sh,
+	  op_analyzer_status_sh
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?motion_series
+        (
+          logging_group_id integer using "76",
+          "time",
+	  acceleration_x,
+	  acceleration_y,
+	  acceleration_z,
+	  rate_x,
+	  rate_y,
+	  rate_z
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2010/Flux/flux_3.0.csv' 
+        (
+          "time",
+	  program_version,
+	  acceleration_x,
+	  acceleration_y,
+	  acceleration_z,
+	  rate_x,
+	  rate_y,
+	  rate_z,
+	  wind_speed_u,
+	  wind_speed_v,
+	  wind_speed_w,
+	  air_temperature_sonic,
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  "op_CO2_absorptance",
+	  "op_H2O_absorptance",
+	  op_pressure,
+	  op_temperature,
+	  op_cooler_voltage,
+	  op_analyzer_status,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status,
+	  wind_speed_u_ser,
+	  wind_speed_v_ser,
+	  wind_speed_w_ser,
+	  air_temperature_sonic_ser,
+	  sound_speed_ser,
+	  anemometer_status_ser,
+	  atmospheric_pressure_fast,
+	  op_temperature_base,
+	  op_temperature_spar,
+	  op_temperature_bulb,
+	  cp_mode,
+	  "op_CO2_density_sh",
+	  "op_H2O_density_sh",
+	  op_pressure_sh,
+	  op_analyzer_status_sh
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_analog
         (
-          logging_group_id integer using "42",
+          logging_group_id integer using "73",
 	  stream_type text using "analog",
           "time",
 	  wind_speed_u,
@@ -152,19 +313,52 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/EC/wind1_analog_2.1.csv' 
+     FROM '/home/sluque/Data/ArcticNet/2010/Flux/flux_3.1.csv' 
         (
           "time",
-	  record_no,
 	  program_version,
+	  acceleration_x,
+	  acceleration_y,
+	  acceleration_z,
+	  rate_x,
+	  rate_y,
+	  rate_z,
 	  wind_speed_u,
 	  wind_speed_v,
 	  wind_speed_w,
-	  air_temperature_sonic
+	  air_temperature_sonic,
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  "op_CO2_absorptance",
+	  "op_H2O_absorptance",
+	  op_pressure,
+	  op_temperature,
+	  op_cooler_voltage,
+	  op_analyzer_status,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status,
+	  wind_speed_u_ser,
+	  wind_speed_v_ser,
+	  wind_speed_w_ser,
+	  air_temperature_sonic_ser,
+	  sound_speed_ser,
+	  anemometer_status_ser,
+	  atmospheric_pressure_fast,
+	  op_temperature_base,
+	  op_temperature_spar,
+	  op_temperature_bulb,
+	  cp_mode,
+	  "op_CO2_density_sh",
+	  "op_H2O_density_sh",
+	  op_pressure_sh,
+	  op_analyzer_status_sh
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_analog
         (
-          logging_group_id integer using "43",
+          logging_group_id integer using "74",
 	  stream_type text using "analog",
           "time",
 	  wind_speed_u,
@@ -181,11 +375,179 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/EC/wind1_serial_1.0.csv' 
+     FROM '/home/sluque/Data/ArcticNet/2010/Flux/flux_3.2.csv' 
         (
           "time",
-	  record_no,
 	  program_version,
+	  acceleration_x,
+	  acceleration_y,
+	  acceleration_z,
+	  rate_x,
+	  rate_y,
+	  rate_z,
+	  wind_speed_u,
+	  wind_speed_v,
+	  wind_speed_w,
+	  air_temperature_sonic,
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  "op_CO2_absorptance",
+	  "op_H2O_absorptance",
+	  op_pressure,
+	  op_temperature,
+	  op_cooler_voltage,
+	  op_analyzer_status,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status,
+	  wind_speed_u_ser,
+	  wind_speed_v_ser,
+	  wind_speed_w_ser,
+	  air_temperature_sonic_ser,
+	  sound_speed_ser,
+	  anemometer_status_ser,
+	  atmospheric_pressure_fast,
+	  op_temperature_base,
+	  op_temperature_spar,
+	  op_temperature_bulb,
+	  cp_mode,
+	  "op_CO2_density_sh",
+	  "op_H2O_density_sh",
+	  op_pressure_sh,
+	  op_analyzer_status_sh
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_analog
+        (
+          logging_group_id integer using "75",
+	  stream_type text using "analog",
+          "time",
+	  wind_speed_u,
+	  wind_speed_v,
+	  wind_speed_w,
+	  air_temperature_sonic
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2010/Flux/flux_3.3.csv' 
+        (
+          "time",
+	  program_version,
+	  acceleration_x,
+	  acceleration_y,
+	  acceleration_z,
+	  rate_x,
+	  rate_y,
+	  rate_z,
+	  wind_speed_u,
+	  wind_speed_v,
+	  wind_speed_w,
+	  air_temperature_sonic,
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  "op_CO2_absorptance",
+	  "op_H2O_absorptance",
+	  op_pressure,
+	  op_temperature,
+	  op_cooler_voltage,
+	  op_analyzer_status,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status,
+	  wind_speed_u_ser,
+	  wind_speed_v_ser,
+	  wind_speed_w_ser,
+	  air_temperature_sonic_ser,
+	  sound_speed_ser,
+	  anemometer_status_ser,
+	  atmospheric_pressure_fast,
+	  op_temperature_base,
+	  op_temperature_spar,
+	  op_temperature_bulb,
+	  cp_mode,
+	  "op_CO2_density_sh",
+	  "op_H2O_density_sh",
+	  op_pressure_sh,
+	  op_analyzer_status_sh
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_analog
+        (
+          logging_group_id integer using "76",
+	  stream_type text using "analog",
+          "time",
+	  wind_speed_u,
+	  wind_speed_v,
+	  wind_speed_w,
+	  air_temperature_sonic
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+-- Now we modify input headers to retrieve the serial variables
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2010/Flux/flux_3.0.csv' 
+        (
+          "time",
+	  program_version,
+	  acceleration_x,
+	  acceleration_y,
+	  acceleration_z,
+	  rate_x,
+	  rate_y,
+	  rate_z,
+	  wind_speed_u_an,
+	  wind_speed_v_an,
+	  wind_speed_w_an,
+	  air_temperature_sonic_an,
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  "op_CO2_absorptance",
+	  "op_H2O_absorptance",
+	  op_pressure,
+	  op_temperature,
+	  op_cooler_voltage,
+	  op_analyzer_status,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status,
+	  wind_speed_u,
+	  wind_speed_v,
+	  wind_speed_w,
+	  air_temperature_sonic,
+	  sound_speed,
+	  anemometer_status,
+	  atmospheric_pressure_fast,
+	  op_temperature_base,
+	  op_temperature_spar,
+	  op_temperature_bulb,
+	  cp_mode,
+	  "op_CO2_density_sh",
+	  "op_H2O_density_sh",
+	  op_pressure_sh,
+	  op_analyzer_status_sh
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_serial
+        (
+          logging_group_id integer using "73",
+	  stream_type text using "serial",
+          "time",
 	  wind_speed_u,
 	  wind_speed_v,
 	  wind_speed_w,
@@ -193,9 +555,192 @@ LOAD CSV
 	  sound_speed,
 	  anemometer_status
         )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+-- Now we modify input headers to retrieve the serial variables
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2010/Flux/flux_3.1.csv' 
+        (
+          "time",
+	  program_version,
+	  acceleration_x,
+	  acceleration_y,
+	  acceleration_z,
+	  rate_x,
+	  rate_y,
+	  rate_z,
+	  wind_speed_u_an,
+	  wind_speed_v_an,
+	  wind_speed_w_an,
+	  air_temperature_sonic_an,
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  "op_CO2_absorptance",
+	  "op_H2O_absorptance",
+	  op_pressure,
+	  op_temperature,
+	  op_cooler_voltage,
+	  op_analyzer_status,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status,
+	  wind_speed_u,
+	  wind_speed_v,
+	  wind_speed_w,
+	  air_temperature_sonic,
+	  sound_speed,
+	  anemometer_status,
+	  atmospheric_pressure_fast,
+	  op_temperature_base,
+	  op_temperature_spar,
+	  op_temperature_bulb,
+	  cp_mode,
+	  "op_CO2_density_sh",
+	  "op_H2O_density_sh",
+	  op_pressure_sh,
+	  op_analyzer_status_sh
+        )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_serial
         (
-          logging_group_id integer using "42",
+          logging_group_id integer using "74",
+	  stream_type text using "serial",
+          "time",
+	  wind_speed_u,
+	  wind_speed_v,
+	  wind_speed_w,
+	  air_temperature_sonic,
+	  sound_speed,
+	  anemometer_status
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+-- Now we modify input headers to retrieve the serial variables
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2010/Flux/flux_3.2.csv' 
+        (
+          "time",
+	  program_version,
+	  acceleration_x,
+	  acceleration_y,
+	  acceleration_z,
+	  rate_x,
+	  rate_y,
+	  rate_z,
+	  wind_speed_u_an,
+	  wind_speed_v_an,
+	  wind_speed_w_an,
+	  air_temperature_sonic_an,
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  "op_CO2_absorptance",
+	  "op_H2O_absorptance",
+	  op_pressure,
+	  op_temperature,
+	  op_cooler_voltage,
+	  op_analyzer_status,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status,
+	  wind_speed_u,
+	  wind_speed_v,
+	  wind_speed_w,
+	  air_temperature_sonic,
+	  sound_speed,
+	  anemometer_status,
+	  atmospheric_pressure_fast,
+	  op_temperature_base,
+	  op_temperature_spar,
+	  op_temperature_bulb,
+	  cp_mode,
+	  "op_CO2_density_sh",
+	  "op_H2O_density_sh",
+	  op_pressure_sh,
+	  op_analyzer_status_sh
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_serial
+        (
+          logging_group_id integer using "75",
+	  stream_type text using "serial",
+          "time",
+	  wind_speed_u,
+	  wind_speed_v,
+	  wind_speed_w,
+	  air_temperature_sonic,
+	  sound_speed,
+	  anemometer_status
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+-- Now we modify input headers to retrieve the serial variables
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2010/Flux/flux_3.3.csv' 
+        (
+          "time",
+	  program_version,
+	  acceleration_x,
+	  acceleration_y,
+	  acceleration_z,
+	  rate_x,
+	  rate_y,
+	  rate_z,
+	  wind_speed_u_an,
+	  wind_speed_v_an,
+	  wind_speed_w_an,
+	  air_temperature_sonic_an,
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  "op_CO2_absorptance",
+	  "op_H2O_absorptance",
+	  op_pressure,
+	  op_temperature,
+	  op_cooler_voltage,
+	  op_analyzer_status,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status,
+	  wind_speed_u,
+	  wind_speed_v,
+	  wind_speed_w,
+	  air_temperature_sonic,
+	  sound_speed,
+	  anemometer_status,
+	  atmospheric_pressure_fast,
+	  op_temperature_base,
+	  op_temperature_spar,
+	  op_temperature_bulb,
+	  cp_mode,
+	  "op_CO2_density_sh",
+	  "op_H2O_density_sh",
+	  op_pressure_sh,
+	  op_analyzer_status_sh
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_serial
+        (
+          logging_group_id integer using "76",
 	  stream_type text using "serial",
           "time",
 	  wind_speed_u,
@@ -214,29 +759,65 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/EC/wind1_serial_2.1.csv' 
+     FROM '/home/sluque/Data/ArcticNet/2010/Flux/flux_3.0.csv' 
         (
           "time",
-	  record_no,
 	  program_version,
+	  acceleration_x,
+	  acceleration_y,
+	  acceleration_z,
+	  rate_x,
+	  rate_y,
+	  rate_z,
 	  wind_speed_u,
 	  wind_speed_v,
 	  wind_speed_w,
 	  air_temperature_sonic,
-	  sound_speed,
-	  anemometer_status
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  "op_CO2_absorptance",
+	  "op_H2O_absorptance",
+	  op_pressure,
+	  op_temperature,
+	  op_cooler_voltage,
+	  op_analyzer_status,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status,
+	  wind_speed_u_ser,
+	  wind_speed_v_ser,
+	  wind_speed_w_ser,
+	  air_temperature_sonic_ser,
+	  sound_speed_ser,
+	  anemometer_status_ser,
+	  atmospheric_pressure_fast,
+	  op_temperature_base,
+	  op_temperature_spar,
+	  op_temperature_bulb,
+	  cp_mode,
+	  "op_CO2_density_sh",
+	  "op_H2O_density_sh",
+	  op_pressure_sh,
+	  op_analyzer_status_sh
         )
-     INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_serial
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?open_path_series_noshroud
         (
-          logging_group_id integer using "43",
-	  stream_type text using "serial",
+          logging_group_id integer using "73",
+	  is_shroud boolean using "f",
           "time",
-	  wind_speed_u,
-	  wind_speed_v,
-	  wind_speed_w,
-	  air_temperature_sonic,
-	  sound_speed,
-	  anemometer_status
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  "op_CO2_absorptance",
+	  "op_H2O_absorptance",
+	  op_pressure,
+	  op_temperature,
+	  op_temperature_base,
+	  op_temperature_spar,
+	  op_temperature_bulb,
+	  op_cooler_voltage,
+	  op_analyzer_status
         )
      WITH skip header = 1,
           fields optionally enclosed by '"',
@@ -247,27 +828,65 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/EC/wind2_sdm_1.0.csv' 
+     FROM '/home/sluque/Data/ArcticNet/2010/Flux/flux_3.1.csv' 
         (
           "time",
-	  record_no,
 	  program_version,
+	  acceleration_x,
+	  acceleration_y,
+	  acceleration_z,
+	  rate_x,
+	  rate_y,
+	  rate_z,
 	  wind_speed_u,
 	  wind_speed_v,
 	  wind_speed_w,
 	  air_temperature_sonic,
-	  anemometer_status
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  "op_CO2_absorptance",
+	  "op_H2O_absorptance",
+	  op_pressure,
+	  op_temperature,
+	  op_cooler_voltage,
+	  op_analyzer_status,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status,
+	  wind_speed_u_ser,
+	  wind_speed_v_ser,
+	  wind_speed_w_ser,
+	  air_temperature_sonic_ser,
+	  sound_speed_ser,
+	  anemometer_status_ser,
+	  atmospheric_pressure_fast,
+	  op_temperature_base,
+	  op_temperature_spar,
+	  op_temperature_bulb,
+	  cp_mode,
+	  "op_CO2_density_sh",
+	  "op_H2O_density_sh",
+	  op_pressure_sh,
+	  op_analyzer_status_sh
         )
-     INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_serial
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?open_path_series_noshroud
         (
-          logging_group_id integer using "44",
-	  stream_type text using "serial",
+          logging_group_id integer using "74",
+	  is_shroud boolean using "f",
           "time",
-	  wind_speed_u,
-	  wind_speed_v,
-	  wind_speed_w,
-	  air_temperature_sonic,
-	  anemometer_status
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  "op_CO2_absorptance",
+	  "op_H2O_absorptance",
+	  op_pressure,
+	  op_temperature,
+	  op_temperature_base,
+	  op_temperature_spar,
+	  op_temperature_bulb,
+	  op_cooler_voltage,
+	  op_analyzer_status
         )
      WITH skip header = 1,
           fields optionally enclosed by '"',
@@ -278,27 +897,65 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/EC/wind2_sdm_2.1.csv' 
+     FROM '/home/sluque/Data/ArcticNet/2010/Flux/flux_3.2.csv' 
         (
           "time",
-	  record_no,
 	  program_version,
+	  acceleration_x,
+	  acceleration_y,
+	  acceleration_z,
+	  rate_x,
+	  rate_y,
+	  rate_z,
 	  wind_speed_u,
 	  wind_speed_v,
 	  wind_speed_w,
 	  air_temperature_sonic,
-	  anemometer_status
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  "op_CO2_absorptance",
+	  "op_H2O_absorptance",
+	  op_pressure,
+	  op_temperature,
+	  op_cooler_voltage,
+	  op_analyzer_status,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status,
+	  wind_speed_u_ser,
+	  wind_speed_v_ser,
+	  wind_speed_w_ser,
+	  air_temperature_sonic_ser,
+	  sound_speed_ser,
+	  anemometer_status_ser,
+	  atmospheric_pressure_fast,
+	  op_temperature_base,
+	  op_temperature_spar,
+	  op_temperature_bulb,
+	  cp_mode,
+	  "op_CO2_density_sh",
+	  "op_H2O_density_sh",
+	  op_pressure_sh,
+	  op_analyzer_status_sh
         )
-     INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_serial
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?open_path_series_noshroud
         (
-          logging_group_id integer using "45",
-	  stream_type text using "serial",
+          logging_group_id integer using "75",
+	  is_shroud boolean using "f",
           "time",
-	  wind_speed_u,
-	  wind_speed_v,
-	  wind_speed_w,
-	  air_temperature_sonic,
-	  anemometer_status
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  "op_CO2_absorptance",
+	  "op_H2O_absorptance",
+	  op_pressure,
+	  op_temperature,
+	  op_temperature_base,
+	  op_temperature_spar,
+	  op_temperature_bulb,
+	  op_cooler_voltage,
+	  op_analyzer_status
         )
      WITH skip header = 1,
           fields optionally enclosed by '"',
@@ -309,28 +966,317 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/EC/motion_1.0.csv' 
+     FROM '/home/sluque/Data/ArcticNet/2010/Flux/flux_3.3.csv' 
         (
           "time",
-	  record_no,
 	  program_version,
 	  acceleration_x,
 	  acceleration_y,
 	  acceleration_z,
 	  rate_x,
 	  rate_y,
-	  rate_z
+	  rate_z,
+	  wind_speed_u,
+	  wind_speed_v,
+	  wind_speed_w,
+	  air_temperature_sonic,
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  "op_CO2_absorptance",
+	  "op_H2O_absorptance",
+	  op_pressure,
+	  op_temperature,
+	  op_cooler_voltage,
+	  op_analyzer_status,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status,
+	  wind_speed_u_ser,
+	  wind_speed_v_ser,
+	  wind_speed_w_ser,
+	  air_temperature_sonic_ser,
+	  sound_speed_ser,
+	  anemometer_status_ser,
+	  atmospheric_pressure_fast,
+	  op_temperature_base,
+	  op_temperature_spar,
+	  op_temperature_bulb,
+	  cp_mode,
+	  "op_CO2_density_sh",
+	  "op_H2O_density_sh",
+	  op_pressure_sh,
+	  op_analyzer_status_sh
         )
-     INTO postgresql://sluque:Gases01@localhost:5433/gases?motion_series
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?open_path_series_noshroud
         (
-          logging_group_id integer using "42",
+          logging_group_id integer using "76",
+	  is_shroud boolean using "f",
           "time",
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  "op_CO2_absorptance",
+	  "op_H2O_absorptance",
+	  op_pressure,
+	  op_temperature,
+	  op_temperature_base,
+	  op_temperature_spar,
+	  op_temperature_bulb,
+	  op_cooler_voltage,
+	  op_analyzer_status
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+-- Now we modify input headers to retrieve the shrouded open path
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2010/Flux/flux_3.0.csv' 
+        (
+          "time",
+	  program_version,
 	  acceleration_x,
 	  acceleration_y,
 	  acceleration_z,
 	  rate_x,
 	  rate_y,
-	  rate_z
+	  rate_z,
+	  wind_speed_u,
+	  wind_speed_v,
+	  wind_speed_w,
+	  air_temperature_sonic,
+	  "op_CO2_density_nsh",
+	  "op_H2O_density_nsh",
+	  "op_CO2_absorptance_nsh",
+	  "op_H2O_absorptance_nsh",
+	  op_pressure_nsh,
+	  op_temperature_nsh,
+	  op_cooler_voltage_nsh,
+	  op_analyzer_status_nsh,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status,
+	  wind_speed_u_ser,
+	  wind_speed_v_ser,
+	  wind_speed_w_ser,
+	  air_temperature_sonic_ser,
+	  sound_speed_ser,
+	  anemometer_status_ser,
+	  atmospheric_pressure_fast,
+	  op_temperature_base_nsh,
+	  op_temperature_spar_nsh,
+	  op_temperature_bulb_nsh,
+	  cp_mode,
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  op_pressure,
+	  op_analyzer_status
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?open_path_series_shroud
+        (
+          logging_group_id integer using "73",
+	  is_shroud boolean using "t",
+          "time",
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  op_pressure,
+	  op_analyzer_status
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+-- Now we modify input headers to retrieve the shrouded open path
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2010/Flux/flux_3.1.csv' 
+        (
+          "time",
+	  program_version,
+	  acceleration_x,
+	  acceleration_y,
+	  acceleration_z,
+	  rate_x,
+	  rate_y,
+	  rate_z,
+	  wind_speed_u,
+	  wind_speed_v,
+	  wind_speed_w,
+	  air_temperature_sonic,
+	  "op_CO2_density_nsh",
+	  "op_H2O_density_nsh",
+	  "op_CO2_absorptance_nsh",
+	  "op_H2O_absorptance_nsh",
+	  op_pressure_nsh,
+	  op_temperature_nsh,
+	  op_cooler_voltage_nsh,
+	  op_analyzer_status_nsh,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status,
+	  wind_speed_u_ser,
+	  wind_speed_v_ser,
+	  wind_speed_w_ser,
+	  air_temperature_sonic_ser,
+	  sound_speed_ser,
+	  anemometer_status_ser,
+	  atmospheric_pressure_fast,
+	  op_temperature_base_nsh,
+	  op_temperature_spar_nsh,
+	  op_temperature_bulb_nsh,
+	  cp_mode,
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  op_pressure,
+	  op_analyzer_status
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?open_path_series_shroud
+        (
+          logging_group_id integer using "74",
+	  is_shroud boolean using "t",
+          "time",
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  op_pressure,
+	  op_analyzer_status
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+-- Now we modify input headers to retrieve the shrouded open path
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2010/Flux/flux_3.2.csv' 
+        (
+          "time",
+	  program_version,
+	  acceleration_x,
+	  acceleration_y,
+	  acceleration_z,
+	  rate_x,
+	  rate_y,
+	  rate_z,
+	  wind_speed_u,
+	  wind_speed_v,
+	  wind_speed_w,
+	  air_temperature_sonic,
+	  "op_CO2_density_nsh",
+	  "op_H2O_density_nsh",
+	  "op_CO2_absorptance_nsh",
+	  "op_H2O_absorptance_nsh",
+	  op_pressure_nsh,
+	  op_temperature_nsh,
+	  op_cooler_voltage_nsh,
+	  op_analyzer_status_nsh,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status,
+	  wind_speed_u_ser,
+	  wind_speed_v_ser,
+	  wind_speed_w_ser,
+	  air_temperature_sonic_ser,
+	  sound_speed_ser,
+	  anemometer_status_ser,
+	  atmospheric_pressure_fast,
+	  op_temperature_base_nsh,
+	  op_temperature_spar_nsh,
+	  op_temperature_bulb_nsh,
+	  cp_mode,
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  op_pressure,
+	  op_analyzer_status
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?open_path_series_shroud
+        (
+          logging_group_id integer using "75",
+	  is_shroud boolean using "t",
+          "time",
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  op_pressure,
+	  op_analyzer_status
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+-- Now we modify input headers to retrieve the shrouded open path
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2010/Flux/flux_3.3.csv' 
+        (
+          "time",
+	  program_version,
+	  acceleration_x,
+	  acceleration_y,
+	  acceleration_z,
+	  rate_x,
+	  rate_y,
+	  rate_z,
+	  wind_speed_u,
+	  wind_speed_v,
+	  wind_speed_w,
+	  air_temperature_sonic,
+	  "op_CO2_density_nsh",
+	  "op_H2O_density_nsh",
+	  "op_CO2_absorptance_nsh",
+	  "op_H2O_absorptance_nsh",
+	  op_pressure_nsh,
+	  op_temperature_nsh,
+	  op_cooler_voltage_nsh,
+	  op_analyzer_status_nsh,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status,
+	  wind_speed_u_ser,
+	  wind_speed_v_ser,
+	  wind_speed_w_ser,
+	  air_temperature_sonic_ser,
+	  sound_speed_ser,
+	  anemometer_status_ser,
+	  atmospheric_pressure_fast,
+	  op_temperature_base_nsh,
+	  op_temperature_spar_nsh,
+	  op_temperature_bulb_nsh,
+	  cp_mode,
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  op_pressure,
+	  op_analyzer_status
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?open_path_series_shroud
+        (
+          logging_group_id integer using "76",
+	  is_shroud boolean using "t",
+          "time",
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  op_pressure,
+	  op_analyzer_status
         )
      WITH skip header = 1,
           fields optionally enclosed by '"',
@@ -341,28 +1287,481 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/EC/motion_2.1.csv' 
+     FROM '/home/sluque/Data/ArcticNet/2010/Flux/flux_3.0.csv' 
         (
           "time",
-	  record_no,
 	  program_version,
 	  acceleration_x,
 	  acceleration_y,
 	  acceleration_z,
 	  rate_x,
 	  rate_y,
-	  rate_z
+	  rate_z,
+	  wind_speed_u,
+	  wind_speed_v,
+	  wind_speed_w,
+	  air_temperature_sonic,
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  "op_CO2_absorptance",
+	  "op_H2O_absorptance",
+	  op_pressure,
+	  op_temperature,
+	  op_cooler_voltage,
+	  op_analyzer_status,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status,
+	  wind_speed_u_ser,
+	  wind_speed_v_ser,
+	  wind_speed_w_ser,
+	  air_temperature_sonic_ser,
+	  sound_speed_ser,
+	  anemometer_status_ser,
+	  atmospheric_pressure_fast,
+	  op_temperature_base,
+	  op_temperature_spar,
+	  op_temperature_bulb,
+	  cp_mode,
+	  "op_CO2_density_sh",
+	  "op_H2O_density_sh",
+	  op_pressure_sh,
+	  op_analyzer_status_sh
         )
-     INTO postgresql://sluque:Gases01@localhost:5433/gases?motion_series
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?closed_path_series_main
         (
-          logging_group_id integer using "43",
+          logging_group_id integer using "73",
+	  is_main boolean using "t",
           "time",
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2010/Flux/flux_3.1.csv' 
+        (
+          "time",
+	  program_version,
 	  acceleration_x,
 	  acceleration_y,
 	  acceleration_z,
 	  rate_x,
 	  rate_y,
-	  rate_z
+	  rate_z,
+	  wind_speed_u,
+	  wind_speed_v,
+	  wind_speed_w,
+	  air_temperature_sonic,
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  "op_CO2_absorptance",
+	  "op_H2O_absorptance",
+	  op_pressure,
+	  op_temperature,
+	  op_cooler_voltage,
+	  op_analyzer_status,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status,
+	  wind_speed_u_ser,
+	  wind_speed_v_ser,
+	  wind_speed_w_ser,
+	  air_temperature_sonic_ser,
+	  sound_speed_ser,
+	  anemometer_status_ser,
+	  atmospheric_pressure_fast,
+	  op_temperature_base,
+	  op_temperature_spar,
+	  op_temperature_bulb,
+	  cp_mode,
+	  "op_CO2_density_sh",
+	  "op_H2O_density_sh",
+	  op_pressure_sh,
+	  op_analyzer_status_sh
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?closed_path_series_main
+        (
+          logging_group_id integer using "74",
+	  is_main boolean using "t",
+          "time",
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2010/Flux/flux_3.2.csv' 
+        (
+          "time",
+	  program_version,
+	  acceleration_x,
+	  acceleration_y,
+	  acceleration_z,
+	  rate_x,
+	  rate_y,
+	  rate_z,
+	  wind_speed_u,
+	  wind_speed_v,
+	  wind_speed_w,
+	  air_temperature_sonic,
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  "op_CO2_absorptance",
+	  "op_H2O_absorptance",
+	  op_pressure,
+	  op_temperature,
+	  op_cooler_voltage,
+	  op_analyzer_status,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status,
+	  wind_speed_u_ser,
+	  wind_speed_v_ser,
+	  wind_speed_w_ser,
+	  air_temperature_sonic_ser,
+	  sound_speed_ser,
+	  anemometer_status_ser,
+	  atmospheric_pressure_fast,
+	  op_temperature_base,
+	  op_temperature_spar,
+	  op_temperature_bulb,
+	  cp_mode,
+	  "op_CO2_density_sh",
+	  "op_H2O_density_sh",
+	  op_pressure_sh,
+	  op_analyzer_status_sh
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?closed_path_series_main
+        (
+          logging_group_id integer using "75",
+	  is_main boolean using "t",
+          "time",
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2010/Flux/flux_3.3.csv' 
+        (
+          "time",
+	  program_version,
+	  acceleration_x,
+	  acceleration_y,
+	  acceleration_z,
+	  rate_x,
+	  rate_y,
+	  rate_z,
+	  wind_speed_u,
+	  wind_speed_v,
+	  wind_speed_w,
+	  air_temperature_sonic,
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  "op_CO2_absorptance",
+	  "op_H2O_absorptance",
+	  op_pressure,
+	  op_temperature,
+	  op_cooler_voltage,
+	  op_analyzer_status,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status,
+	  wind_speed_u_ser,
+	  wind_speed_v_ser,
+	  wind_speed_w_ser,
+	  air_temperature_sonic_ser,
+	  sound_speed_ser,
+	  anemometer_status_ser,
+	  atmospheric_pressure_fast,
+	  op_temperature_base,
+	  op_temperature_spar,
+	  op_temperature_bulb,
+	  cp_mode,
+	  "op_CO2_density_sh",
+	  "op_H2O_density_sh",
+	  op_pressure_sh,
+	  op_analyzer_status_sh
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?closed_path_series_main
+        (
+          logging_group_id integer using "76",
+	  is_main boolean using "t",
+          "time",
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+-- Renaming atmospheric pressure to match the database
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2010/Flux/flux_3.0.csv' 
+        (
+          "time",
+	  program_version,
+	  acceleration_x,
+	  acceleration_y,
+	  acceleration_z,
+	  rate_x,
+	  rate_y,
+	  rate_z,
+	  wind_speed_u,
+	  wind_speed_v,
+	  wind_speed_w,
+	  air_temperature_sonic,
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  "op_CO2_absorptance",
+	  "op_H2O_absorptance",
+	  op_pressure,
+	  op_temperature,
+	  op_cooler_voltage,
+	  op_analyzer_status,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status,
+	  wind_speed_u_ser,
+	  wind_speed_v_ser,
+	  wind_speed_w_ser,
+	  air_temperature_sonic_ser,
+	  sound_speed_ser,
+	  anemometer_status_ser,
+	  atmospheric_pressure,
+	  op_temperature_base,
+	  op_temperature_spar,
+	  op_temperature_bulb,
+	  cp_mode,
+	  "op_CO2_density_sh",
+	  "op_H2O_density_sh",
+	  op_pressure_sh,
+	  op_analyzer_status_sh
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?meteorology_series
+        (
+          logging_group_id integer using "73",
+          "time",
+	  atmospheric_pressure
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2010/Flux/flux_3.1.csv' 
+        (
+          "time",
+	  program_version,
+	  acceleration_x,
+	  acceleration_y,
+	  acceleration_z,
+	  rate_x,
+	  rate_y,
+	  rate_z,
+	  wind_speed_u,
+	  wind_speed_v,
+	  wind_speed_w,
+	  air_temperature_sonic,
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  "op_CO2_absorptance",
+	  "op_H2O_absorptance",
+	  op_pressure,
+	  op_temperature,
+	  op_cooler_voltage,
+	  op_analyzer_status,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status,
+	  wind_speed_u_ser,
+	  wind_speed_v_ser,
+	  wind_speed_w_ser,
+	  air_temperature_sonic_ser,
+	  sound_speed_ser,
+	  anemometer_status_ser,
+	  atmospheric_pressure,
+	  op_temperature_base,
+	  op_temperature_spar,
+	  op_temperature_bulb,
+	  cp_mode,
+	  "op_CO2_density_sh",
+	  "op_H2O_density_sh",
+	  op_pressure_sh,
+	  op_analyzer_status_sh
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?meteorology_series
+        (
+          logging_group_id integer using "74",
+          "time",
+	  atmospheric_pressure
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2010/Flux/flux_3.2.csv' 
+        (
+          "time",
+	  program_version,
+	  acceleration_x,
+	  acceleration_y,
+	  acceleration_z,
+	  rate_x,
+	  rate_y,
+	  rate_z,
+	  wind_speed_u,
+	  wind_speed_v,
+	  wind_speed_w,
+	  air_temperature_sonic,
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  "op_CO2_absorptance",
+	  "op_H2O_absorptance",
+	  op_pressure,
+	  op_temperature,
+	  op_cooler_voltage,
+	  op_analyzer_status,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status,
+	  wind_speed_u_ser,
+	  wind_speed_v_ser,
+	  wind_speed_w_ser,
+	  air_temperature_sonic_ser,
+	  sound_speed_ser,
+	  anemometer_status_ser,
+	  atmospheric_pressure,
+	  op_temperature_base,
+	  op_temperature_spar,
+	  op_temperature_bulb,
+	  cp_mode,
+	  "op_CO2_density_sh",
+	  "op_H2O_density_sh",
+	  op_pressure_sh,
+	  op_analyzer_status_sh
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?meteorology_series
+        (
+          logging_group_id integer using "75",
+          "time",
+	  atmospheric_pressure
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2010/Flux/flux_3.3.csv' 
+        (
+          "time",
+	  program_version,
+	  acceleration_x,
+	  acceleration_y,
+	  acceleration_z,
+	  rate_x,
+	  rate_y,
+	  rate_z,
+	  wind_speed_u,
+	  wind_speed_v,
+	  wind_speed_w,
+	  air_temperature_sonic,
+	  "op_CO2_density",
+	  "op_H2O_density",
+	  "op_CO2_absorptance",
+	  "op_H2O_absorptance",
+	  op_pressure,
+	  op_temperature,
+	  op_cooler_voltage,
+	  op_analyzer_status,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status,
+	  wind_speed_u_ser,
+	  wind_speed_v_ser,
+	  wind_speed_w_ser,
+	  air_temperature_sonic_ser,
+	  sound_speed_ser,
+	  anemometer_status_ser,
+	  atmospheric_pressure,
+	  op_temperature_base,
+	  op_temperature_spar,
+	  op_temperature_bulb,
+	  cp_mode,
+	  "op_CO2_density_sh",
+	  "op_H2O_density_sh",
+	  op_pressure_sh,
+	  op_analyzer_status_sh
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?meteorology_series
+        (
+          logging_group_id integer using "76",
+          "time",
+	  atmospheric_pressure
         )
      WITH skip header = 1,
           fields optionally enclosed by '"',
