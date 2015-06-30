@@ -1,7 +1,7 @@
 #! /usr/bin/gawk -f
 # Author: Sebastian Luque
 # Created: 2014-02-10T23:24:53+0000
-# Last-Updated: 2015-06-23T16:54:43+0000
+# Last-Updated: 2015-06-30T18:46:29+0000
 #           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary: 
@@ -65,5 +65,3 @@ FNR > 22 {
 # Local variables:
 # allout-layout: (-2 + : 0)
 # End:
-# 
-# nav4db.awk ends here

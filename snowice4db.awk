@@ -1,8 +1,7 @@
 #! /usr/bin/gawk -f
-# $Id: $
 # Author: Sebastian P. Luque
 # Created: 2014-09-25T22:01:24+0000
-# Last-Updated: 2014-09-26T17:13:13+0000
+# Last-Updated: 2015-06-30T18:47:35+0000
 #           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary: 
@@ -54,5 +53,3 @@ FNR > 4 {
 # Local variables:
 # allout-layout: (-2 + : 0)
 # End:
-# 
-# snowice4db.awk ends here

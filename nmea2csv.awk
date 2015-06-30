@@ -1,10 +1,9 @@
 #! /usr/bin/gawk -f
-# $Id$
 # Author: Sebastian Luque
 # Created: 2014-01-30T21:50:04+0000
-# Last-Updated: 2014-08-25T21:35:27+0000
-#           By: Sebastian Luque
-# copyright (c) 2014 Sebastian P. Luque
+# Last-Updated: 2015-06-30T18:46:39+0000
+#           By: Sebastian P. Luque
+# copyright (c) 2014, 2015 Sebastian P. Luque
 #
 # This program is Free Software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -98,5 +97,3 @@ $1 ~ /\$INVTG/ {
 # Local variables:
 # allout-layout: (1 + : 0)
 # End:
-# 
-# nmea2csv.awk ends here
