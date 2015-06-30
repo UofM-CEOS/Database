@@ -1,14 +1,13 @@
 #! /usr/bin/gawk -f
-# $Id$
 # Author: Sebastian P. Luque
 # Created: 2014-09-17T17:07:20+0000
-# Last-Updated: 2014-09-17T17:12:08+0000
+# Last-Updated: 2015-06-30T18:34:48+0000
 #           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary: 
 # 
 # Split large tables from the database into daily files, provided the first
-# column is ISO timestamp.
+# column is ISO date (YYYY-MM-DD and optional time stamp).
 #
 # Example call (writing file in current directory):
 #
@@ -22,7 +21,7 @@
 
 BEGIN {
     FS=OFS=","
-    fprefix="NAV"
+    if (! fprefix) fprefix="NAV"
 }
 
 FNR > 1 {
