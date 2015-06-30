@@ -1,7 +1,7 @@
 #! /usr/bin/gawk -f
 # Author: Sebastian P. Luque
 # Created: 2014-05-02T03:01:07+0000
-# Last-Updated: 2015-06-30T18:37:50+0000
+# Last-Updated: 2015-06-30T18:47:50+0000
 #           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary: 
@@ -41,5 +41,3 @@ FNR > 1 {
 # Local variables:
 # allout-layout: (-2 + : 0)
 # End:
-# 
-# split_YYYYMMDDHHMMSS.awk ends here
