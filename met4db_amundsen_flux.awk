@@ -2,8 +2,8 @@
 # $Id$
 # Author: Sebastian Luque
 # Created: 2014-02-09T03:05:41+0000
-# Last-Updated: 2014-08-25T21:31:56+0000
-#           By: Sebastian Luque
+# Last-Updated: 2015-05-29T15:17:14+0000
+#           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary:
 #
@@ -23,6 +23,34 @@
 # W_s_WVc(1)    -> Mean horizontal wind speed
 # W_s_WVc(2)    -> Unit vector mean wind direction
 # W_s_WVc(3)    -> Standard deviation of wind direction
+#
+# In 2010 (perhaps others too), it was:
+#
+# [1]  arrayID
+# [2]  year [YYYY]
+# [3]  day of year [DDD]
+# [4]  hour-minute [HHMM]
+# [5]  seconds [SS]
+# [6]  program version [D+]
+# [7]  battery voltage [D+]
+# [8]  panel temperature [D+]
+# [9]  atmospheric pressure [D+]
+# [10] air temperature [D+]
+# [11] relative humidity [D+]
+# [12] surface temperature [D+]
+# [13] W_s_WVc(1) [D+] -> mean horizontal wind speed
+# [14] W_s_WVc(2) [D+] -> unit vector mean wind direction
+# [15] W_s_WVc(3) [D+] -> standard deviation of wind direction
+# [16] PAR [D+]
+# [17] pitch [D+]
+# [18] roll [D+]
+# [19] standard deviation battery voltage [D+]
+# [20] standard deviation panel temperature [D+]
+# [21] standard deviation atmospheric pressure [D+]
+# [22] standard deviation air temperature [D+]
+# [23] standard deviation relative humidity [D+]
+# [24] standard deviation surface temperature [D+]
+# [25] standard deviation PAR [D+]
 #
 # Example call (file written to current directory):
 #
