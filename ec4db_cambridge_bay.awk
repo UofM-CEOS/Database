@@ -1,8 +1,7 @@
 #! /usr/bin/gawk -f
-# $Id$
 # Author: Sebastian Luque
 # Created: 2014-09-18T21:06:43+0000
-# Last-Updated: 2014-09-23T21:53:30+0000
+# Last-Updated: 2015-06-30T18:45:39+0000
 #           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary: 
@@ -51,5 +50,3 @@ FNR > 4 {
 # Local variables:
 # allout-layout: (-2 + : 0)
 # End:
-# 
-# ec4db_cambridge_bay_2014.awk ends here

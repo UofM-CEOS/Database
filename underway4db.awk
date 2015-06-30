@@ -1,7 +1,7 @@
 #! /usr/bin/gawk -f
 # Author: Sebastian Luque
 # Created: 2014-01-09T21:39:59+0000
-# Last-Updated: 2015-05-29T16:08:02+0000
+# Last-Updated: 2015-06-30T18:48:19+0000
 #           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary:
@@ -78,5 +78,3 @@ FNR > 1 {
 # Local variables:
 # allout-layout: (-2 + : 0)
 # End:
-# 
-# underway4db.awk ends here
