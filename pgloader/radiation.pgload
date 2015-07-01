@@ -1,0 +1,98 @@
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2014/RAD/STD/rad_all.csv' 
+        (
+          "time",
+          battery_voltage,
+	  logger_temperature,
+	  battery_voltage_sd,
+	  logger_temperature_sd,
+	  "K_down",
+	  temperature_thermopile,
+	  temperature_case,
+	  temperature_dome,
+	  "LW_down",
+	  "PAR",
+	  "UV_sensor_temperature",
+	  "UV_b",
+	  "UV_a",
+	  "K_down_sd",
+	  temperature_thermopile_sd,
+	  temperature_case_sd,
+	  temperature_dome_sd,
+	  "LW_down_sd",
+	  "PAR_sd",
+	  "UV_sensor_temperature_sd",
+	  "UV_b_sd",
+	  "UV_a_sd"
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?radiation_series
+        (
+          logging_group_id integer using "65",
+          "time",
+	  "K_down",
+	  temperature_thermopile,
+	  temperature_case,
+	  temperature_dome,
+	  "LW_down",
+	  "PAR",
+	  "UV_sensor_temperature",
+	  "UV_b",
+	  "UV_a",
+	  "K_down_sd",
+	  temperature_thermopile_sd,
+	  temperature_case_sd,
+	  temperature_dome_sd,
+	  "LW_down_sd",
+	  "PAR_sd",
+	  "UV_sensor_temperature_sd",
+	  "UV_b_sd",
+	  "UV_a_sd"
+        )
+     WITH fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2014/RAD/STD/rad_all.csv' 
+        (
+          "time",
+          battery_voltage,
+	  logger_temperature,
+	  battery_voltage_sd,
+	  logger_temperature_sd,
+	  "K_down",
+	  temperature_thermopile,
+	  temperature_case,
+	  temperature_dome,
+	  "LW_down",
+	  "PAR",
+	  "UV_sensor_temperature",
+	  "UV_b",
+	  "UV_a",
+	  "K_down_sd",
+	  temperature_thermopile_sd,
+	  temperature_case_sd,
+	  temperature_dome_sd,
+	  "LW_down_sd",
+	  "PAR_sd",
+	  "UV_sensor_temperature_sd",
+	  "UV_b_sd",
+	  "UV_a_sd"
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?logger_series
+        (
+          logging_group_id integer using "65",
+          "time",
+          battery_voltage,
+	  logger_temperature,
+	  battery_voltage_sd,
+	  logger_temperature_sd
+        )
+     WITH fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';

@@ -1,0 +1,167 @@
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2014/MET/MET_all.csv' 
+        (
+          "time",
+	  record_no,
+	  program_version,
+          battery_voltage,
+	  logger_temperature,
+	  atmospheric_pressure,
+	  air_temperature,
+	  relative_humidity,
+	  surface_temperature,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  wind_speed, 
+	  wind_direction,
+	  wind_direction_sd,
+	  battery_voltage_sd, 
+	  logger_temperature_sd,
+	  atmospheric_pressure_sd,
+	  air_temperature_sd,
+	  relative_humidity_sd,
+	  surface_temperature_sd,
+	  cp_CO2_fraction_sd,
+	  "cp_H2O_fraction_sd",
+	  cp_pressure_sd,
+	  cp_temperature_sd
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?meteorology_series
+        (
+          logging_group_id integer using "38",
+          "time",
+	  atmospheric_pressure,
+	  air_temperature,
+	  relative_humidity,
+	  surface_temperature,
+	  wind_speed,
+	  wind_direction,
+	  wind_direction_sd
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2014/MET/MET_all.csv' 
+        (
+          "time",
+	  record_no,
+	  program_version,
+          battery_voltage,
+	  logger_temperature,
+	  atmospheric_pressure,
+	  air_temperature,
+	  relative_humidity,
+	  surface_temperature,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  wind_speed, 
+	  wind_direction,
+	  wind_direction_sd,
+	  battery_voltage_sd, 
+	  logger_temperature_sd,
+	  atmospheric_pressure_sd,
+	  air_temperature_sd,
+	  relative_humidity_sd,
+	  surface_temperature_sd,
+	  cp_CO2_fraction_sd,
+	  "cp_H2O_fraction_sd",
+	  cp_pressure_sd,
+	  cp_temperature_sd
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?closed_path_series_main
+        (
+          logging_group_id integer using "38",
+	  is_main boolean using "t",
+          "time",
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2014/MET/MET_all.csv' 
+        (
+          "time",
+	  record_no,
+	  program_version,
+          battery_voltage,
+	  logger_temperature,
+	  atmospheric_pressure,
+	  air_temperature,
+	  relative_humidity,
+	  surface_temperature,
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  wind_speed, 
+	  wind_direction,
+	  wind_direction_sd,
+	  battery_voltage_sd, 
+	  logger_temperature_sd,
+	  atmospheric_pressure_sd,
+	  air_temperature_sd,
+	  relative_humidity_sd,
+	  surface_temperature_sd,
+	  cp_CO2_fraction_sd,
+	  "cp_H2O_fraction_sd",
+	  cp_pressure_sd,
+	  cp_temperature_sd
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?logger_series
+        (
+          logging_group_id integer using "38",
+          "time",
+	  battery_voltage,
+	  battery_voltage_sd,
+	  logger_temperature,
+	  logger_temperature_sd
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2014/cpath4db_log.csv' 
+        (
+          observation_time_beg,
+	  observation_time_end,
+	  observation_code,
+          observer_notes
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?observer_log
+        (
+          logging_group_id integer using "38",
+          observation_time_beg,
+	  observation_time_end,
+	  observation_code,
+          observer_notes
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
