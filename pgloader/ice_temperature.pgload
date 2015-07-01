@@ -1,0 +1,123 @@
+LOAD CSV
+     FROM '/home/sluque/Data/Cambridge_Bay/2014/IceTemp/IceTemp_all_1.4.csv' 
+        (
+          "time",
+          record_no,
+          program_version,
+          logger_temperature,
+	  stratum_height,
+          stratum_temperature
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?snow_ice_series
+        (
+          logging_group_id integer using "64",
+          "time",
+          stratum_height,
+	  stratum_temperature
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+LOAD CSV
+     FROM '/home/sluque/Data/Cambridge_Bay/2014/IceTemp/IceTemp_all_1.5.csv' 
+        (
+          "time",
+          record_no,
+          program_version,
+          logger_temperature,
+	  stratum_height,
+          stratum_temperature
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?snow_ice_series
+        (
+          logging_group_id integer using "60",
+          "time",
+          stratum_height,
+	  stratum_temperature
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+LOAD CSV
+     FROM '/home/sluque/Data/Cambridge_Bay/2014/IceTemp/IceTemp_all_1.6.csv' 
+        (
+          "time",
+          record_no,
+          program_version,
+          logger_temperature,
+	  stratum_height,
+          stratum_temperature
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?snow_ice_series
+        (
+          logging_group_id integer using "61",
+          "time",
+          stratum_height,
+	  stratum_temperature
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+LOAD CSV
+     FROM '/home/sluque/Data/Cambridge_Bay/2014/IceTemp/IceTemp_all_1.7.csv' 
+        (
+          "time",
+          record_no,
+          program_version,
+          logger_temperature,
+	  stratum_height,
+          stratum_temperature
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?snow_ice_series
+        (
+          logging_group_id integer using "62",
+          "time",
+          stratum_height,
+	  stratum_temperature
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+LOAD CSV
+     FROM '/home/sluque/Data/Cambridge_Bay/2014/IceTemp/IceTemp_all_1.8.csv' 
+        (
+          "time",
+          record_no,
+          program_version,
+          logger_temperature,
+	  stratum_height,
+          stratum_temperature
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?snow_ice_series
+        (
+          logging_group_id integer using "63",
+          "time",
+          stratum_height,
+	  stratum_temperature
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
