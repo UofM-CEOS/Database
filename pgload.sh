@@ -1,8 +1,8 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2014-02-05T22:44:42+0000
-# Last-Updated: 2015-06-30T18:46:58+0000
-#           By: Sebastian P. Luque
+# Last-Updated: 2015-07-02T18:50:43+0000
+#           By: Sebastian Luque
 # -------------------------------------------------------------------------
 # Commentary: 
 #
@@ -20,37 +20,37 @@ pgloader -D /var/tmp/pgloader_amundsen_2010 \
     -S navigation_summary.log \
     -L /var/tmp/pgloader_amundsen_2010/navigation_2010.log \
     --log-min-messages debug --client-min-messages warning \
-    amundsen_Navigation_2010.pgload
+    pgloader/navigation.pgload
 pgloader -D /var/tmp/pgloader_amundsen_2010 \
     -S meteorology_summary.log \
     -L /var/tmp/pgloader_amundsen_2010/meteorology_2010.log \
     --log-min-messages debug --client-min-messages warning \
-    amundsen_MET_2010.pgload
+    pgloader/meteorology.pgload
 pgloader -D /var/tmp/pgloader_amundsen_2010 \
     -S flux_avg_summary.log \
     -L /var/tmp/pgloader_amundsen_2010/flux_avg_2010.log \
     --log-min-messages debug --client-min-messages warning \
-    amundsen_FluxAvg_2010.pgload
+    pgloader/flux_avg.pgload
 pgloader -D /var/tmp/pgloader_amundsen_2010 \
     -S flux_summary.log \
     -L /var/tmp/pgloader_amundsen_2010/flux_2010.log \
     --log-min-messages debug --client-min-messages warning \
-    amundsen_Flux_2010.pgload
+    pgloader/flux.pgload
 pgloader -D /var/tmp/pgloader_amundsen_2010 \
     -S rad_summary.log \
     -L /var/tmp/pgloader_amundsen_2010/rad_2010.log \
     --log-min-messages debug --client-min-messages warning \
-    amundsen_RAD_2010.pgload
+    pgloader/radiation.pgload
 pgloader -D /var/tmp/pgloader_amundsen_2010 \
     -S UWpCO2_summary.log \
     -L /var/tmp/pgloader_amundsen_2010/UWpCO2_2010.log \
     --log-min-messages debug --client-min-messages warning \
-    amundsen_UWpCO2_2010.pgload
+    pgloader/uw_pCO2.pgload
 pgloader -D /var/tmp/pgloader_amundsen_2010 \
     -S Logs_summary.log \
     -L /var/tmp/pgloader_amundsen_2010/Logs_2010.log \
     --log-min-messages debug --client-min-messages warning \
-    amundsen_Logs_2010.pgload
+    pgloader/logs.pgload
 
 
 
