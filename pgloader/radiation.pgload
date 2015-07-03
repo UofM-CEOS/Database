@@ -1,5 +1,5 @@
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/RAD/STD/rad_all.csv' 
+     FROM '/home/sluque/Data/ArcticNet/2014/RAD/STD/rad_all.csv'
         (
           "time",
           battery_voltage,
@@ -56,7 +56,7 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/RAD/STD/rad_all.csv' 
+     FROM '/home/sluque/Data/ArcticNet/2014/RAD/STD/rad_all.csv'
         (
           "time",
           battery_voltage,

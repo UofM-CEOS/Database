@@ -1,5 +1,5 @@
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/MET/MET_all.csv' 
+     FROM '/home/sluque/Data/ArcticNet/2014/MET/MET_all.csv'
         (
           "time",
 	  record_no,
@@ -14,10 +14,10 @@ LOAD CSV
 	  "cp_H2O_fraction",
 	  cp_pressure,
 	  cp_temperature,
-	  wind_speed, 
+	  wind_speed,
 	  wind_direction,
 	  wind_direction_sd,
-	  battery_voltage_sd, 
+	  battery_voltage_sd,
 	  logger_temperature_sd,
 	  atmospheric_pressure_sd,
 	  air_temperature_sd,
@@ -49,7 +49,7 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/MET/MET_all.csv' 
+     FROM '/home/sluque/Data/ArcticNet/2014/MET/MET_all.csv'
         (
           "time",
 	  record_no,
@@ -64,10 +64,10 @@ LOAD CSV
 	  "cp_H2O_fraction",
 	  cp_pressure,
 	  cp_temperature,
-	  wind_speed, 
+	  wind_speed,
 	  wind_direction,
 	  wind_direction_sd,
-	  battery_voltage_sd, 
+	  battery_voltage_sd,
 	  logger_temperature_sd,
 	  atmospheric_pressure_sd,
 	  air_temperature_sd,
@@ -97,7 +97,7 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/MET/MET_all.csv' 
+     FROM '/home/sluque/Data/ArcticNet/2014/MET/MET_all.csv'
         (
           "time",
 	  record_no,
@@ -112,10 +112,10 @@ LOAD CSV
 	  "cp_H2O_fraction",
 	  cp_pressure,
 	  cp_temperature,
-	  wind_speed, 
+	  wind_speed,
 	  wind_direction,
 	  wind_direction_sd,
-	  battery_voltage_sd, 
+	  battery_voltage_sd,
 	  logger_temperature_sd,
 	  atmospheric_pressure_sd,
 	  air_temperature_sd,
@@ -144,7 +144,7 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/cpath4db_log.csv' 
+     FROM '/home/sluque/Data/ArcticNet/2014/cpath4db_log.csv'
         (
           observation_time_beg,
 	  observation_time_end,
