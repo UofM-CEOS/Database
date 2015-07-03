@@ -1,5 +1,5 @@
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/LI-7500A/open_path_LI7500A_1.csv' 
+     FROM '/home/sluque/Data/ArcticNet/2014/LI-7500A/open_path_LI7500A_1.csv'
         (
           "time",
 	  record_no,
@@ -40,7 +40,7 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/LI-7500A/open_path_LI7500A_2.csv' 
+     FROM '/home/sluque/Data/ArcticNet/2014/LI-7500A/open_path_LI7500A_2.csv'
         (
           "time",
 	  record_no,
@@ -81,7 +81,7 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/LI-7500A/sonic1_analog.csv' 
+     FROM '/home/sluque/Data/ArcticNet/2014/LI-7500A/sonic1_analog.csv'
         (
           "time",
 	  record_no,
@@ -110,7 +110,7 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/LI-7500A/sonic2_sdm.csv' 
+     FROM '/home/sluque/Data/ArcticNet/2014/LI-7500A/sonic2_sdm.csv'
         (
           "time",
 	  record_no,

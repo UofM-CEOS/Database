@@ -1,5 +1,5 @@
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2011/Logs/closed_path_log_4db.csv' 
+     FROM '/home/sluque/Data/ArcticNet/2011/Logs/closed_path_log_4db.csv'
         (
           observation_time_beg,
 	  observation_time_end,
@@ -23,7 +23,7 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2011/Logs/met_log_4db.csv' 
+     FROM '/home/sluque/Data/ArcticNet/2011/Logs/met_log_4db.csv'
         (
           observation_time_beg,
 	  observation_time_end,
