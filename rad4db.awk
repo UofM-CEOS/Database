@@ -1,7 +1,7 @@
 #! /usr/bin/igawk -f
 # Author: Sebastian Luque
 # Created: 2014-02-07T17:50:24+0000
-# Last-Updated: 2015-07-14T18:18:08+0000
+# Last-Updated: 2015-07-14T18:34:11+0000
 #           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary: 
@@ -38,6 +38,8 @@
 # [25] standard deviation UV_b [D+]
 # [26] standard deviation UV_a [D+]
 #
+# The file contains old 2014 data, which we skip.
+# 
 # Example call (file written in current directory):
 #
 # rad4db.awk *.dat > rad_all.csv
@@ -51,7 +53,7 @@ BEGIN {
     ncols=26			# number of columns
 }
 
-{
+$2 > 2014 {			# skip old data
     # Skip messed up rows
     gsub(/"/, "")
     # These are bad logger time stamps
