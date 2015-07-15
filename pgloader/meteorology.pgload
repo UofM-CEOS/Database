@@ -88,7 +88,6 @@ LOAD CSV
           wind_direction [null if "NaN"],
 	  wind_speed [null if "NaN"],
 	  air_temperature [null if "NaN"],
-	  relative_humidity [null if "NaN"],
 	  dew_point [null if "NaN"],
 	  atmospheric_pressure [null if "NaN"]
         )
@@ -96,11 +95,11 @@ LOAD CSV
         (
           logging_group_id integer using "85",
           "time",
-	  atmospheric_pressure,
-	  air_temperature,
-	  relative_humidity,
+	  wind_direction,
 	  wind_speed,
-	  wind_direction
+	  air_temperature,
+	  dew_point,
+	  atmospheric_pressure
         )
      WITH skip header = 1,
           fields optionally enclosed by '"',
