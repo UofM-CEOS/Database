@@ -1,7 +1,7 @@
 #! /usr/bin/gawk -f
 # Author: Sebastian P. Luque
 # Created: 2015-07-14T16:08:22+0000
-# Last-Updated: 2015-07-15T14:58:05+0000
+# Last-Updated: 2015-07-15T18:54:08+0000
 #           By: Sebastian P. Luque
 # copyright (c) 2015 Sebastian P. Luque
 # -------------------------------------------------------------------------
@@ -18,7 +18,7 @@
 # [2] Acquisition hour [HHMMSS]
 # [3] Latitude [degrees N]
 # [4] Longitude [degrees E]
-# [5] True wind direction [degre
+# [5] True wind direction [degrees]
 # [6] True wind speed [Knt]
 # [7] Air temperature [deg C]
 # [8] Dew point [deg C]
