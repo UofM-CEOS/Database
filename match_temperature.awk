@@ -1,9 +1,8 @@
 #! /usr/bin/gawk -f
 # Author: Sebastian Luque
 # Created: 2013-11-21T13:40:36+0000
-# Last-Updated: 2015-08-26T19:49:07+0000
+# Last-Updated: 2015-08-26T20:46:56+0000
 #           By: Sebastian P. Luque
-# Version:
 # copyright (c) 2013-2015 Sebastian P. Luque
 # -------------------------------------------------------------------------
 # This program is Free Software; you can redistribute it and/or modify
@@ -35,7 +34,7 @@
 #
 # We assume:
 #
-#     o pCO2 files do not have a header line.
+#     o pCO2 file does not have a header line.
 #     o Temperature files have a single header line.
 #     o Full ISO time stamp is available in both files as single field (1st).
 #
@@ -55,7 +54,7 @@
 
 BEGIN { FS=OFS="," }
 
-# Work on pCO2 data
+# Work on pCO2 file
 NR == FNR {
     split($1, a, /[ :-]/)
     tstr_pCO2=sprintf("%s %s %s %s %s %s",
