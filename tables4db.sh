@@ -1,7 +1,7 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2014-08-28T22:17:42+0000
-# Last-Updated: 2015-07-14T19:43:07+0000
+# Last-Updated: 2015-08-26T15:24:01+0000
 #           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary: 
@@ -10,11 +10,12 @@
 # -------------------------------------------------------------------------
 # Code:
 
-ROOTDIR=~/Data/Statoil/2015
+ROOTDIR=~/Data/ArcticNet/2015
 NAV=${ROOTDIR}/NAV/Ship
 MET=${ROOTDIR}/MET
 MET_AAVOS=${MET}/AAVOS
-# UNDERWAY=${ROOTDIR}/UW_pCO2
+UNDERWAY=${ROOTDIR}/UW_pCO2
+UWTEMPERATURE=${UNDERWAY}/Tsw
 RAD=${ROOTDIR}/RAD
 # FLUX=${ROOTDIR}/Flux
 # FLUX_AVG=${FLUX}/IRGA
@@ -23,18 +24,18 @@ LOGFILE2=${ROOTDIR}/Logs/met_log.csv
 LOGFILE3=${ROOTDIR}/Logs/complete_tower_log.csv
 AWKPATH=/usr/local/src/awk
 
-./nav_proc4db.awk ${NAV}/NAV_*.int | \
-    awk -F, '!x[$1]++' > ${NAV}/navproc_all.csv
-AWKPATH=${AWKPATH} ./met4db.awk ${MET}/*.dat | \
-    awk -F, '!x[$1]++' > ${MET}/MET_all.csv
-AWKPATH=${AWKPATH} ./AAVOS_proc4db.awk ${MET_AAVOS}/*.int | \
-    awk -F, '!x[$1]++' > ${MET_AAVOS}/AAVOS_all.csv
-# ./underway4db.awk ${UNDERWAY}/*.txt | \
-#     awk '!x[$0]++' > ${UNDERWAY}/AMD_2010.csv
-# ./underway4db_misc.awk ${UWTEMPERATURE}/* | \
-#     awk '!x[$0]++' > ${UNDERWAY}/AMD_water_temperature_2014.csv
-AWKPATH=${AWKPATH} ./rad4db.awk ${RAD}/*.dat | \
-    awk '!x[$0]++' > ${RAD}/rad_all.csv
+# ./nav_proc4db.awk ${NAV}/NAV_*.int | \
+#     awk -F, '!x[$1]++' > ${NAV}/navproc_all.csv
+# AWKPATH=${AWKPATH} ./met4db.awk ${MET}/*.dat | \
+#     awk -F, '!x[$1]++' > ${MET}/MET_all.csv
+# AWKPATH=${AWKPATH} ./AAVOS_proc4db.awk ${MET_AAVOS}/*.int | \
+#     awk -F, '!x[$1]++' > ${MET_AAVOS}/AAVOS_all.csv
+./underway4db.awk ${UNDERWAY}/*.txt | \
+    awk '!x[$0]++' > ${UNDERWAY}/UW_pCO2.csv
+./underway4db_misc.awk ${UWTEMPERATURE}/* | \
+    awk '!x[$0]++' > ${UNDERWAY}/UW_water_temperature.csv
+# AWKPATH=${AWKPATH} ./rad4db.awk ${RAD}/*.dat | \
+#     awk '!x[$0]++' > ${RAD}/rad_all.csv
 # AWKPATH=${AWKPATH} ./ec_avg_4db_amundsen_flux.awk ${FLUX_AVG}/*.dat | \
 #     awk -F, '!x[$1]++' > ${FLUX_AVG}/flux_avg.csv
 # AWKPATH=${AWKPATH} ./ec4db_amundsen_flux.awk ${FLUX}/*.dat | \
