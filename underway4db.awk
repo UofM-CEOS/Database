@@ -1,7 +1,7 @@
 #! /usr/bin/gawk -f
 # Author: Sebastian Luque
 # Created: 2014-01-09T21:39:59+0000
-# Last-Updated: 2015-08-26T15:48:34+0000
+# Last-Updated: 2015-08-26T20:54:02+0000
 #           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary:
@@ -43,7 +43,10 @@
 # [31] "uw pH" [D+]
 # [32] uw redox potential [D+]
 # [33] temperature external [D+]
-# 
+#
+# Example:
+#
+# ./underway4db.awk *.txt > output.csv
 # -------------------------------------------------------------------------
 # Code:
 

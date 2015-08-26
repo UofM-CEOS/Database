@@ -1,12 +1,16 @@
 #! /usr/bin/gawk -f
 # Author: Sebastian Luque
 # Created: 2014-11-04T21:35:25+0000
-# Last-Updated: 2015-06-30T18:48:26+0000
+# Last-Updated: 2015-08-26T20:55:13+0000
 #           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary:
 #
-# See the pgloader configuration file for details.
+# See the pgloader configuration file for details on loading output.
+#
+# Example:
+#
+# ./underway4db_misc.awk * > output.csv
 # -------------------------------------------------------------------------
 # Code:
 
