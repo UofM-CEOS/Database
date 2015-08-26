@@ -1,9 +1,8 @@
 #! /usr/bin/gawk -f
 # Author: Sebastian Luque
 # Created: 2013-11-21T13:40:36+0000
-# Last-Updated: 2015-08-26T20:46:56+0000
+# Last-Updated: 2015-08-26T20:57:06+0000
 #           By: Sebastian P. Luque
-# copyright (c) 2013-2015 Sebastian P. Luque
 # -------------------------------------------------------------------------
 # This program is Free Software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
