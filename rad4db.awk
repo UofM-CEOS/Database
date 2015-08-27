@@ -1,7 +1,7 @@
 #! /usr/bin/igawk -f
 # Author: Sebastian Luque
 # Created: 2014-02-07T17:50:24+0000
-# Last-Updated: 2015-07-14T18:34:11+0000
+# Last-Updated: 2015-08-27T03:00:09+0000
 #           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary: 
@@ -53,7 +53,7 @@ BEGIN {
     ncols=26			# number of columns
 }
 
-$2 > 2014 {			# skip old data
+{
     # Skip messed up rows
     gsub(/"/, "")
     # These are bad logger time stamps
