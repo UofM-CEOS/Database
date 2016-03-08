@@ -2,3 +2,5 @@ auto/
 *.csv
 /misc.sql
 /exploration.R
+/dbload_procedure.html
+/dbload_procedure.png

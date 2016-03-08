@@ -1,0 +1,25 @@
+#+STARTUP: content indent hideblocks
+#+TITLE: Database loading procedure
+#+OPTIONS: ^:{}
+
+#+BEGIN_SRC plantuml :file dbload_procedure.png
+  start
+  :Convert DOS to Unix EOL;
+  :Generate single CSV files per
+  measurement unit (MET, NAV, etc.);
+  if (Metadata properly entered in database,
+  so logging group IDs defined?) then (yes)
+  :Load CSV files into database
+  using pgloader;
+  else (no)
+  note right
+  No point loading data without
+  logging group IDs
+  end note
+  endif
+  end
+#+END_SRC
+
+#+RESULTS:
+[[file:dbload_procedure.png]]
+
