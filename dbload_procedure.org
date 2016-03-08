@@ -12,10 +12,7 @@
   :Load CSV files into database
   using pgloader;
   else (no)
-  note right
-  No point loading data without
-  logging group IDs
-  end note
+  -> Do not load any data;
   endif
   end
 #+END_SRC
