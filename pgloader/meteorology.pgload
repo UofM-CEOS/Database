@@ -1,5 +1,5 @@
 LOAD CSV
-     FROM '/home/sluque/Data/Statoil/2015/MET/MET_all.csv'
+     FROM '/home/sluque/Data/ArcticNet/2015/MET/LoggerNet/MET_all_1.0.csv'
         (
           "time",
 	  record_no,
@@ -22,7 +22,7 @@ LOAD CSV
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?meteorology_series
         (
-          logging_group_id integer using "83",
+          logging_group_id integer using "88",
           "time",
 	  atmospheric_pressure,
 	  air_temperature,
@@ -41,7 +41,7 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/Statoil/2015/MET/MET_all.csv'
+     FROM '/home/sluque/Data/ArcticNet/2015/MET/LoggerNet/MET_all_1.0.csv'
         (
           "time",
 	  record_no,
@@ -64,7 +64,7 @@ LOAD CSV
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?logger_series
         (
-          logging_group_id integer using "83",
+          logging_group_id integer using "88",
           "time",
 	  battery_voltage,
 	  battery_voltage_sd,
@@ -80,26 +80,108 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/Statoil/2015/MET/AAVOS/AAVOS_all.csv'
+     FROM '/home/sluque/Data/ArcticNet/2015/MET/LoggerNet/MET_all_1.2.csv'
         (
           "time",
-	  latitude [null if "NaN"],
-	  longitude [null if "NaN"],
-          wind_direction [null if "NaN"],
-	  wind_speed [null if "NaN"],
-	  air_temperature [null if "NaN"],
-	  dew_point [null if "NaN"],
-	  atmospheric_pressure [null if "NaN"]
+	  record_no,
+	  program_version,
+          battery_voltage,
+	  logger_temperature,
+	  atmospheric_pressure,
+	  air_temperature,
+	  relative_humidity,
+	  surface_temperature,
+	  wind_speed,
+	  wind_direction,
+	  wind_direction_sd,
+	  battery_voltage_sd,
+	  logger_temperature_sd,
+	  atmospheric_pressure_sd,
+	  air_temperature_sd,
+	  relative_humidity_sd,
+	  surface_temperature_sd
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?meteorology_series
         (
-          logging_group_id integer using "85",
+          logging_group_id integer using "93",
+          "time",
+	  atmospheric_pressure,
+	  air_temperature,
+	  relative_humidity,
+	  surface_temperature,
+	  wind_speed,
+	  wind_direction,
+	  wind_direction_sd
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2015/MET/LoggerNet/MET_all_1.2.csv'
+        (
+          "time",
+	  record_no,
+	  program_version,
+          battery_voltage,
+	  logger_temperature,
+	  atmospheric_pressure,
+	  air_temperature,
+	  relative_humidity,
+	  surface_temperature,
+	  wind_speed,
+	  wind_direction,
+	  wind_direction_sd,
+	  battery_voltage_sd,
+	  logger_temperature_sd,
+	  atmospheric_pressure_sd,
+	  air_temperature_sd,
+	  relative_humidity_sd,
+	  surface_temperature_sd
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?logger_series
+        (
+          logging_group_id integer using "93",
+          "time",
+	  battery_voltage,
+	  battery_voltage_sd,
+	  logger_temperature,
+	  logger_temperature_sd
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2015/MET/AAVOS/AAVOS_LEG02-04.csv'
+        (
+          "time",
+	  wind_speed [null if "NaN"],
+          true_wind_direction [null if "NaN"],
+          wind_direction [null if "NaN"],
+	  atmospheric_pressure [null if "NaN"],
+	  air_temperature [null if "NaN"],
+	  relative_humidity [null if "NaN"],
+	  surface_temperature [null if "NaN"]
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?meteorology_series
+        (
+          logging_group_id integer using "95",
           "time",
 	  wind_direction,
 	  wind_speed,
+	  atmospheric_pressure,
 	  air_temperature,
-	  dew_point,
-	  atmospheric_pressure
+	  relative_humidity,
+	  surface_temperature
         )
      WITH skip header = 1,
           fields optionally enclosed by '"',

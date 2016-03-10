@@ -1,5 +1,5 @@
 LOAD CSV
-     FROM '/home/sluque/Data/Statoil/2015/RAD/rad_all.csv'
+     FROM '/home/sluque/Data/ArcticNet/2015/RAD/RAD_all.csv'
         (
           "time",
           battery_voltage,
@@ -27,7 +27,7 @@ LOAD CSV
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?radiation_series
         (
-          logging_group_id integer using "84",
+          logging_group_id integer using "89",
           "time",
 	  "K_down",
 	  temperature_thermopile,
@@ -84,7 +84,7 @@ LOAD CSV
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?logger_series
         (
-          logging_group_id integer using "84",
+          logging_group_id integer using "89",
           "time",
           battery_voltage,
 	  logger_temperature,
