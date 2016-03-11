@@ -1,6 +1,6 @@
 auto/
 *.csv
+*.png
+*.html
 /misc.sql
 /exploration.R
-/dbload_procedure.html
-/dbload_procedure.png
