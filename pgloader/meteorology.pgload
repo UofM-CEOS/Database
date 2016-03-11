@@ -1,5 +1,5 @@
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2015/MET/LoggerNet/MET_all_1.0.csv'
+     FROM '/home/sluque/Data/ArcticNet/2015/MET/MET_CEOS_1.0.csv'
         (
           "time",
 	  record_no,
@@ -41,7 +41,7 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2015/MET/LoggerNet/MET_all_1.0.csv'
+     FROM '/home/sluque/Data/ArcticNet/2015/MET/MET_CEOS_1.0.csv'
         (
           "time",
 	  record_no,
@@ -80,7 +80,7 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2015/MET/LoggerNet/MET_all_1.2.csv'
+     FROM '/home/sluque/Data/ArcticNet/2015/MET/MET_CEOS_1.2.csv'
         (
           "time",
 	  record_no,
@@ -122,7 +122,7 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2015/MET/LoggerNet/MET_all_1.2.csv'
+     FROM '/home/sluque/Data/ArcticNet/2015/MET/MET_CEOS_1.2.csv'
         (
           "time",
 	  record_no,

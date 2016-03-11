@@ -29,10 +29,10 @@ pgloader -D /var/tmp/pgloader_AMD_2015 -S UWpCO2_summary.log \
     -L /var/tmp/pgloader_AMD_2015/uw_pCO2.log \
     --log-min-messages debug --client-min-messages warning \
     pgloader/uw_pCO2.pgload
-# pgloader -D /var/tmp/pgloader -S Logs_summary.log \
-#     -L /var/tmp/pgloader/logs.log \
-#     --log-min-messages debug --client-min-messages warning \
-#     pgloader/logs.pgload
+pgloader -D /var/tmp/pgloader_AMD_2015 -S Logs_summary.log \
+    -L /var/tmp/pgloader_AMD_2015/logs.log \
+    --log-min-messages debug --client-min-messages warning \
+    pgloader/logs.pgload
 
 
 
