@@ -4,3 +4,5 @@ auto/
 *.html
 /misc.sql
 /exploration.R
+/db_quicklook.*
+!/db_quicklook.org
