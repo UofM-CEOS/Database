@@ -14,13 +14,14 @@
   import psycopg2 as pg
   from mpl_toolkits.basemap import Basemap
   plt.style.use('ggplot')
+  # Set up connection for the session
+  conn=pg.connect("host=localhost port=5433 dbname=gases")
 #+END_SRC
 
 * Ship track
 
 #+NAME: ship_track
 #+BEGIN_SRC python :results file :exports results
-  conn=pg.connect("host=localhost port=5433 dbname=gases")
   qry="""
   SELECT DISTINCT ON ("time")
     date_trunc('minute', "time") AS "time",
