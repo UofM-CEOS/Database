@@ -4,11 +4,11 @@ LOAD CSV
           "time",
 	  record_no,
 	  program_version,
-	  op_analyzer_status,
-	  "op_CO2_density",
-	  "op_H2O_density",
-	  op_pressure,
-	  op_temperature
+	  op_analyzer_status [null if "NAN"],
+	  "op_CO2_density" [null if "NAN"],
+	  "op_H2O_density" [null if "NAN"],
+	  op_pressure [null if "NAN"],
+	  op_temperature [null if "NAN"]
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?open_path_series_noshroud
         (
@@ -35,11 +35,11 @@ LOAD CSV
           "time",
 	  record_no,
 	  program_version,
-	  op_analyzer_status,
-	  "op_CO2_density",
-	  "op_H2O_density",
-	  op_pressure,
-	  op_temperature
+	  op_analyzer_status [null if "NAN"],
+	  "op_CO2_density" [null if "NAN"],
+	  "op_H2O_density" [null if "NAN"],
+	  op_pressure [null if "NAN"],
+	  op_temperature [null if "NAN"]
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?open_path_series_noshroud
         (
@@ -66,11 +66,11 @@ LOAD CSV
           "time",
 	  record_no,
 	  program_version,
-	  op_analyzer_status,
-	  "op_CO2_density",
-	  "op_H2O_density",
-	  op_pressure,
-	  op_temperature
+	  op_analyzer_status [null if "NAN"],
+	  "op_CO2_density" [null if "NAN"],
+	  "op_H2O_density" [null if "NAN"],
+	  op_pressure [null if "NAN"],
+	  op_temperature [null if "NAN"]
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?open_path_series_noshroud
         (
@@ -97,11 +97,11 @@ LOAD CSV
           "time",
 	  record_no,
 	  program_version,
-	  op_analyzer_status,
-	  "op_CO2_density",
-	  "op_H2O_density",
-	  op_pressure,
-	  op_temperature
+	  op_analyzer_status [null if "NAN"],
+	  "op_CO2_density" [null if "NAN"],
+	  "op_H2O_density" [null if "NAN"],
+	  op_pressure [null if "NAN"],
+	  op_temperature [null if "NAN"]
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?open_path_series_noshroud
         (
@@ -128,10 +128,10 @@ LOAD CSV
           "time",
 	  record_no,
 	  program_version,
-	  wind_speed_u,
-	  wind_speed_v,
-	  wind_speed_w,
-	  air_temperature_sonic
+	  wind_speed_u [null if "NAN"],
+	  wind_speed_v [null if "NAN"],
+	  wind_speed_w [null if "NAN"],
+	  air_temperature_sonic [null if "NAN"]
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_analog
         (
@@ -157,10 +157,10 @@ LOAD CSV
           "time",
 	  record_no,
 	  program_version,
-	  wind_speed_u,
-	  wind_speed_v,
-	  wind_speed_w,
-	  air_temperature_sonic
+	  wind_speed_u [null if "NAN"],
+	  wind_speed_v [null if "NAN"],
+	  wind_speed_w [null if "NAN"],
+	  air_temperature_sonic [null if "NAN"]
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_analog
         (
@@ -186,12 +186,12 @@ LOAD CSV
           "time",
 	  record_no,
 	  program_version,
-	  wind_speed_u,
-	  wind_speed_v,
-	  wind_speed_w,
-	  air_temperature_sonic,
-	  sound_speed,
-	  anemometer_status
+	  wind_speed_u [null if "NAN"],
+	  wind_speed_v [null if "NAN"],
+	  wind_speed_w [null if "NAN"],
+	  air_temperature_sonic [null if "NAN"],
+	  sound_speed [null if "NAN"],
+	  anemometer_status [null if "NAN"]
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_serial
         (
@@ -219,12 +219,12 @@ LOAD CSV
           "time",
 	  record_no,
 	  program_version,
-	  wind_speed_u,
-	  wind_speed_v,
-	  wind_speed_w,
-	  air_temperature_sonic,
-	  sound_speed,
-	  anemometer_status
+	  wind_speed_u [null if "NAN"],
+	  wind_speed_v [null if "NAN"],
+	  wind_speed_w [null if "NAN"],
+	  air_temperature_sonic [null if "NAN"],
+	  sound_speed [null if "NAN"],
+	  anemometer_status [null if "NAN"]
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_serial
         (
@@ -252,11 +252,11 @@ LOAD CSV
           "time",
 	  record_no,
 	  program_version,
-	  wind_speed_u,
-	  wind_speed_v,
-	  wind_speed_w,
-	  air_temperature_sonic,
-	  anemometer_status
+	  wind_speed_u [null if "NAN"],
+	  wind_speed_v [null if "NAN"],
+	  wind_speed_w [null if "NAN"],
+	  air_temperature_sonic [null if "NAN"],
+	  anemometer_status [null if "NAN"]
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_serial
         (
@@ -283,11 +283,11 @@ LOAD CSV
           "time",
 	  record_no,
 	  program_version,
-	  wind_speed_u,
-	  wind_speed_v,
-	  wind_speed_w,
-	  air_temperature_sonic,
-	  anemometer_status
+	  wind_speed_u [null if "NAN"],
+	  wind_speed_v [null if "NAN"],
+	  wind_speed_w [null if "NAN"],
+	  air_temperature_sonic [null if "NAN"],
+	  anemometer_status [null if "NAN"]
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_serial
         (
@@ -314,12 +314,12 @@ LOAD CSV
           "time",
 	  record_no,
 	  program_version,
-	  acceleration_x,
-	  acceleration_y,
-	  acceleration_z,
-	  rate_x,
-	  rate_y,
-	  rate_z
+	  acceleration_x [null if "NAN"],
+	  acceleration_y [null if "NAN"],
+	  acceleration_z [null if "NAN"],
+	  rate_x [null if "NAN"],
+	  rate_y [null if "NAN"],
+	  rate_z [null if "NAN"]
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?motion_series
         (
@@ -346,12 +346,12 @@ LOAD CSV
           "time",
 	  record_no,
 	  program_version,
-	  acceleration_x,
-	  acceleration_y,
-	  acceleration_z,
-	  rate_x,
-	  rate_y,
-	  rate_z
+	  acceleration_x [null if "NAN"],
+	  acceleration_y [null if "NAN"],
+	  acceleration_z [null if "NAN"],
+	  rate_x [null if "NAN"],
+	  rate_y [null if "NAN"],
+	  rate_z [null if "NAN"]
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?motion_series
         (
