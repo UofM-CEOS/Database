@@ -1,16 +1,16 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2014-08-28T22:17:42+0000
-# Last-Updated: 2015-06-30T18:47:59+0000
+# Last-Updated: 2016-09-13T20:01:42+0000
 #           By: Sebastian P. Luque
-# 
-# Commentary: 
+#
+# Commentary:
 #
 # Prepare data for loading onto database.
 # -------------------------------------------------------------------------
 # Code:
 
-ROOTDIR=~/Data/ArcticNet/2010
+ROOTDIR=~/Data/ArcticNet/2016
 NAV=${ROOTDIR}/NAV
 NAV_SHIP=${NAV}/Ship/Processed
 MET=${ROOTDIR}/MET
