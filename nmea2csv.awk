@@ -1,9 +1,9 @@
 #! /usr/bin/gawk -f
 # Author: Sebastian Luque
 # Created: 2014-01-30T21:50:04+0000
-# Last-Updated: 2015-06-30T18:46:39+0000
+# Last-Updated: 2016-09-23T16:04:19+0000
 #           By: Sebastian P. Luque
-# copyright (c) 2014, 2015 Sebastian P. Luque
+# copyright (c) 2014-2016 Sebastian P. Luque
 #
 # This program is Free Software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,14 +17,14 @@
 # along with GNU Emacs; see the file COPYING. If not, write to the
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
-# ------------------------------------------------------------------------- 
-# Commentary: 
+# -------------------------------------------------------------------------
+# Commentary:
 #
-# Extracts NMEA(0183)-like data from the Applanix instrument ran by Ocean
-# Mapping Group to CSV form.  We obtain heading, position, speed and course
-# over ground.
+# Extracts NMEA(0183)-like data from GPS navigation systems such as the
+# POSMV and C-NAV instruments onboard the Amundsen, and converts them to
+# CSV form.  We obtain heading, position, speed and course over ground.
 #
-# The apparent order of the sentences in 2013 files is:
+# The apparent order of sentences in POSMV seems to be:
 #
 # $INZDA
 # $ECZDA
@@ -32,6 +32,13 @@
 # $INGGA
 # $INHDT
 # $INVTG
+#
+# While for C-NAV, this is:
+#
+# $GPGGA
+# $GPVTG
+# $GPZDA
+# $GPDTM
 #
 # See pgloader configuration on net82 computer to load the output flat file
 # onto the navigation_series table of our gases database.
@@ -45,29 +52,40 @@
 BEGIN {
     FS=OFS=","
     printf "date_time,longitude,latitude,altitude,heading,roll,pitch,"
-    printf "heave,cog,sog_knots,sog_km\n"
+    printf "heave,cog,sog_knots,sog_kmh\n"
 }
 
 {$1=toupper($1)}
 
-$1 ~ /\$INZDA/ {
+$1 ~ /\$INZDA/ || $1 ~ /\$GPZDA/ {
     yyyymmdd=sprintf("%s-%s-%s", $5, $4, $3)
+    # Make sure we print as in BEGIN.  This is the last sentence for C-NAV,
+    # so we have collected all the data from the rules below
+    if ($1 ~ /\$GPZDA/) {
+	printf "%s %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", yyyymmdd, hhmmss,
+	    lon, lat, altitude, heading, roll, pitch, heave, cog,
+	    sog_knots, sog_kmh
+    }
     next
 }
 
-$1 ~ /\$PASHR/ {
+$1 ~ /\$PASHR/ || $1 ~ /\$GPGGA/ {
     hh=substr($2, 1, 2)
     mm=substr($2, 3, 2)
     ss=substr($2, 5)
     hhmmss=sprintf("%s:%s:%s", hh, mm, ss)
-    heading=$3
-    roll=$5
-    pitch=$6
-    heave=$7
-    next
+    if ($1 ~ /\$PASHR/) {
+	heading=$3
+	roll=$5
+	pitch=$6
+	heave=$7
+	next
+    }
 }
 
-$1 ~ /\$INGGA/ {
+# Both sentences have the required data in the same positions.  Always
+# verify this is the case.
+$1 ~ /\$INGGA/ || $1 ~ /\$GPGGA/ {
     lat_deg=substr($3, 1, 2)
     lat_dec=substr($3, 3) / 60
     lat=lat_deg + lat_dec
@@ -80,14 +98,18 @@ $1 ~ /\$INGGA/ {
     next
 }
 
-$1 ~ /\$INVTG/ {
+# Both sentences have the required data in the same positions.  Always
+# verify this is the case.
+$1 ~ /\$INVTG/ || $1 ~ /\$GPVTG/ {
     cog=$2
     sog_knots=$6
-    sog_km=$8
-    # Make sure we print as in BEGIN
-    printf "%s %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", yyyymmdd, hhmmss,
-	lon, lat, altitude, heading, roll, pitch, heave, cog,
-	sog_knots, sog_km
+    sog_kmh=$8
+    # Make sure we print as in BEGIN.  This is the last sentence for POSMV
+    if ($1 ~ /\$INVTG/) {
+	printf "%s %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", yyyymmdd, hhmmss,
+	    lon, lat, altitude, heading, roll, pitch, heave, cog,
+	    sog_knots, sog_kmh
+    }
 }
 
 
