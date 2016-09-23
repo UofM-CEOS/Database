@@ -1,14 +1,14 @@
 #! /usr/bin/gawk -f
 # Author: Sebastian Luque
 # Created: 2014-01-09T21:39:59+0000
-# Last-Updated: 2015-08-26T15:48:34+0000
+# Last-Updated: 2016-09-23T18:47:50+0000
 #           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary:
 #
 # See the pgloader configuration file for details.
 #
-# We have the following file structure (2015):
+# We have the following file structure (2016):
 #
 # [1]  record_type [string]
 # [2]  uw_diag [integer]
@@ -35,23 +35,24 @@
 # [23] drip 2 [D+]
 # [24] condenser temperature [D+]
 # [25] temperature dry box [D+]
-# [26] ctd pressure [D+]
-# [27] ctd temperature [D+]
-# [28] ctd conductivity [D+]
-# [29] "ctd O2 saturation" [D+]
-# [30] "ctd O2 concentration" [D+]
-# [31] "uw pH" [D+]
-# [32] uw redox potential [D+]
-# [33] temperature external [D+]
-# 
+# [26] N/A -- garbage [0]
+# [27] ctd pressure [D+]
+# [28] ctd temperature [D+]
+# [29] ctd conductivity [D+]
+# [30] "ctd O2 saturation" [D+]
+# [31] "ctd O2 concentration" [D+]
+# [32] "uw pH" [D+]
+# [33] uw redox potential [D+]
+# [34] temperature external [D+]
+#
 # -------------------------------------------------------------------------
 # Code:
 
 BEGIN {
     FS="\t"
     OFS=","
-    ncols=33			# number of columns
-    year=2015
+    ncols=34			# number of columns
+    year=2016
 }
 
 NF > ncols || $1 !~ /[[:alpha:]]/ { next } # obviously garbage
