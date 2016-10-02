@@ -25,14 +25,18 @@ import csv
 
 __version__ = "0.1.0"
 
-def main(data_file, start, delta, time_field, nskip):
-    """Read data file and perform timestamp regeneration.
+def main(data_file, start, **kwargs):
+    """Read comma-separated data file and perform timestamp regeneration
 
     See parser help for description of arguments.  All arguments are
     coerced to string during execution.
     """
-    beg = datetime(start[0], start[1], start[2], start[3], start[4],
-                   start[5], start[6])
+    delta = kwargs.get("delta")
+    time_field = kwargs.get("time_field")
+    time_format = kwargs.get("time_format")
+    nskip = kwargs.get("nskip")
+    beg = datetime(start[0], start[1], start[2], start[3],
+                   start[4], start[5], start[6])
     tdelta = timedelta(microseconds=delta)
     with data_file as f:
         freader = csv.reader(f)
@@ -48,7 +52,10 @@ def main(data_file, start, delta, time_field, nskip):
                 continue
             else:
                 tstamp = tstamp + tdelta
-            tstampstr = tstamp.strftime("%Y-%m-%d %H:%M:%S.%f")[:-5]
+            if "%f" in time_format: # truncate to deciseconds
+                tstampstr = tstamp.strftime(time_format)[:-5]
+            else:
+                tstampstr = tstamp.strftime(time_format)
             line[time_field] = "\"{0}\"".format(tstampstr)
             print(",".join(line))
 
@@ -73,13 +80,16 @@ if __name__ == "__main__":
                         help=("Field number (origin 0) where erroneous "
                               "timestamp is found."))
     parser.add_argument("-f", "--time-format",
-                        default="\"%Y-%m-%d %H:%M:%S.%f\"",
-                        help=("Format string for input and output of time "
-                              "field, as expected by strptime/strftime."))
+                        default="%Y-%m-%d %H:%M:%S.%f",
+                        help=("Format string for output of time field, "
+                              "as expected by strptime/strftime. "
+                              "Fractional seconds are truncated to "
+                              "deciseconds."))
     parser.add_argument("-n", "--nskip", type=int, default=0,
                         help=("Number of rows to skip from beginning."))
     parser.add_argument("--version", action="version",
                         version="%(prog)s {}".format(__version__))
     args = parser.parse_args()
     main(args.data_file, start=args.start, delta=args.delta,
-         time_field=args.time_field, nskip=args.nskip)
+         time_field=args.time_field, time_format=args.time_format,
+         nskip=args.nskip)
