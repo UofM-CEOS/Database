@@ -1,7 +1,7 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2014-08-28T22:17:42+0000
-# Last-Updated: 2016-10-02T03:24:57+0000
+# Last-Updated: 2016-10-03T20:09:03+0000
 #           By: Sebastian Luque
 #
 # Commentary:
@@ -16,6 +16,7 @@ NAV_POSMV=${NAV}/POSMV
 NAV_CNAV=${NAV}/CNAV
 NAV_BEST=${NAV}/Ship/Best
 METCO2=${ROOTDIR}/MET
+MET_AAVOS=${ROOTDIR}/MET/AAVOS
 UNDERWAY=${ROOTDIR}/UW_pCO2
 TSG=${UNDERWAY}/TSG
 RAD=${ROOTDIR}/RAD
@@ -28,8 +29,8 @@ TEMPDIR=$(mktemp -d -p /var/tmp)
 
 # Convert from DOS EOL
 fromdos ${NAV_POSMV}/*/* ${NAV_CNAV}/*/* ${METCO2}/Converted/*.dat \
-	${METCO2}/*.dat ${RAD}/*.dat ${UNDERWAY}/*.txt \
-	${FLUX}/Converted/*.dat ${FLUX}/*.dat
+	${METCO2}/*.dat ${MET_AAVOS}/*.log ${RAD}/*.dat \
+	${UNDERWAY}/*.txt ${FLUX}/Converted/*.dat ${FLUX}/*.dat
 
 # NAV
 # POSMV data
@@ -41,9 +42,12 @@ AWKPATH=${AWKPATH} ./nmea2csv.awk ${NAV_CNAV}/LEG*/*.log | \
 # ./navproc4db_amundsen_flux.awk ${NAV_SHIP}/LEG_*/*.int | \
 #     awk -F, '!x[$1]++' > ${NAV_SHIP}/navproc_all.csv
 
-# METCO2
+# MET
 AWKPATH=${AWKPATH} ./met4db.awk ${METCO2}/*.dat | \
     awk -F, '!x[$1]++' > ${METCO2}/MET_all.csv
+# # AAVOS
+# AWKPATH=${AWKPATH} ./AAVOS_proc4db.awk ${MET_AAVOS}/LEG_0[234]/*.csv | \
+#     awk -F, '!x[$1]++' > ${MET_AAVOS}/AAVOS_LEG01-02.csv
 
 # Underway
 ./underway4db.awk ${UNDERWAY}/*.txt | \
