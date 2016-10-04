@@ -1,5 +1,5 @@
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/MET/MET_all.csv'
+     FROM '/home/sluque/Data/ArcticNet/2016/MET/MET_all.csv'
         (
           "time",
 	  record_no,
@@ -22,15 +22,11 @@ LOAD CSV
 	  atmospheric_pressure_sd [null if "NAN"],
 	  air_temperature_sd [null if "NAN"],
 	  relative_humidity_sd [null if "NAN"],
-	  surface_temperature_sd [null if "NAN"],
-	  cp_CO2_fraction_sd [null if "NAN"],
-	  "cp_H2O_fraction_sd" [null if "NAN"],
-	  cp_pressure_sd [null if "NAN"],
-	  cp_temperature_sd [null if "NAN"]
+	  surface_temperature_sd [null if "NAN"]
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?meteorology_series
         (
-          logging_group_id integer using "38",
+          logging_group_id integer using "98",
           "time",
 	  atmospheric_pressure,
 	  air_temperature,
@@ -49,7 +45,7 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/MET/MET_all.csv'
+     FROM '/home/sluque/Data/ArcticNet/2016/MET/MET_all.csv'
         (
           "time",
 	  record_no,
@@ -72,63 +68,11 @@ LOAD CSV
 	  atmospheric_pressure_sd [null if "NAN"],
 	  air_temperature_sd [null if "NAN"],
 	  relative_humidity_sd [null if "NAN"],
-	  surface_temperature_sd [null if "NAN"],
-	  cp_CO2_fraction_sd [null if "NAN"],
-	  "cp_H2O_fraction_sd" [null if "NAN"],
-	  cp_pressure_sd [null if "NAN"],
-	  cp_temperature_sd [null if "NAN"]
-        )
-     INTO postgresql://sluque:Gases01@localhost:5433/gases?closed_path_series_main
-        (
-          logging_group_id integer using "38",
-	  is_main boolean using "t",
-          "time",
-	  "cp_CO2_fraction",
-	  "cp_H2O_fraction",
-	  cp_pressure,
-	  cp_temperature
-        )
-     WITH skip header = 1,
-          fields optionally enclosed by '"',
-          fields escaped by double-quote,
-          fields terminated by ','
-     SET client_encoding to 'utf-8',
-         standard_conforming_strings to 'on';
-
-
-LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/MET/MET_all.csv'
-        (
-          "time",
-	  record_no,
-	  program_version,
-          battery_voltage [null if "NAN"],
-	  logger_temperature [null if "NAN"],
-	  atmospheric_pressure [null if "NAN"],
-	  air_temperature [null if "NAN"],
-	  relative_humidity [null if "NAN"],
-	  surface_temperature [null if "NAN"],
-	  "cp_CO2_fraction" [null if "NAN"],
-	  "cp_H2O_fraction" [null if "NAN"],
-	  cp_pressure [null if "NAN"],
-	  cp_temperature [null if "NAN"],
-	  wind_speed [null if "NAN"],
-	  wind_direction [null if "NAN"],
-	  wind_direction_sd [null if "NAN"],
-	  battery_voltage_sd [null if "NAN"],
-	  logger_temperature_sd [null if "NAN"],
-	  atmospheric_pressure_sd [null if "NAN"],
-	  air_temperature_sd [null if "NAN"],
-	  relative_humidity_sd [null if "NAN"],
-	  surface_temperature_sd [null if "NAN"],
-	  cp_CO2_fraction_sd [null if "NAN"],
-	  "cp_H2O_fraction_sd" [null if "NAN"],
-	  cp_pressure_sd [null if "NAN"],
-	  cp_temperature_sd [null if "NAN"]
+	  surface_temperature_sd [null if "NAN"]
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?logger_series
         (
-          logging_group_id integer using "38",
+          logging_group_id integer using "98",
           "time",
 	  battery_voltage,
 	  battery_voltage_sd,

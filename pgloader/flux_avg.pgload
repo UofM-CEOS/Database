@@ -1,134 +1,38 @@
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/LI-7500A/open_path_LI7500A_1.csv'
+     FROM '/home/sluque/Data/ArcticNet/2016/MET/MET_all.csv'
         (
           "time",
 	  record_no,
 	  program_version,
-	  op_analyzer_status [null if "NAN"],
-	  "op_CO2_fraction" [null if "NAN"],
-	  "op_H2O_fraction" [null if "NAN"],
-	  "op_CO2_density" [null if "NAN"],
-	  "op_H2O_density" [null if "NAN"],
-	  "op_CO2_absorptance" [null if "NAN"],
-	  "op_H2O_absorptance" [null if "NAN"],
-	  op_pressure [null if "NAN"],
-	  op_temperature [null if "NAN"],
-	  op_cooler_voltage [null if "NAN"]
+          battery_voltage [null if "NAN"],
+	  logger_temperature [null if "NAN"],
+	  atmospheric_pressure [null if "NAN"],
+	  air_temperature [null if "NAN"],
+	  relative_humidity [null if "NAN"],
+	  surface_temperature [null if "NAN"],
+	  "cp_CO2_fraction" [null if "NAN"],
+	  "cp_H2O_fraction" [null if "NAN"],
+	  cp_pressure [null if "NAN"],
+	  cp_temperature [null if "NAN"],
+	  wind_speed [null if "NAN"],
+	  wind_direction [null if "NAN"],
+	  wind_direction_sd [null if "NAN"],
+	  battery_voltage_sd [null if "NAN"],
+	  logger_temperature_sd [null if "NAN"],
+	  atmospheric_pressure_sd [null if "NAN"],
+	  air_temperature_sd [null if "NAN"],
+	  relative_humidity_sd [null if "NAN"],
+	  surface_temperature_sd [null if "NAN"]
         )
-     INTO postgresql://sluque:Gases01@localhost:5433/gases?open_path_series_noshroud
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?closed_path_series_auxiliary
         (
-          logging_group_id integer using "39",
-	  is_shroud boolean using "f",
+          logging_group_id integer using "98",
+	  is_main boolean using "f",
           "time",
-	  op_analyzer_status,
-	  "op_CO2_fraction",
-	  "op_H2O_fraction",
-	  "op_CO2_density",
-	  "op_H2O_density",
-	  "op_CO2_absorptance",
-	  "op_H2O_absorptance",
-	  op_pressure,
-	  op_temperature,
-	  op_cooler_voltage
-        )
-     WITH skip header = 1,
-          fields optionally enclosed by '"',
-          fields escaped by double-quote,
-          fields terminated by ','
-     SET client_encoding to 'utf-8',
-         standard_conforming_strings to 'on';
-
-
-LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/LI-7500A/open_path_LI7500A_2.csv'
-        (
-          "time",
-	  record_no,
-	  program_version,
-	  op_analyzer_status [null if "NAN"],
-	  "op_CO2_fraction" [null if "NAN"],
-	  "op_H2O_fraction" [null if "NAN"],
-	  "op_CO2_density" [null if "NAN"],
-	  "op_H2O_density" [null if "NAN"],
-	  "op_CO2_absorptance" [null if "NAN"],
-	  "op_H2O_absorptance" [null if "NAN"],
-	  op_pressure [null if "NAN"],
-	  op_temperature [null if "NAN"],
-	  op_cooler_voltage [null if "NAN"]
-        )
-     INTO postgresql://sluque:Gases01@localhost:5433/gases?open_path_series_noshroud
-        (
-          logging_group_id integer using "40",
-	  is_shroud boolean using "f",
-          "time",
-	  op_analyzer_status,
-	  "op_CO2_fraction",
-	  "op_H2O_fraction",
-	  "op_CO2_density",
-	  "op_H2O_density",
-	  "op_CO2_absorptance",
-	  "op_H2O_absorptance",
-	  op_pressure,
-	  op_temperature,
-	  op_cooler_voltage
-        )
-     WITH skip header = 1,
-          fields optionally enclosed by '"',
-          fields escaped by double-quote,
-          fields terminated by ','
-     SET client_encoding to 'utf-8',
-         standard_conforming_strings to 'on';
-
-
-LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/LI-7500A/sonic1_analog.csv'
-        (
-          "time",
-	  record_no,
-	  program_version,
-	  wind_speed_u [null if "NAN"],
-	  wind_speed_v [null if "NAN"],
-	  wind_speed_w [null if "NAN"],
-	  air_temperature_sonic [null if "NAN"]
-        )
-     INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_analog
-        (
-          logging_group_id integer using "39",
-	  stream_type text using "analog",
-          "time",
-	  wind_speed_u,
-	  wind_speed_v,
-	  wind_speed_w,
-	  air_temperature_sonic
-        )
-     WITH skip header = 1,
-          fields optionally enclosed by '"',
-          fields escaped by double-quote,
-          fields terminated by ','
-     SET client_encoding to 'utf-8',
-         standard_conforming_strings to 'on';
-
-
-LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/LI-7500A/sonic2_sdm.csv'
-        (
-          "time",
-	  record_no,
-	  program_version,
-	  wind_speed_u [null if "NAN"],
-	  wind_speed_v [null if "NAN"],
-	  wind_speed_w [null if "NAN"],
-	  air_temperature_sonic [null if "NAN"]
-        )
-     INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_serial
-        (
-          logging_group_id integer using "40",
-	  stream_type text using "serial",
-          "time",
-	  wind_speed_u,
-	  wind_speed_v,
-	  wind_speed_w,
-	  air_temperature_sonic
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature
         )
      WITH skip header = 1,
           fields optionally enclosed by '"',

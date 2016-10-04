@@ -1,25 +1,26 @@
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/EC/open_path_LI7500A_1_1.0.csv'
+     FROM '/home/sluque/Data/ArcticNet/2016/EC/flux_sorted_fixed_2.0_opath.csv'
         (
           "time",
-	  record_no,
 	  program_version,
-	  op_analyzer_status [null if "NAN"],
 	  "op_CO2_density" [null if "NAN"],
 	  "op_H2O_density" [null if "NAN"],
 	  op_pressure [null if "NAN"],
-	  op_temperature [null if "NAN"]
+	  op_temperature [null if "NAN"],
+	  op_cooler_voltage [null if "NAN"],
+	  op_analyzer_status [null if "NAN"]
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?open_path_series_noshroud
         (
-          logging_group_id integer using "42",
+          logging_group_id integer using "100",
 	  is_shroud boolean using "f",
           "time",
-	  op_analyzer_status,
 	  "op_CO2_density",
 	  "op_H2O_density",
 	  op_pressure,
-	  op_temperature
+	  op_temperature,
+	  op_cooler_voltage,
+	  op_analyzer_status
         )
      WITH skip header = 1,
           fields optionally enclosed by '"',
@@ -30,27 +31,28 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/EC/open_path_LI7500A_1_2.1.csv'
+     FROM '/home/sluque/Data/ArcticNet/2016/EC/flux_sorted_fixed_2.3_opath.csv'
         (
           "time",
-	  record_no,
 	  program_version,
-	  op_analyzer_status [null if "NAN"],
 	  "op_CO2_density" [null if "NAN"],
 	  "op_H2O_density" [null if "NAN"],
 	  op_pressure [null if "NAN"],
-	  op_temperature [null if "NAN"]
+	  op_temperature [null if "NAN"],
+	  op_cooler_voltage [null if "NAN"],
+	  op_analyzer_status [null if "NAN"]
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?open_path_series_noshroud
         (
-          logging_group_id integer using "43",
+          logging_group_id integer using "101",
 	  is_shroud boolean using "f",
           "time",
-	  op_analyzer_status,
 	  "op_CO2_density",
 	  "op_H2O_density",
 	  op_pressure,
-	  op_temperature
+	  op_temperature,
+	  op_cooler_voltage,
+	  op_analyzer_status
         )
      WITH skip header = 1,
           fields optionally enclosed by '"',
@@ -61,27 +63,28 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/EC/open_path_LI7500A_2_1.0.csv'
+     FROM '/home/sluque/Data/ArcticNet/2016/EC/flux_sorted_fixed_2.4_opath.csv'
         (
           "time",
-	  record_no,
 	  program_version,
-	  op_analyzer_status [null if "NAN"],
 	  "op_CO2_density" [null if "NAN"],
 	  "op_H2O_density" [null if "NAN"],
 	  op_pressure [null if "NAN"],
-	  op_temperature [null if "NAN"]
+	  op_temperature [null if "NAN"],
+	  op_cooler_voltage [null if "NAN"],
+	  op_analyzer_status [null if "NAN"]
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?open_path_series_noshroud
         (
-          logging_group_id integer using "44",
+          logging_group_id integer using "102",
 	  is_shroud boolean using "f",
           "time",
-	  op_analyzer_status,
 	  "op_CO2_density",
 	  "op_H2O_density",
 	  op_pressure,
-	  op_temperature
+	  op_temperature,
+	  op_cooler_voltage,
+	  op_analyzer_status
         )
      WITH skip header = 1,
           fields optionally enclosed by '"',
@@ -92,41 +95,9 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/EC/open_path_LI7500A_2_2.1.csv'
+     FROM '/home/sluque/Data/ArcticNet/2016/EC/flux_sorted_fixed_2.0_wind3d_ana.csv'
         (
           "time",
-	  record_no,
-	  program_version,
-	  op_analyzer_status [null if "NAN"],
-	  "op_CO2_density" [null if "NAN"],
-	  "op_H2O_density" [null if "NAN"],
-	  op_pressure [null if "NAN"],
-	  op_temperature [null if "NAN"]
-        )
-     INTO postgresql://sluque:Gases01@localhost:5433/gases?open_path_series_noshroud
-        (
-          logging_group_id integer using "45",
-	  is_shroud boolean using "f",
-          "time",
-	  op_analyzer_status,
-	  "op_CO2_density",
-	  "op_H2O_density",
-	  op_pressure,
-	  op_temperature
-        )
-     WITH skip header = 1,
-          fields optionally enclosed by '"',
-          fields escaped by double-quote,
-          fields terminated by ','
-     SET client_encoding to 'utf-8',
-         standard_conforming_strings to 'on';
-
-
-LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/EC/wind1_analog_1.0.csv'
-        (
-          "time",
-	  record_no,
 	  program_version,
 	  wind_speed_u [null if "NAN"],
 	  wind_speed_v [null if "NAN"],
@@ -135,7 +106,7 @@ LOAD CSV
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_analog
         (
-          logging_group_id integer using "42",
+          logging_group_id integer using "100",
 	  stream_type text using "analog",
           "time",
 	  wind_speed_u,
@@ -152,10 +123,9 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/EC/wind1_analog_2.1.csv'
+     FROM '/home/sluque/Data/ArcticNet/2016/EC/flux_sorted_fixed_2.3_wind3d_ana.csv'
         (
           "time",
-	  record_no,
 	  program_version,
 	  wind_speed_u [null if "NAN"],
 	  wind_speed_v [null if "NAN"],
@@ -164,7 +134,7 @@ LOAD CSV
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_analog
         (
-          logging_group_id integer using "43",
+          logging_group_id integer using "101",
 	  stream_type text using "analog",
           "time",
 	  wind_speed_u,
@@ -181,10 +151,37 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/EC/wind1_serial_1.0.csv'
+     FROM '/home/sluque/Data/ArcticNet/2016/EC/flux_sorted_fixed_2.4_wind3d_ana.csv'
         (
           "time",
-	  record_no,
+	  program_version,
+	  wind_speed_u [null if "NAN"],
+	  wind_speed_v [null if "NAN"],
+	  wind_speed_w [null if "NAN"],
+	  air_temperature_sonic [null if "NAN"]
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_analog
+        (
+          logging_group_id integer using "102",
+	  stream_type text using "analog",
+          "time",
+	  wind_speed_u,
+	  wind_speed_v,
+	  wind_speed_w,
+	  air_temperature_sonic
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2016/EC/flux_sorted_fixed_2.0_wind3d_ser.csv'
+        (
+          "time",
 	  program_version,
 	  wind_speed_u [null if "NAN"],
 	  wind_speed_v [null if "NAN"],
@@ -195,7 +192,7 @@ LOAD CSV
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_serial
         (
-          logging_group_id integer using "42",
+          logging_group_id integer using "100",
 	  stream_type text using "serial",
           "time",
 	  wind_speed_u,
@@ -214,10 +211,9 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/EC/wind1_serial_2.1.csv'
+     FROM '/home/sluque/Data/ArcticNet/2016/EC/flux_sorted_fixed_2.3_wind3d_ser.csv'
         (
           "time",
-	  record_no,
 	  program_version,
 	  wind_speed_u [null if "NAN"],
 	  wind_speed_v [null if "NAN"],
@@ -228,7 +224,7 @@ LOAD CSV
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_serial
         (
-          logging_group_id integer using "43",
+          logging_group_id integer using "101",
 	  stream_type text using "serial",
           "time",
 	  wind_speed_u,
@@ -247,26 +243,27 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/EC/wind2_sdm_1.0.csv'
+     FROM '/home/sluque/Data/ArcticNet/2016/EC/flux_sorted_fixed_2.4_wind3d_ser.csv'
         (
           "time",
-	  record_no,
 	  program_version,
 	  wind_speed_u [null if "NAN"],
 	  wind_speed_v [null if "NAN"],
 	  wind_speed_w [null if "NAN"],
 	  air_temperature_sonic [null if "NAN"],
+	  sound_speed [null if "NAN"],
 	  anemometer_status [null if "NAN"]
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_serial
         (
-          logging_group_id integer using "44",
+          logging_group_id integer using "102",
 	  stream_type text using "serial",
           "time",
 	  wind_speed_u,
 	  wind_speed_v,
 	  wind_speed_w,
 	  air_temperature_sonic,
+	  sound_speed,
 	  anemometer_status
         )
      WITH skip header = 1,
@@ -278,41 +275,9 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/EC/wind2_sdm_2.1.csv'
+     FROM '/home/sluque/Data/ArcticNet/2016/EC/flux_sorted_fixed_2.0_motion.csv'
         (
           "time",
-	  record_no,
-	  program_version,
-	  wind_speed_u [null if "NAN"],
-	  wind_speed_v [null if "NAN"],
-	  wind_speed_w [null if "NAN"],
-	  air_temperature_sonic [null if "NAN"],
-	  anemometer_status [null if "NAN"]
-        )
-     INTO postgresql://sluque:Gases01@localhost:5433/gases?wind3d_series_serial
-        (
-          logging_group_id integer using "45",
-	  stream_type text using "serial",
-          "time",
-	  wind_speed_u,
-	  wind_speed_v,
-	  wind_speed_w,
-	  air_temperature_sonic,
-	  anemometer_status
-        )
-     WITH skip header = 1,
-          fields optionally enclosed by '"',
-          fields escaped by double-quote,
-          fields terminated by ','
-     SET client_encoding to 'utf-8',
-         standard_conforming_strings to 'on';
-
-
-LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/EC/motion_1.0.csv'
-        (
-          "time",
-	  record_no,
 	  program_version,
 	  acceleration_x [null if "NAN"],
 	  acceleration_y [null if "NAN"],
@@ -323,7 +288,7 @@ LOAD CSV
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?motion_series
         (
-          logging_group_id integer using "42",
+          logging_group_id integer using "100",
           "time",
 	  acceleration_x,
 	  acceleration_y,
@@ -341,10 +306,9 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2014/EC/motion_2.1.csv'
+     FROM '/home/sluque/Data/ArcticNet/2016/EC/flux_sorted_fixed_2.3_motion.csv'
         (
           "time",
-	  record_no,
 	  program_version,
 	  acceleration_x [null if "NAN"],
 	  acceleration_y [null if "NAN"],
@@ -355,7 +319,7 @@ LOAD CSV
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?motion_series
         (
-          logging_group_id integer using "43",
+          logging_group_id integer using "101",
           "time",
 	  acceleration_x,
 	  acceleration_y,
@@ -363,6 +327,127 @@ LOAD CSV
 	  rate_x,
 	  rate_y,
 	  rate_z
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2016/EC/flux_sorted_fixed_2.4_motion.csv'
+        (
+          "time",
+	  program_version,
+	  acceleration_x [null if "NAN"],
+	  acceleration_y [null if "NAN"],
+	  acceleration_z [null if "NAN"],
+	  rate_x [null if "NAN"],
+	  rate_y [null if "NAN"],
+	  rate_z [null if "NAN"]
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?motion_series
+        (
+          logging_group_id integer using "102",
+          "time",
+	  acceleration_x,
+	  acceleration_y,
+	  acceleration_z,
+	  rate_x,
+	  rate_y,
+	  rate_z
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2016/EC/flux_sorted_fixed_2.0_cpath.csv'
+        (
+          "time",
+	  program_version,
+	  "cp_CO2_fraction" [null if "NAN"],
+	  "cp_H2O_fraction" [null if "NAN"],
+	  cp_pressure [null if "NAN"],
+	  cp_temperature [null if "NAN"],
+	  cp_analyzer_status [null if "NAN"]
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?closed_path_series_main
+        (
+          logging_group_id integer using "100",
+	  is_main boolean using "t",
+          "time",
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2016/EC/flux_sorted_fixed_2.3_cpath.csv'
+        (
+          "time",
+	  program_version,
+	  "cp_CO2_fraction" [null if "NAN"],
+	  "cp_H2O_fraction" [null if "NAN"],
+	  cp_pressure [null if "NAN"],
+	  cp_temperature [null if "NAN"],
+	  cp_analyzer_status [null if "NAN"]
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?closed_path_series_main
+        (
+          logging_group_id integer using "101",
+	  is_main boolean using "t",
+          "time",
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+
+
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2016/EC/flux_sorted_fixed_2.4_cpath.csv'
+        (
+          "time",
+	  program_version,
+	  "cp_CO2_fraction" [null if "NAN"],
+	  "cp_H2O_fraction" [null if "NAN"],
+	  cp_pressure [null if "NAN"],
+	  cp_temperature [null if "NAN"],
+	  cp_analyzer_status [null if "NAN"]
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?closed_path_series_main
+        (
+          logging_group_id integer using "102",
+	  is_main boolean using "t",
+          "time",
+	  "cp_CO2_fraction",
+	  "cp_H2O_fraction",
+	  cp_pressure,
+	  cp_temperature,
+	  cp_analyzer_status
         )
      WITH skip header = 1,
           fields optionally enclosed by '"',
