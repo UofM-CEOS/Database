@@ -1,8 +1,8 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2014-08-28T22:17:42+0000
-# Last-Updated: 2016-10-03T20:09:03+0000
-#           By: Sebastian Luque
+# Last-Updated: 2016-10-04T15:32:24+0000
+#           By: Sebastian P. Luque
 #
 # Commentary:
 #
@@ -144,6 +144,26 @@ awk -f ${TEMPDIR}/subset.awk ${FLUX}/flux_sorted_fixed.csv > ${TEMPDIR}/check_fl
 # Split based on program version (only EC in this year)
 ./split_progversion.awk -v PROGCOL=2 ${FLUX}/flux_sorted_fixed.csv
 # ./split_progversion.awk -v PROGCOL=2 ${FLUX_AVG}/flux_avg.csv
+
+# Split based on flux subgroup
+for f in ${FLUX}/flux_sorted_fixed_*.csv; do
+    fmot=${f%*.csv}_motion.csv
+    motflds='1,2,3,4,5,6,7,8'
+    cut -d, -f"${motflds}" "$f" > $fmot
+    fwnd_ana=${f%*.csv}_wind3d_ana.csv
+    wndflds_ana='1,2,9,10,11,12'
+    cut -d, -f"${wndflds_ana}" "$f" > $fwnd_ana
+    fwnd_ser=${f%*.csv}_wind3d_ser.csv
+    wndflds_ser='1,2,13,14,15,16,17,18'
+    cut -d, -f"${wndflds_ser}" "$f" > $fwnd_ser
+    opath=${f%*.csv}_opath.csv
+    opathflds='1,2,19,20,21,22,23,24'
+    cut -d, -f"${opathflds}" "$f" > $opath
+    cpath=${f%*.csv}_cpath.csv
+    cpathflds='1,2,25,26,27,28,29'
+    cut -d, -f"${cpathflds}" "$f" > $cpath
+done
+
 
 # Clean up
 rm -rf ${TEMPDIR}
