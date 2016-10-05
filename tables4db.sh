@@ -1,7 +1,7 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2014-08-28T22:17:42+0000
-# Last-Updated: 2016-10-04T15:32:24+0000
+# Last-Updated: 2016-10-05T13:14:56+0000
 #           By: Sebastian P. Luque
 #
 # Commentary:
@@ -21,8 +21,8 @@ UNDERWAY=${ROOTDIR}/UW_pCO2
 TSG=${UNDERWAY}/TSG
 RAD=${ROOTDIR}/RAD
 FLUX=${ROOTDIR}/EC
-LOGFILE2=${ROOTDIR}/Logs/closed_path_log.csv
 LOGFILE1=${ROOTDIR}/Logs/met_log.csv
+LOGFILE2=${ROOTDIR}/Logs/closed_path_log.csv
 LOGFILE3=${ROOTDIR}/Logs/complete_tower_log.csv
 AWKPATH=/usr/local/src/awk
 TEMPDIR=$(mktemp -d -p /var/tmp)
@@ -58,6 +58,8 @@ AWKPATH=${AWKPATH} ./met4db.awk ${METCO2}/*.dat | \
 # RAD
 AWKPATH=${AWKPATH} ./rad4db.awk ${RAD}/*.dat | \
     awk '!x[$0]++' > ${RAD}/RAD_all.csv
+# Something happened between 2016-07-24 and 2016-07-30, as there seems to
+# be a different program running altogether.
 
 # Flux
 # People didn't bother updating the version number string variable in the
@@ -137,8 +139,8 @@ awk -f ${TEMPDIR}/subset.awk ${FLUX}/flux_sorted_fixed.csv > ${TEMPDIR}/check_fl
 # 2016-08-02 00:00:00.0 - 2016-08-06 23:56:45.4
 
 # Logs
+./observer_log_4db.awk ${LOGFILE1} > $(dirname ${LOGFILE1})/metlog_4db.csv
 # ./observer_log_4db.awk ${LOGFILE2} > $(dirname ${LOGFILE2})/metlog_4db.csv
-# ./observer_log_4db.awk ${LOGFILE1} > $(dirname ${LOGFILE1})/closed_path_log_4db.csv
 # ./observer_log_4db.awk ${LOGFILE3} > $(dirname ${LOGFILE3})/towerlog_4db.csv
 
 # Split based on program version (only EC in this year)

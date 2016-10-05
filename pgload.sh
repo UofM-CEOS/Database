@@ -1,10 +1,10 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2014-02-05T22:44:42+0000
-# Last-Updated: 2015-07-01T13:43:08+0000
-#           By: Sebastian Luque
+# Last-Updated: 2016-10-05T16:47:54+0000
+#           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
-# Commentary: 
+# Commentary:
 #
 # This script is for preparing and loading data onto database, using
 # pgloader.
@@ -14,34 +14,34 @@
 # Prepare data
 ./tables4db.sh
 
-Load tables
+# Load tables
 
-pgloader -D /var/tmp/pgloader -S navigation_summary.log \
-    -L /var/tmp/pgloader/navigation.log \
+pgloader -D /var/tmp/pgloader/AMD2016 -S navigation_summary.log \
+    -L /var/tmp/pgloader/AMD2016/navigation.log \
     --log-min-messages debug --client-min-messages warning \
     pgloader/navigation.pgload
-pgloader -D /var/tmp/pgloader -S meteorology_summary.log \
-    -L /var/tmp/pgloader/meteorology.log \
+pgloader -D /var/tmp/pgloader/AMD2016 -S meteorology_summary.log \
+    -L /var/tmp/pgloader/AMD2016/meteorology.log \
     --log-min-messages debug --client-min-messages warning \
     pgloader/meteorology.pgload
-pgloader -D /var/tmp/pgloader -S flux_avg_summary.log \
-    -L /var/tmp/pgloader/flux_avg.log \
-    --log-min-messages debug --client-min-messages warning \
-    pgloader/flux_avg.pgload
-pgloader -D /var/tmp/pgloader -S flux_summary.log \
-    -L /var/tmp/pgloader/flux.log \
-    --log-min-messages debug --client-min-messages warning \
-    pgloader/flux.pgload
-pgloader -D /var/tmp/pgloader -S rad_summary.log \
-    -L /var/tmp/pgloader/radiation.log \
+pgloader -D /var/tmp/pgloader/AMD2016 -S rad_summary.log \
+    -L /var/tmp/pgloader/AMD2016/radiation.log \
     --log-min-messages debug --client-min-messages warning \
     pgloader/radiation.pgload
-pgloader -D /var/tmp/pgloader -S UWpCO2_summary.log \
-    -L /var/tmp/pgloader/uw_pCO2.log \
+pgloader -D /var/tmp/pgloader/AMD2016 -S flux_avg_summary.log \
+    -L /var/tmp/pgloader/AMD2016/flux_avg.log \
+    --log-min-messages debug --client-min-messages warning \
+    pgloader/flux_avg.pgload
+pgloader -D /var/tmp/pgloader/AMD2016 -S flux_summary.log \
+    -L /var/tmp/pgloader/AMD2016/flux.log \
+    --log-min-messages debug --client-min-messages warning \
+    pgloader/flux.pgload
+pgloader -D /var/tmp/pgloader/AMD2016 -S UWpCO2_summary.log \
+    -L /var/tmp/pgloader/AMD2016/uw_pCO2.log \
     --log-min-messages debug --client-min-messages warning \
     pgloader/uw_pCO2.pgload
-pgloader -D /var/tmp/pgloader -S Logs_summary.log \
-    -L /var/tmp/pgloader/logs.log \
+pgloader -D /var/tmp/pgloader/AMD2016 -S Logs_summary.log \
+    -L /var/tmp/pgloader/AMD2016/logs.log \
     --log-min-messages debug --client-min-messages warning \
     pgloader/logs.pgload
 

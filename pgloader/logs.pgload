@@ -1,5 +1,5 @@
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2011/Logs/closed_path_log_4db.csv'
+     FROM '/home/sluque/Data/ArcticNet/2016/Logs/metlog_4db.csv'
         (
           observation_time_beg,
 	  observation_time_end,
@@ -8,31 +8,7 @@ LOAD CSV
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?observer_log
         (
-          logging_group_id integer using "3",
-          observation_time_beg,
-	  observation_time_end,
-	  observation_code,
-          observer_notes text using "Using a single logging group ID for all Flux groups."
-        )
-     WITH skip header = 1,
-          fields optionally enclosed by '"',
-          fields escaped by double-quote,
-          fields terminated by ','
-     SET client_encoding to 'utf-8',
-         standard_conforming_strings to 'on';
-
-
-LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2011/Logs/met_log_4db.csv'
-        (
-          observation_time_beg,
-	  observation_time_end,
-	  observation_code,
-          observer_notes
-        )
-     INTO postgresql://sluque:Gases01@localhost:5433/gases?observer_log
-        (
-          logging_group_id integer using "1",
+          logging_group_id integer using "98",
           observation_time_beg,
 	  observation_time_end,
 	  observation_code
