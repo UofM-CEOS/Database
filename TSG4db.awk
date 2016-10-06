@@ -1,7 +1,7 @@
 #! /usr/bin/gawk -f
 # Author: Sebastian Luque
 # Created: 2015-10-10T21:35:25+0000
-# Last-Updated: 2016-03-10T17:54:42+0000
+# Last-Updated: 2016-10-06T02:37:49+0000
 #           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary:
@@ -49,10 +49,24 @@ NF > ncols || $1 !~ /[[:digit:]]/ { next } # obviously garbage
 {
     gsub(/ +; +/, ";")
     gsub(/\//, "-", $1)		# fix date string to ISO
+    tstr=sprintf("%s %s %s %s %s %s",
+		 substr($1, 1, 4),
+		 substr($1, 6, 2),
+		 substr($1, 9, 2),
+		 substr($1, 12, 2),
+		 substr($1, 15, 2),
+		 substr($1, 18, 2))
+    utc_now=mktime(tstr)
+    # TSG instrument tends to make errors writing timestamp, whereby the
+    # timestamp is repeated once consecutively, so must be manually
+    # corrected
+    if (utc_now == utc_next - 1) utc_now++
+    time_utc=strftime("%F %T", utc_now)
     time_gps=sprintf("%s %s", substr($1, 1, 10), $2)
-    printf "%s,%s,", time_gps, $1
+    printf "%s,%s,", time_utc, time_gps
     for (i=3; i <= (ncols - 1); i++) { printf "%s,", $i }
     print $ncols
+    utc_next=utc_now + 1
 }
 
 
