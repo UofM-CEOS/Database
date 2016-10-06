@@ -2,13 +2,40 @@
 #+TITLE: Data issues
 #+OPTIONS: ^:{}
 
-#+NAME: op_cambridge_bay_2014
-#+BEGIN_SRC sh
-  psql -p5433 gases <<EOF
-  SELECT * FROM cambridge_bay.opath_10hz_2014
-  WHERE bad_chopper_wheel_temperature_flag OR bad_detector_temperature_flag
-      OR bad_optical_wheel_rotation_rate_flag OR bad_sync_flag
-      AND "op_CO2_signal_strength" > 80
-      LIMIT 100;
-  EOF
-#+END_SRC
+* Navigation
+
+Unprocessed POSMV and C-NAV data show substantial noise and some amount of
+write error due to the logger itself, and it would be wise to wait for
+processed data from U Laval to rely on it completely.
+
+* Meteorology
+
+Data from AAVOS instrument not loaded, as they are unprocessed.
+
+* Radiation
+
+Something happened between 2016-07-24 and 2016-07-30, as there seems to be
+a different program running altogether.
+
+* Flux
+
+** There were incorrectly timestamped data
+
+Data correspond to 2008-02-13 19:35:55.7 through 2008-02-19 21:32:54.3.
+Chatting with Tonya, the missing data were due to a power cut issue whereby
+the clock on the logger got misconfigured on 2016-06-01.  When power was
+restored, the logger resumed logging with the wrong timestamp until the
+problem was fixed on 2016-06-08.  This was fixed by lining them up against
+the first *correct* timestamp after the power was restored (2016-06-08
+14:46:43.9).  Thus, the last timestamped data could be made continuous with
+the first *correct* timestamped data.  However, there were still gaps in
+the data:
+
+- 2016-07-22 03:36:07.8 - 2016-08-01 20:24:51.6
+- 2016-08-02 00:00:00.0 - 2016-08-06 23:56:45.4
+
+* Underway pCO2
+
+** External temperature data unavailable
+
+- Data from CEOS logger not available
