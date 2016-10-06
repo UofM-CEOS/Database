@@ -37,7 +37,7 @@ LOAD CSV
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?underway_series
         (
-          logging_group_id integer using "96",
+          logging_group_id integer using "103",
           "time",
           record_type,
 	  uw_diag,
@@ -79,7 +79,7 @@ LOAD CSV
 
 
 -- LOAD CSV
---      FROM '/home/sluque/Data/ArcticNet/2016/UW_pCO2/AMD_water_temperature_2014.csv'
+--      FROM '/home/sluque/Data/ArcticNet/2016/UW_pCO2/AMD_water_temperature_2016.csv'
 --      	(
 -- 	  "time",
 -- 	  battery_voltage,
@@ -105,7 +105,7 @@ LOAD CSV
 
 
 -- LOAD CSV
---      FROM '/home/sluque/Data/ArcticNet/2014/UW_pCO2/AMD_water_temperature_2014.csv'
+--      FROM '/home/sluque/Data/ArcticNet/2014/UW_pCO2/AMD_water_temperature_2016.csv'
 --      	(
 -- 	  "time",
 -- 	  battery_voltage,
@@ -130,3 +130,38 @@ LOAD CSV
 --           fields terminated by ','
 --      SET client_encoding to 'utf-8',
 --          standard_conforming_strings to 'on';
+
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2016/UW_pCO2/TSG/TSG_leg01-02.csv'
+     	(
+	  "time",
+	  time_logger,
+	  latitude,
+	  longitude,
+	  tsg_instrument_temperature,
+	  tsg_conductivity,
+	  tsg_salinity,
+	  tsg_sound_speed,
+	  tsg_temperature,
+	  tsg_fluorescence,
+	  tsg_H2O_flow,
+	  tsg_sound_velocity_measured
+	)
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?underway_series
+        (
+          logging_group_id integer using "105",
+          "time",
+          record_type text using "EXTERNAL_TEMPERATURE",
+	  tsg_temperature,
+	  tsg_conductivity,
+	  tsg_salinity,
+	  tsg_sound_speed,
+	  "tsg_H2O_flow",
+	  tsg_fluorescence
+	)
+     WITH skip header = 1,
+     	  fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';

@@ -1,7 +1,7 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2014-08-28T22:17:42+0000
-# Last-Updated: 2016-10-05T13:14:56+0000
+# Last-Updated: 2016-10-05T21:47:26+0000
 #           By: Sebastian P. Luque
 #
 # Commentary:
@@ -52,6 +52,8 @@ AWKPATH=${AWKPATH} ./met4db.awk ${METCO2}/*.dat | \
 # Underway
 ./underway4db.awk ${UNDERWAY}/*.txt | \
     awk '!x[$0]++' > ${UNDERWAY}/UWpCO2_2016.csv
+./TSG4db.awk ${TSG}/*.cnv | \
+    awk 'NR == 1 || !x[$0]++' > ${TSG}/TSG.csv
 # ./underway4db_indeplogger4db.awk ${UWTEMPERATURE}/* | \
 #     awk '!x[$0]++' > ${UNDERWAY}/UW_H2O_temperature.csv
 
