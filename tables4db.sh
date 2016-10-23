@@ -1,7 +1,7 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2014-08-28T22:17:42+0000
-# Last-Updated: 2016-10-05T21:47:26+0000
+# Last-Updated: 2016-10-21T17:10:27+0000
 #           By: Sebastian P. Luque
 #
 # Commentary:
@@ -18,19 +18,22 @@ NAV_BEST=${NAV}/Ship/Best
 METCO2=${ROOTDIR}/MET
 MET_AAVOS=${ROOTDIR}/MET/AAVOS
 UNDERWAY=${ROOTDIR}/UW_pCO2
+UWTEMPERATURE=${UNDERWAY}/TSW
 TSG=${UNDERWAY}/TSG
 RAD=${ROOTDIR}/RAD
 FLUX=${ROOTDIR}/EC
+FLUXDIAG=${FLUX}/DIAG
 LOGFILE1=${ROOTDIR}/Logs/met_log.csv
 LOGFILE2=${ROOTDIR}/Logs/closed_path_log.csv
 LOGFILE3=${ROOTDIR}/Logs/complete_tower_log.csv
 AWKPATH=/usr/local/src/awk
-TEMPDIR=$(mktemp -d -p /var/tmp)
+TEMPDIR=$(mktemp -d -p /var/local/tmp)
 
 # Convert from DOS EOL
 fromdos ${NAV_POSMV}/*/* ${NAV_CNAV}/*/* ${METCO2}/Converted/*.dat \
-	${METCO2}/*.dat ${MET_AAVOS}/*.log ${RAD}/*.dat \
-	${UNDERWAY}/*.txt ${FLUX}/Converted/*.dat ${FLUX}/*.dat
+	${METCO2}/*.dat ${MET_AAVOS}/LEG*/*.log ${RAD}/*.dat \
+	${UNDERWAY}/*.txt ${UWTEMPERATURE}/*.dat \
+	${FLUX}/Converted/*.dat ${FLUX}/*.dat
 
 # NAV
 # POSMV data
@@ -54,8 +57,8 @@ AWKPATH=${AWKPATH} ./met4db.awk ${METCO2}/*.dat | \
     awk '!x[$0]++' > ${UNDERWAY}/UWpCO2_2016.csv
 ./TSG4db.awk ${TSG}/*.cnv | \
     awk 'NR == 1 || !x[$0]++' > ${TSG}/TSG.csv
-# ./underway4db_indeplogger4db.awk ${UWTEMPERATURE}/* | \
-#     awk '!x[$0]++' > ${UNDERWAY}/UW_H2O_temperature.csv
+./underway_indeplogger4db.awk ${UWTEMPERATURE}/* | \
+    awk '!x[$0]++' > ${UNDERWAY}/UW_H2O_temperature.csv
 
 # RAD
 AWKPATH=${AWKPATH} ./rad4db.awk ${RAD}/*.dat | \
@@ -94,7 +97,7 @@ AWKPATH=${AWKPATH} ./flux4db.awk ${FLUX}/*fixed.dat \
 
 # We need to order the output by timestamp. Maneuver for header line...
 tail -n+2 ${TEMPDIR}/flux.csv | \
-    sort -t',' -k1,1 -o ${TEMPDIR}/flux_sorted.csv
+    sort -T${TEMPDIR} -t',' -k1,1 -o ${TEMPDIR}/flux_sorted.csv
 head -n1 ${TEMPDIR}/flux.csv | \
     cat - ${TEMPDIR}/flux_sorted.csv > ${FLUX}/flux_sorted.csv
 # There's some mis-timestamped data: 2008-02-13 19:35:55.7 to 2008-02-19
@@ -131,7 +134,7 @@ EOF
 tac ${FLUX}/flux_sorted.csv | awk '$1 ~ /2008-/' | \
     ./regenerate_timestamps.py -s 2016 06 08 14 46 43 800000 -d-100000 - | \
     awk '$1 ~ /2016-/' - ${FLUX}/flux_sorted.csv | \
-    sort -t',' -k1,1 -o ${TEMPDIR}/flux_fixed.csv
+    sort -T${TEMPDIR} -t',' -k1,1 -o ${TEMPDIR}/flux_fixed.csv
 head -n1 ${FLUX}/flux_sorted.csv | \
     cat - ${TEMPDIR}/flux_fixed.csv > ${FLUX}/flux_sorted_fixed.csv
 # Check
@@ -141,9 +144,9 @@ awk -f ${TEMPDIR}/subset.awk ${FLUX}/flux_sorted_fixed.csv > ${TEMPDIR}/check_fl
 # 2016-08-02 00:00:00.0 - 2016-08-06 23:56:45.4
 
 # Logs
-./observer_log_4db.awk ${LOGFILE1} > $(dirname ${LOGFILE1})/metlog_4db.csv
-# ./observer_log_4db.awk ${LOGFILE2} > $(dirname ${LOGFILE2})/metlog_4db.csv
-# ./observer_log_4db.awk ${LOGFILE3} > $(dirname ${LOGFILE3})/towerlog_4db.csv
+./observer_log4db.awk ${LOGFILE1} > $(dirname ${LOGFILE1})/metlog_4db.csv
+# ./observer_log4db.awk ${LOGFILE2} > $(dirname ${LOGFILE2})/metlog_4db.csv
+# ./observer_log4db.awk ${LOGFILE3} > $(dirname ${LOGFILE3})/towerlog_4db.csv
 
 # Split based on program version (only EC in this year)
 ./split_progversion.awk -v PROGCOL=2 ${FLUX}/flux_sorted_fixed.csv
