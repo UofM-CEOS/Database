@@ -415,10 +415,10 @@ analyses, with Nafion dryer:
     bad_equ_temperature_flag, bad_temperature_external_flag
   FROM amundsen_flux.underway_1s_2016;
   """
-  # pCO2=pd.read_sql(qry, conn, parse_dates=['time_study', 'time_1min'],
-  #                  index_col="time_study")
-  pCO2=pd.read_sql(qry, conn, parse_dates=['time_study'],
+  pCO2=pd.read_sql(qry, conn, parse_dates=['time_study', 'time_1min'],
                    index_col="time_study")
+  # pCO2=pd.read_sql(qry, conn, parse_dates=['time_study'],
+  #                  index_col="time_study")
   # Y-limits
   uwCO2lims = (100, 700)
   uwH2Olims = (2, 18)
