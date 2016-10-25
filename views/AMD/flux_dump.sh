@@ -1,8 +1,8 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2016-10-08T17:00:02+0000
-# Last-Updated: 2016-10-14T18:37:04+0000
-#           By: Sebastian P. Luque
+# Last-Updated: 2016-10-25T12:16:26+0000
+#           By: Sebastian Luque
 #
 # Commentary:
 #
@@ -17,7 +17,7 @@ LFREQ1ODIR=${ROOTDIR}/LowFreq_1w20min
 LFREQ2=lowfreq_1w20min_2016_flags
 LFREQ2ODIR=${ROOTDIR}/LowFreq_1w20min_flags
 LFREQ3=lowfreq_20min_fluxable_2016
-LFREQ3FILE=${ROOTDIR}/LowFreq_20min_fluxable/lowfreq_20min_fluxable_2016.csv
+LFREQ3FILE=${ROOTDIR}/LowFreq_20min_fluxable/L3_2016.csv
 # Core high frequency views
 HFREQ1=flux_10hz_2016
 HFREQ1ODIR=${ROOTDIR}/Flux_10hz
@@ -72,7 +72,7 @@ SELECT time_20min, time_study, longitude, longitude_avg, latitude, latitude_avg,
 FROM amundsen_flux.lowfreq_1w20min_2016
 ORDER BY time_20min, time_study;
 \cd ${LFREQ1ODIR}
-\copy (SELECT * FROM lowfreq_1w20min) TO PROGRAM 'awk -v prefix=1w20min -f ${SPLITISO_PRG} -' CSV
+\copy (SELECT * FROM lowfreq_1w20min) TO PROGRAM 'awk -v fprefix=L1 -f ${SPLITYMD_PRG} -' CSV
 EOF
 psql -p5433 -f${TMPDIR}/lfreq1_dump.sql gases
 
@@ -121,7 +121,7 @@ SELECT time_20min, time_study, longitude, longitude_avg, latitude, latitude_avg,
 FROM amundsen_flux.lowfreq_1w20min_2016_flags
 ORDER BY time_20min, time_study;
 \cd ${LFREQ2ODIR}
-\copy (SELECT * FROM lowfreq_1w20min_flags) TO PROGRAM 'awk -v prefix=1w20min -f ${SPLITISO_PRG} -' CSV
+\copy (SELECT * FROM lowfreq_1w20min_flags) TO PROGRAM 'awk -v fprefix=L2 -f ${SPLITYMD_PRG} -' CSV
 EOF
 psql -p5433 -f${TMPDIR}/lfreq2_dump.sql gases
 
@@ -136,3 +136,32 @@ FROM amundsen_flux.lowfreq_20min_fluxable_2016;
 \copy (SELECT * FROM lowfreq_20min_fluxable) TO '${LFREQ3FILE}' CSV HEADER
 EOF
 psql -p5433 -f${TMPDIR}/lfreq3_dump.sql gases
+
+cat <<EOF > ${TMPDIR}/hfreq1_dump.sql
+CREATE OR REPLACE TEMPORARY VIEW flux_10hz AS
+SELECT time_20min, time_study, longitude, latitude, speed_over_ground,
+       course_over_ground, heading, pitch, roll, heave, atmospheric_pressure,
+       air_temperature, relative_humidity, surface_temperature, wind_speed,
+       wind_direction, true_wind_speed, true_wind_direction, "PAR",
+       "K_down", "LW_down", acceleration_x, acceleration_y, acceleration_z,
+       rate_x, rate_y, rate_z, wind_speed_u, wind_speed_v, wind_speed_w,
+       air_temperature_sonic, sound_speed, anemometer_status, "op_CO2_fraction",
+       "op_CO2_density", "op_CO2_absorptance", "op_H2O_fraction", "op_H2O_density",
+       "op_H2O_absorptance", op_pressure, op_temperature, op_temperature_base,
+       op_temperature_spar, op_temperature_bulb, op_cooler_voltage,
+       op_bandwidth, op_delay_interval, op_bad_chopper_wheel_temperature_flag,
+       op_bad_detector_temperature_flag, op_bad_optical_wheel_rate_flag,
+       op_bad_sync_flag, "op_CO2_signal_strength", op_analyzer_status,
+       cp_analyzer_status, "cp_CO2_fraction", "cp_CO2_density", "cp_CO2_dry_fraction",
+       "cp_CO2_absorptance", "cp_H2O_fraction", "cp_H2O_density", "cp_H2O_dry_fraction",
+       "cp_H2O_absorptance", cp_pressure, cp_temperature, cp_temperature_in,
+       cp_temperature_out, cp_temperature_block, cp_temperature_cell,
+       "cp_CO2_signal_strength", "cp_H2O_signal_strength"
+  FROM amundsen_flux.flux_10hz_2016;
+\cd ${HFREQ1ODIR}
+\copy (SELECT * FROM flux_10hz) TO PROGRAM 'awk -v fprefix=EC -f ${SPLITISO_PRG} -' CSV
+EOF
+psql -p5433 -f${TMPDIR}/hfreq1_dump.sql gases
+
+
+rm -rf ${TMPDIR}
