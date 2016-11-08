@@ -1,8 +1,8 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2016-10-08T17:00:02+0000
-# Last-Updated: 2016-10-25T12:16:26+0000
-#           By: Sebastian Luque
+# Last-Updated: 2016-11-08T14:44:32+0000
+#           By: Sebastian P. Luque
 #
 # Commentary:
 #
@@ -69,7 +69,7 @@ SELECT time_20min, time_study, longitude, longitude_avg, latitude, latitude_avg,
        bad_ctd_flag, "bad_CO2_flag", "bad_H2O_flag", "bad_H2O_flow_flag",
        bad_pressure_analyzer_flag, bad_temperature_analyzer_flag, bad_equ_temperature_flag,
        bad_temperature_external_flag
-FROM amundsen_flux.lowfreq_1w20min_2016
+FROM amundsen_flux.${LFREQ1}
 ORDER BY time_20min, time_study;
 \cd ${LFREQ1ODIR}
 \copy (SELECT * FROM lowfreq_1w20min) TO PROGRAM 'awk -v fprefix=L1 -f ${SPLITYMD_PRG} -' CSV
@@ -118,7 +118,7 @@ SELECT time_20min, time_study, longitude, longitude_avg, latitude, latitude_avg,
        bad_ctd_flag, "bad_CO2_flag", "bad_H2O_flag", "bad_H2O_flow_flag",
        bad_pressure_analyzer_flag, bad_temperature_analyzer_flag, bad_equ_temperature_flag,
        bad_temperature_external_flag, fluxable_exception
-FROM amundsen_flux.lowfreq_1w20min_2016_flags
+FROM amundsen_flux.${LFREQ2}
 ORDER BY time_20min, time_study;
 \cd ${LFREQ2ODIR}
 \copy (SELECT * FROM lowfreq_1w20min_flags) TO PROGRAM 'awk -v fprefix=L2 -f ${SPLITYMD_PRG} -' CSV
@@ -132,7 +132,7 @@ SELECT time_20min, longitude, latitude, speed_over_ground, course_over_ground,
        relative_humidity, surface_temperature, wind_speed, wind_direction,
        true_wind_speed, true_wind_direction, "PAR", "K_down", "LW_down",
        nfluxable
-FROM amundsen_flux.lowfreq_20min_fluxable_2016;
+FROM amundsen_flux.${LFREQ3};
 \copy (SELECT * FROM lowfreq_20min_fluxable) TO '${LFREQ3FILE}' CSV HEADER
 EOF
 psql -p5433 -f${TMPDIR}/lfreq3_dump.sql gases
@@ -157,7 +157,7 @@ SELECT time_20min, time_study, longitude, latitude, speed_over_ground,
        "cp_H2O_absorptance", cp_pressure, cp_temperature, cp_temperature_in,
        cp_temperature_out, cp_temperature_block, cp_temperature_cell,
        "cp_CO2_signal_strength", "cp_H2O_signal_strength"
-  FROM amundsen_flux.flux_10hz_2016;
+  FROM amundsen_flux.${HFREQ1};
 \cd ${HFREQ1ODIR}
 \copy (SELECT * FROM flux_10hz) TO PROGRAM 'awk -v fprefix=EC -f ${SPLITISO_PRG} -' CSV
 EOF
