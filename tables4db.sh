@@ -1,7 +1,7 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2014-08-28T22:17:42+0000
-# Last-Updated: 2016-10-21T17:10:27+0000
+# Last-Updated: 2016-11-16T20:28:14+0000
 #           By: Sebastian P. Luque
 #
 # Commentary:
@@ -14,9 +14,9 @@ ROOTDIR=~/Data/ArcticNet/2016
 NAV=${ROOTDIR}/NAV
 NAV_POSMV=${NAV}/POSMV
 NAV_CNAV=${NAV}/CNAV
-NAV_BEST=${NAV}/Ship/Best
+NAV_BEST=${NAV}/Best
 METCO2=${ROOTDIR}/MET
-MET_AAVOS=${ROOTDIR}/MET/AAVOS
+MET_AAVOS=${ROOTDIR}/MET/AAVOS/Processed
 UNDERWAY=${ROOTDIR}/UW_pCO2
 UWTEMPERATURE=${UNDERWAY}/TSW
 TSG=${UNDERWAY}/TSG
@@ -30,9 +30,9 @@ AWKPATH=/usr/local/src/awk
 TEMPDIR=$(mktemp -d -p /var/local/tmp)
 
 # Convert from DOS EOL
-fromdos ${NAV_POSMV}/*/* ${NAV_CNAV}/*/* ${METCO2}/Converted/*.dat \
-	${METCO2}/*.dat ${MET_AAVOS}/LEG*/*.log ${RAD}/*.dat \
-	${UNDERWAY}/*.txt ${UWTEMPERATURE}/*.dat \
+fromdos ${NAV_POSMV}/*/* ${NAV_CNAV}/*/* ${NAV_BEST}/*/* \
+	${METCO2}/Converted/*.dat ${METCO2}/*.dat ${MET_AAVOS}/LEG*/*.log \
+	${RAD}/*.dat ${UNDERWAY}/*.txt ${UWTEMPERATURE}/*.dat \
 	${FLUX}/Converted/*.dat ${FLUX}/*.dat
 
 # NAV
@@ -42,8 +42,9 @@ AWKPATH=${AWKPATH} ./nmea2csv.awk ${NAV_POSMV}/LEG*/*.log | \
 # CNAV data
 AWKPATH=${AWKPATH} ./nmea2csv.awk ${NAV_CNAV}/LEG*/*.log | \
     awk -F, '!x[$1]++' > ${NAV_CNAV}/CNAV_all.csv
-# ./navproc4db_amundsen_flux.awk ${NAV_SHIP}/LEG_*/*.int | \
-#     awk -F, '!x[$1]++' > ${NAV_SHIP}/navproc_all.csv
+# Best
+./nav_proc4db.awk ${NAV_BEST}/LEG_*/*.int | \
+    awk -F, '!x[$1]++' > ${NAV_BEST}/navproc_all.csv
 
 # MET
 AWKPATH=${AWKPATH} ./met4db.awk ${METCO2}/*.dat | \
