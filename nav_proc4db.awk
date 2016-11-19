@@ -1,7 +1,7 @@
 #! /usr/bin/gawk -f
 # Author: Sebastian Luque
 # Created: 2014-02-10T23:24:53+0000
-# Last-Updated: 2016-11-16T20:21:47+0000
+# Last-Updated: 2016-11-19T22:16:23+0000
 #           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary:
@@ -56,7 +56,7 @@ BEGIN {
 
 FNR > skip {
     gsub(/\//, "-", $1)
-    printf "%s %s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", $1, $2, $3, $4, $5, $6,
+    printf "%s %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", $1, $2, $3, $4, $5, $6,
 	$7, $8, $9, $10, $11, $12
 }
 
