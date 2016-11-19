@@ -1,7 +1,7 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2014-08-28T22:17:42+0000
-# Last-Updated: 2016-11-16T20:28:14+0000
+# Last-Updated: 2016-11-19T22:44:41+0000
 #           By: Sebastian P. Luque
 #
 # Commentary:
@@ -43,7 +43,7 @@ AWKPATH=${AWKPATH} ./nmea2csv.awk ${NAV_POSMV}/LEG*/*.log | \
 AWKPATH=${AWKPATH} ./nmea2csv.awk ${NAV_CNAV}/LEG*/*.log | \
     awk -F, '!x[$1]++' > ${NAV_CNAV}/CNAV_all.csv
 # Best
-./nav_proc4db.awk ${NAV_BEST}/LEG_*/*.int | \
+./nav_proc4db.awk -v skip=23 ${NAV_BEST}/LEG_*/*.int | \
     awk -F, '!x[$1]++' > ${NAV_BEST}/navproc_all.csv
 
 # MET
