@@ -1,12 +1,17 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2016-10-08T17:00:02+0000
-# Last-Updated: 2016-10-25T12:16:26+0000
-#           By: Sebastian Luque
+# Last-Updated: 2016-11-22T21:12:07+0000
+#           By: Sebastian P. Luque
 #
 # Commentary:
 #
 # Dump core views and tables to file(s) for flux analyses.
+#
+# Note that this outputs all the columns in each of the underlying views,
+# and the colnames.html lists all the columns in that view, so *do not*
+# modify the select list, as it will no longer correspond to what is shown
+# in colnames.html.
 # -------------------------------------------------------------------------
 # Code:
 
@@ -46,7 +51,7 @@ SELECT time_20min, time_study, longitude, longitude_avg, latitude, latitude_avg,
        cp_temperature, cp_temperature_avg, "op_CO2_density", "op_CO2_density_avg",
        "op_H2O_density", "op_H2O_density_avg", op_pressure, op_pressure_avg,
        op_temperature, op_temperature_avg, "PAR", "PAR_avg", "K_down",
-       "K_down_avg", "LW_down", "LW_down_avg", uw_diag, equ_temperature,
+       "K_down_avg", "LW_down", "LW_down_avg", equ_temperature,
        equ_temperature_avg, std_value, "uw_CO2_cellA", "uw_CO2_cellA_avg",
        "uw_CO2_cellB", "uw_CO2_cellB_avg", "uw_CO2_fraction", "uw_CO2_fraction_avg",
        "uw_H2O_cellA", "uw_H2O_cellA_avg", "uw_H2O_cellB", "uw_H2O_cellB_avg",
@@ -66,13 +71,19 @@ SELECT time_20min, time_study, longitude, longitude_avg, latitude, latitude_avg,
        bad_wind_direction_flag, very_bad_wind_direction_flag,
        bad_ice_flag, bad_atmospheric_pressure_flag, bad_anemometer_flag,
        bad_barometer_flag, bad_trh_sensor_flag, bad_ir_sensor_flag,
-       bad_ctd_flag, "bad_CO2_flag", "bad_H2O_flag", "bad_H2O_flow_flag",
-       bad_pressure_analyzer_flag, bad_temperature_analyzer_flag, bad_equ_temperature_flag,
-       bad_temperature_external_flag
-FROM amundsen_flux.lowfreq_1w20min_2016
+       nbad_ctd_flag, "nbad_CO2_flag", "nbad_H2O_flag", "nbad_H2O_flow_flag",
+       nbad_pressure_analyzer_flag, nbad_temperature_analyzer_flag,
+       nbad_equ_temperature_flag, nbad_temperature_external_flag
+FROM amundsen_flux.${LFREQ1}
 ORDER BY time_20min, time_study;
 \cd ${LFREQ1ODIR}
 \copy (SELECT * FROM lowfreq_1w20min) TO PROGRAM 'awk -v fprefix=L1 -f ${SPLITYMD_PRG} -' CSV
+\H
+\o colnames.html
+SELECT cols.column_name, col_description(cl.oid, cols.ordinal_position::INT)
+FROM pg_class cl, information_schema.columns cols
+WHERE cols.table_catalog='gases' AND cols.table_schema='amundsen_flux' AND
+cols.table_name = '${LFREQ1}' AND cols.table_name = cl.relname;
 EOF
 psql -p5433 -f${TMPDIR}/lfreq1_dump.sql gases
 
@@ -95,19 +106,18 @@ SELECT time_20min, time_study, longitude, longitude_avg, latitude, latitude_avg,
        cp_temperature, cp_temperature_avg, "op_CO2_density", "op_CO2_density_avg",
        "op_H2O_density", "op_H2O_density_avg", op_pressure, op_pressure_avg,
        op_temperature, op_temperature_avg, "PAR", "PAR_avg", "K_down",
-       "K_down_avg", "LW_down", "LW_down_avg", uw_diag, equ_temperature,
-       equ_temperature_avg, std_value, "uw_CO2_cellA", "uw_CO2_cellA_avg",
-       "uw_CO2_cellB", "uw_CO2_cellB_avg", "uw_CO2_fraction", "uw_CO2_fraction_avg",
-       "uw_H2O_cellA", "uw_H2O_cellA_avg", "uw_H2O_cellB", "uw_H2O_cellB_avg",
-       "uw_H2O_fraction", "uw_H2O_fraction_avg", uw_temperature_analyzer,
-       uw_temperature_analyzer_avg, uw_pressure_analyzer, uw_pressure_analyzer_avg,
-       equ_pressure, equ_pressure_avg, "H2O_flow", "H2O_flow_avg", air_flow_analyzer,
-       air_flow_analyzer_avg, equ_speed_pump, equ_speed_pump_avg, ventilation_flow,
-       ventilation_flow_avg, condensation_atm, condensation_atm_avg,
-       condensation_equ, condensation_equ_avg, drip_1, drip_2, condenser_temperature,
-       condenser_temperature_avg, temperature_dry_box, temperature_dry_box_avg,
-       ctd_pressure, ctd_pressure_avg, ctd_temperature, ctd_temperature_avg,
-       ctd_conductivity, ctd_conductivity_avg, "ctd_O2_saturation",
+       "K_down_avg", "LW_down", "LW_down_avg", equ_temperature, equ_temperature_avg,
+       std_value, "uw_CO2_cellA", "uw_CO2_cellA_avg", "uw_CO2_cellB", "uw_CO2_cellB_avg",
+       "uw_CO2_fraction", "uw_CO2_fraction_avg", "uw_H2O_cellA", "uw_H2O_cellA_avg",
+       "uw_H2O_cellB", "uw_H2O_cellB_avg", "uw_H2O_fraction", "uw_H2O_fraction_avg",
+       uw_temperature_analyzer, uw_temperature_analyzer_avg, uw_pressure_analyzer,
+       uw_pressure_analyzer_avg, equ_pressure, equ_pressure_avg, "H2O_flow",
+       "H2O_flow_avg", air_flow_analyzer, air_flow_analyzer_avg, equ_speed_pump,
+       equ_speed_pump_avg, ventilation_flow, ventilation_flow_avg, condensation_atm,
+       condensation_atm_avg, condensation_equ, condensation_equ_avg, drip_1, drip_2,
+       condenser_temperature, condenser_temperature_avg, temperature_dry_box,
+       temperature_dry_box_avg, ctd_pressure, ctd_pressure_avg, ctd_temperature,
+       ctd_temperature_avg, ctd_conductivity, ctd_conductivity_avg, "ctd_O2_saturation",
        "ctd_O2_saturation_avg", "ctd_O2_concentration", "ctd_O2_concentration_avg",
        "uw_pH", "uw_pH_avg", uw_redox_potential, uw_redox_potential_avg,
        temperature_external, temperature_external_avg, tsg_temperature,
@@ -115,13 +125,19 @@ SELECT time_20min, time_study, longitude, longitude_avg, latitude, latitude_avg,
        bad_wind_direction_flag, very_bad_wind_direction_flag,
        bad_ice_flag, bad_atmospheric_pressure_flag, bad_anemometer_flag,
        bad_barometer_flag, bad_trh_sensor_flag, bad_ir_sensor_flag,
-       bad_ctd_flag, "bad_CO2_flag", "bad_H2O_flag", "bad_H2O_flow_flag",
-       bad_pressure_analyzer_flag, bad_temperature_analyzer_flag, bad_equ_temperature_flag,
-       bad_temperature_external_flag, fluxable_exception
-FROM amundsen_flux.lowfreq_1w20min_2016_flags
+       nbad_ctd_flag, "nbad_CO2_flag", "nbad_H2O_flag", "nbad_H2O_flow_flag",
+       nbad_pressure_analyzer_flag, nbad_temperature_analyzer_flag,
+       nbad_equ_temperature_flag, nbad_temperature_external_flag, fluxable_exception
+FROM amundsen_flux.${LFREQ2}
 ORDER BY time_20min, time_study;
 \cd ${LFREQ2ODIR}
 \copy (SELECT * FROM lowfreq_1w20min_flags) TO PROGRAM 'awk -v fprefix=L2 -f ${SPLITYMD_PRG} -' CSV
+\H
+\o colnames.html
+SELECT cols.column_name, col_description(cl.oid, cols.ordinal_position::INT)
+FROM pg_class cl, information_schema.columns cols
+WHERE cols.table_catalog='gases' AND cols.table_schema='amundsen_flux' AND
+cols.table_name = '${LFREQ2}' AND cols.table_name = cl.relname;
 EOF
 psql -p5433 -f${TMPDIR}/lfreq2_dump.sql gases
 
@@ -160,6 +176,12 @@ SELECT time_20min, time_study, longitude, latitude, speed_over_ground,
   FROM amundsen_flux.flux_10hz_2016;
 \cd ${HFREQ1ODIR}
 \copy (SELECT * FROM flux_10hz) TO PROGRAM 'awk -v fprefix=EC -f ${SPLITISO_PRG} -' CSV
+\H
+\o colnames.html
+SELECT cols.column_name, col_description(cl.oid, cols.ordinal_position::INT)
+FROM pg_class cl, information_schema.columns cols
+WHERE cols.table_catalog='gases' AND cols.table_schema='amundsen_flux' AND
+cols.table_name = '${HFREQ1}' AND cols.table_name = cl.relname;
 EOF
 psql -p5433 -f${TMPDIR}/hfreq1_dump.sql gases
 
