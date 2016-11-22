@@ -1,10 +1,10 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2014-08-28T22:17:42+0000
-# Last-Updated: 2015-06-30T18:47:59+0000
+# Last-Updated: 2016-11-22T21:30:33+0000
 #           By: Sebastian P. Luque
-# 
-# Commentary: 
+#
+# Commentary:
 #
 # Prepare data for loading onto database.
 # -------------------------------------------------------------------------
@@ -25,7 +25,7 @@ AWKPATH=/usr/local/src/awk
 
 AWKPATH=${AWKPATH} ./nav4db_amundsen_flux_2010.awk ${NAV}/*.dat | \
     awk -F, '!x[$1]++' > ${NAV}/NAV_all.csv
-./navproc4db_amundsen_flux.awk ${NAV_SHIP}/LEG_*/*.int | \
+./nav_proc4db.awk -v skip=23 ${NAV_SHIP}/LEG_*/*.int | \
     awk -F, '!x[$1]++' > ${NAV_SHIP}/navproc_all.csv
 AWKPATH=${AWKPATH} ./met4db_amundsen_flux_2010.awk ${MET}/*.dat | \
     awk -F, '!x[$1]++' > ${MET}/MET_all.csv
