@@ -1,0 +1,990 @@
+\documentclass[12pt,letterpaper,titlepage,headings=small,numbers=noenddot]%
+{scrartcl}
+
+\addtokomafont{caption}{\small}
+\setkomafont{captionlabel}{\sffamily\bfseries}
+\renewcommand*{\captionformat}{.\ }
+
+\usepackage[margin=2.75cm]{geometry} %
+\setlength{\parskip}{1em}     %
+\setlength{\parindent}{0em}     %
+%% \addtolength{\footskip}{1.5em}
+
+\usepackage{amsmath}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{lscape}
+\usepackage{booktabs}
+\usepackage{fancyhdr}
+\usepackage{threeparttable}
+\usepackage{rotating}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{relsize}
+\usepackage{paralist}
+\usepackage{sectsty}
+\usepackage[final]{listings}
+\usepackage{tocloft}
+\usepackage[utf8]{inputenc}   %
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage{pgf, tikz}
+\usepackage[colorlinks=true]{hyperref}
+\usetikzlibrary{decorations.pathmorphing,shapes.geometric,trees,arrows,%
+  backgrounds,positioning}
+\tikzstyle{background grid}=[draw, step=0.5cm, gray, very thin]
+
+\lstset{basicstyle=\footnotesize \ttfamily, aboveskip=1em,%
+numbers=left, numberstyle=\tiny}
+
+\graphicspath{{DB/}{Images/}}
+
+\setlength{\abovetopsep}{0.5em} %
+\setlength{\belowrulesep}{1em} %
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\bfseries \nouppercase \leftmark}
+\fancyfoot[C]{\thepage}
+
+\renewcommand{\headrulewidth}{1pt}
+\subsectionfont{\normalsize}
+
+\usepackage{natbib}       %
+\bibpunct{(}{)}{,}{a}{}{,}      %
+
+\usepackage[auth-sc]{authblk}
+\renewcommand\Authfont{\large}
+\renewcommand\Affilfont{\normalsize}
+
+\usepackage[thickqspace,thinspace,textstyle]{SIunits}%
+
+% -------------------------------------------------------------------------
+
+\begin{document}
+
+\title{\Large \bfseries The CEOS \texttt{gases} database}
+
+\author[1]{Sebastián P.~Luque}
+
+\affil[1]{Centre for Earth Observation Science, Department of Environment
+  and Geography, University of Manitoba, Winnipeg, MB R3T 2N2,
+  Canada\thanks{Email: \texttt{sebastian.luque@umanitoba.ca}}}
+
+\date{\smaller[2] \today}
+
+% \publishers{\large{2008-2011 final report}}
+
+\maketitle
+
+\tableofcontents{}
+
+% \newpage
+\section{Introduction}
+\label{sec:introduction}
+
+Data are the main vehicle for scientific progress, and often cost huge
+amounts of money and effort by numerous individuals and institutions to
+obtain.  However, data acquisition systems are rarely free of human and
+machine errors, and incorporate some degree of redundancy for various
+purposes, such as protection for potential losses or troubleshooting while
+data are being acquired.  Once data have been acquired and it is time to
+analyze, present, and distribute them, a vast number of requirements of
+different complexity are imposed on these data.  A properly designed
+database helps store, maintain, and access data to satisfy these
+requirements promptly and efficiently.  It does so by ensuring that all
+necessary data are stored without obvious errors, and with minimal
+redundancy.  Using such a database, different requirements from the same
+underlying data never translate to different storage volumes.
+
+Data acquisition systems tend to change rapidly over time, depending on the
+particular objectives and resources available.  However, the overarching
+scientific goals and activities change much more slowly within a given
+institution or group of researchers.  A database is typically designed to
+address these goals and activities, so it is relatively independent of the
+rapidly changing data acquisition systems, although its design should
+strive to account for any foreseeable changes in these systems.  This
+independence, in turn, means that the tools used to analyze, present, and
+distribute data are also relatively independent of data acquisition systems
+because the database can be queried to supply them with input that has
+consistent structure and properties.  The benefits of this independence
+cannot be overstated.  Without it, even the slightest modifications to any
+data acquisition system result in major time-consuming changes in
+post-acquisition activities, bringing along new opportunities for errors
+and mistakes.
+
+Designing, implementing, and learning how to use databases are also
+time-consuming endeavours, but if done carefully and methodically, are only
+done once for the same purpose.  Therefore, it is time and effort well
+spent, which will pay huge dividends in the long run \citep{8781}.  It
+could be a reply to the famous Murphy's law: ``there is never time to do it
+right, but always time to do it over''.
+
+The CEOS \texttt{gases} database was designed to follow the \textbf{Mission
+  Statement}:
+
+\begin{quote}
+  The purpose of the CEOS \texttt{gases} database is to maintain time
+  series data we collect on concentration of key gas elements and
+  associated meteorological variables at the ocean(ice)-atmosphere layer.
+
+  Objectives:
+
+  \begin{itemize}
+  \item Allow for the computation of gas fluxes using the eddy covariance
+    method.
+  \item Allow for the computation of CO2 equilibrium between air and water.
+  \item Allow access to all associated data gathered during experiments.
+  \end{itemize}
+
+\end{quote}
+
+
+\section{Entity-relationship diagram}
+\label{sec:erd}
+
+A database is composed of ``relations'' or tables, representing unique
+information units.  Each table may participate in one or more relationships
+with other tables within the database.  An entity-relationship diagram
+(ERD) determines the structure of the database by showing these tables and
+relationships, as well as the columns defining data properties.  It is a
+major product of the database design process \citep{8781}.  The ERD for the
+CEOS \texttt{gases} database is shown in Figure~\ref{fig:ERD-main} and
+Figure~\ref{fig:ERD-series}.  ERDs use several symbols to indicate
+important elements of the database model, such as tables, types of tables,
+relationships between them, the type of relationship and the participation
+of records on each side of the relationship (Figure~\ref{fig:ERD-symbols}).
+The mandatory participation symbol in a table means that at least one
+record must exist in it for any record on the other table of the
+relationship.  The optional participation symbol in a table means that not
+all records on the other table of the relationship must have a matching
+record in it.  For example, the \texttt{suppliers} table has an optional
+participation in its relationship with the \texttt{instruments} table
+because not every supplier is associated with an instrument; many suppliers
+provide data loggers or other resources to CEOS instead of instruments.
+
+
+\begin{figure}[!tbh]
+  \begin{center}
+    \includegraphics[width=0.44\textwidth]{db_design_relationship_symbols}
+    \includegraphics[width=0.33\textwidth]{db_design_participation_symbols}
+  \end{center}
+  \caption{ERD symbols.}
+  \label{fig:ERD-symbols}
+\end{figure}
+
+\begin{figure}[!tbh]
+  \begin{center}
+    \includegraphics[trim=25 220 25 80, width=0.95\textwidth]{gases_erd_main}
+  \end{center}
+  \caption{ERD of relations comprising all meta-data necessary to correctly
+    identify any data. Refer to Figure~\ref{fig:ERD-symbols} for meaning of
+    symbols. The key symbol indicates a primary key column.  Dark blue is
+    for regular data tables, light blue for sub-tables, orange for linking
+    tables, and turquoise for look-up tables.}
+  \label{fig:ERD-main}
+\end{figure}
+
+\begin{figure}[!tbh]
+  \begin{center}
+    \includegraphics[trim=0 35 0 25, width=0.95\textwidth]{gases_erd_series}
+  \end{center}
+  \caption{ERD for tables comprising time series data, and their
+    relationship to the table linking them to meta-data. Refer to
+    Figure~\ref{fig:ERD-symbols} for meaning of symbols.  The key symbol
+    indicates a primary key column.  Colours are as in
+    Figure~\ref{fig:ERD-main}; yellow is for partition tables
+    (\url{http://www.postgresql.org/docs/current/static/ddl-partitioning.html}).}
+  \label{fig:ERD-series}
+\end{figure}
+
+Notice how descriptive table and columns names are.  While such names may
+be abbreviated, or otherwise obfuscated due to constraints in the data
+acquisition system\footnote{Some data loggers do impose limitations on how
+  long these names can be, and what characters they can contain.}, the
+meaning of the referred tables and columns must be immediately and clearly
+understood by any database user, not just by experts in the field that may
+be used to the idiosyncratic names adopted in the acquisition system
+(e.g.~AtmP, CO2\_open, Ux, etc.)  If more details are required
+(e.g.~units), they are available in the comments for the table or column
+(Appendix~\ref{sec:appendix}).
+
+
+\clearpage{}
+\section{Database server}
+\label{sec:database-server}
+
+The \texttt{gases} database was implemented in a \texttt{PostgreSQL}
+server, the leading database engine in the Free Software domain
+(\url{http://www.postgresql.org/docs/manuals}).  Full details of the
+implementation are presented in Appendix~\ref{sec:appendix}.  Data
+integrity, accuracy, and access efficiency are ensured via carefully
+selected constraints and indexes on one or a combination of columns in each
+table.
+
+\texttt{PostgreSQL} databases consist of a collection of objects organized
+in a hierarchical manner.  Starting at the broadest level, a database
+consists of schemas, which contain tables, views, functions, and other
+administrative objects.  The \texttt{gases} database consists of two
+main schemas:
+\begin{inparaenum}[a)]
+\item \texttt{public}, and
+\item \texttt{private}
+\end{inparaenum}.  The first one contains all tables, which comprise all
+stored data.  Currently, only the database administrator (i.e.~user
+\texttt{sluque}) can create and modify tables in this schema to secure
+database integrity.  The \texttt{public} schema contains all the ``views''
+or queries, which represent different presentations of one or more tables
+from any schema joined together.  The latter are views of general interest
+across projects.  A second database user (\texttt{ceos}), as well as the
+database administrator, can create and modify tables and views in this
+schema.  However, tables in this schema are not part of the design, so are
+of limited value.  More schemas will be added to hold views from pilot or
+isolated projects.  These views should be accessed using schema-qualified
+form: \texttt{SCHEMA\_NAME.TABLE\_NAME}.  The following schemas have been
+created thus far: \texttt{amundsen\_flux} and \texttt{cambridge\_bay}.
+
+The full database is backed up daily on the local server machine, and
+weekly on an iSCSI device provided by a CEOS NAS server, maintained by
+Wayne Chan.
+
+
+\section{Workflow}
+\label{sec:workflow}
+
+Due to the independence between data acquisition systems and subsequent
+requirements, data flow into and out of the database occurs in three major
+steps:
+\begin{inparaenum}[1)]
+\item entering meta-data allowing for proper identification of each record
+  that will be stored in the database,
+\item preparation of data collected during a project so that it can be
+  allocated to the different tables in the database, and
+\item querying of the database to produce and output data in a form that is
+  amenable for subsequent presentation, analyses, etc.
+\end{inparaenum}
+
+The purpose of this process, especially the final step, is to generate
+information and knowledge based on accurate data.  The level of care taken
+to perform each of these steps determines, to a large extent, whether this
+is accomplished successfully.
+
+
+\section{Generation of meta-data}
+\label{sec:generation-meta-data}
+
+The first step involves populating most of the tables shown in
+Figure~\ref{fig:ERD-main}.  It is very difficult to populate any one of
+these tables independently of each other, because they are composed of
+unique sequential integers that identify each row in any table, as well as
+refer to rows in other tables.  Therefore, using a relational database
+management software, allowing client connections to a database server is
+recommended.  There are several systems of this kind available, such as
+LibreOffice (\url{www.libreoffice.org}) and its Base sub-system, offered as
+Free Software, and Microsoft Access, each with their own advantages and
+disadvantages.  The former allows connections to a \texttt{PostgreSQL}
+databases using its own native driver, as well as via Java and ODBC
+drivers.  Microsoft Access can connect to \texttt{PostgreSQL} databases
+only using an \texttt{ODBC} driver and is only available for Microsoft
+Windows operating systems, but it offers very robust and flexible data
+entry form tools.  Therefore, Microsoft Access was chosen because its
+benefits are crucial to perform this step.
+
+The Microsoft Windows operating system can be installed on computers
+running other operating systems by using virtualization software such as
+Virtualbox (\url{www.virtualbox.org}).  To install and use the \texttt{ODBC
+  PostgreSQL} driver in a Microsoft Windows operating sytem, follow these
+steps:
+
+\begin{enumerate}[\bfseries 1.]
+\item Download and run the appropriate installer from
+  \url{http://www.postgresql.org/ftp/odbc/versions/msi}.  Select the
+  installer for the latest driver version.  Avoid the 64-bit version
+  (identified by the -x64- string in the file name) because Microsoft
+  Access cannot use it, even if your OS/machine does.  Keep this driver
+  up-to-date by checking the web site every few months.
+\item Start the \textbf{32-bit} \texttt{ODBC Administrator} control panel
+  typically found in
+  \lstinline[basicstyle=\small \ttfamily,
+  breaklines=true]|C:\Windows\system32\odbcad32.exe| and pin it to the
+  taskbar or somewhere easily accessible and recognizable for the future.
+  The window should look like Figure~\ref{fig:odbc-admin}.  Make sure that
+  the \textbf{32-bit} version of the control panel is running (on the
+  \texttt{About} tab), and that the \texttt{PostgreSQL ANSI} and
+  \texttt{PostgreSQL Unicode} drivers are listed under the \texttt{Drivers}
+  tab.
+
+  \begin{figure}[!tbh]
+    \begin{center}
+      \begin{minipage}[t]{0.5\textwidth}
+        \includegraphics[width=\textwidth]{odbc_control_panel}
+        \caption{The \texttt{ODBC Administrator} control panel.}
+        \label{fig:odbc-admin}
+      \end{minipage}
+    \end{center}
+  \end{figure}
+
+\item Select the \texttt{User DSN} tab, click the ``Add...'' button, select
+  the \texttt{PostgreSQL ANSI} driver, and click ``Finish''.  At this
+  point, you should see the DSN configuration dialog shown in
+  Figure~\ref{fig:odbc-pgsql-config}.  ``Data Source'' is simply a name
+  given to the DSN, \textbf{but it must be ``PostgreSQL30''}.  Ensure that
+  all fields correspond to the server properties shown in the first section
+  of Appendix~\ref{sec:appendix}, that ``User Name'' is \texttt{ceos}, and
+  ``Password'' is currently ``Gases2014''.  The password for this user may
+  change over time, so please consult with the database administrator to
+  ensure the correct one is used.
+
+  \begin{figure}[!tbh]
+    \begin{center}
+      \begin{minipage}[t]{0.5\textwidth}
+        \includegraphics[width=\textwidth]{odbc_postgresql_dsn}
+        \caption{The \texttt{PostgreSQL ANSI} configuration dialog for
+          configuring the \texttt{ODBC PostgreSQL} driver.}
+        \label{fig:odbc-pgsql-config}
+      \end{minipage}
+    \end{center}
+  \end{figure}
+
+  Note that the \texttt{ceos} user currently has read-only privileges to
+  anything in the \texttt{private} schema, but full read and write
+  privileges to the \texttt{public} schema.
+
+\item Install Microsoft Office Professional Plus 2013 or later, and obtain
+  a copy of the \texttt{ceos\_gases.accde} file from the database
+  administrator.  Opening this file in Microsoft Access looks like
+  Figure~\ref{fig:msaccess-db-main}.  This management system connects and
+  retrieves data from a subset of tables in the server, and provides
+  several forms to facilitate data-entry.  The forms are organized within a
+  main navigation form called ``Main'', and can be seen in the left pane of
+  the application.  Opening this form presents a number of tabs, which are
+  themselves forms presenting data as retrieved from the database.
+
+  The Main navigation form is organized so that data-entry proceeds
+  logically from left to right tabs.  In other words, whenever a new set of
+  meta-data need to be entered, the left-most tab should be verified and
+  updated if necessary first before proceeding to the form in the next tab
+  to the right, and so on.  It is important to follow this arrangement
+  because data that need to be entered in tabs at the right end of the Main
+  navigation form require data presented in forms to the left of them.
+
+  As can be seen from this management system, forms allow entering
+  meta-data in one or more related tables in the server simultaneously.
+  Accurate and complete meta-data are crucial in understanding and using the
+  rest of the data to be stored in the server.
+
+  \begin{figure}[!tbh]
+    \begin{center}
+      \includegraphics[width=\textwidth]{msaccess_ceos_gases_main}
+      \caption{The \texttt{ceos\_gases.accde} interface file opened in
+        Microsoft Access, showing the main navigation form.}
+      \label{fig:msaccess-db-main}
+    \end{center}
+  \end{figure}
+
+\end{enumerate}
+
+\textbf{Do consult the drop-down menus} when filling out the forms.  Some
+of these drop-down menus can be edited, so that records in the underlying
+table can be modified or new records added.
+
+\subsection{People, projects, and organizations}
+\label{sec:people-projs-orgs}
+
+The first three tabs/forms: ``Participants'', ``Projects'', and ``Suppliers
+and Organizations'' are simple data-entry interfaces for the
+\texttt{persons}, \texttt{projects}, and \texttt{suppliers} tables in the
+server, respectively.  Data required in these tables are straightforward
+and an explanation is shown in the documentation for these tables in
+Appendix~\ref{sec:appendix}.
+
+\subsection{Instruments and loggers}
+\label{sec:instruments-loggers}
+
+The following two forms: ``Instruments'', ``Data Loggers'' are slightly
+more complex.  They help to enter data into the \texttt{instruments}, and
+\texttt{loggers} tables, respectively, using data already available in
+other tables (namely \texttt{suppliers}, \texttt{instrument\_serial\_nos},
+and \texttt{logger\_serial\_nos}).  Although it is possible to edit and add
+data in the referred tables, it is easier to do this in the previous forms,
+except for the serial numbers, which can be done by clicking the ``Edit
+List Items'' button at the bottom of the drop-down menus.  The next form:
+``Logger Programs'' is very simple and allows entering data into the
+\texttt{logger\_programs}.
+
+The form ``Deployment Instruments'' helps populate the
+\texttt{deployment\_instruments} table, which is an important linking
+table, associating instruments to data loggers and logger programs.
+
+The simple ``Coordinates'' form is used to enter data into the
+\texttt{coordinates} table.
+
+\subsection{Deployments}
+\label{sec:deployments}
+
+The last three forms: ``Deployments'', ``Deployment Groups'', and ``Logging
+Groups'' are the most complex and are the ones that determine how data in
+the different time series tables can be traced back to their meta-data.
+The first one helps populate the \texttt{deployments} table by presenting
+information from all the tables that it refers to indicate the deployment
+of a particular instrument setup and deployment characteristics at a given
+time.  The second one: ``Deployment Groups'' serves to associate a group of
+deployments having a common time series properties, such as function,
+time-step, sampling frequency, and start/end time.  Each group is given a
+name, and can be further identified by a subgroup number, in case more than
+one main group with the same properties are recorded.  This form helps
+populate the \texttt{logging\_groups} and \texttt{deployment\_groups}
+tables by presenting required data from other tables.  The last form:
+``Logging Groups'' is not a data-entry form, but serves to look up the
+logging groups defined so far, as it shows all logging groups defined so
+far in a table-like manner, which is helpful when entering data in the
+previous form.
+
+Notice that none of the forms require entering values for primary key
+columns of type ``serial''
+(Figures~\ref{fig:ERD-main}-\ref{fig:ERD-series}), as they are
+automatically incremented with new records.  The same applies when loading
+data; the topic of the next section.  At this point, it is a good idea to
+check and print the report ``rprt\_logging\_groups\_summary'', available in
+the ``Reports'' section on the left pane of the application.  The report
+presents a summary of the instruments deployed and assigned to logging
+groups, which is required information for loading data.  Take advantage of
+the filtering facilities if focusing on a particular project, subproject,
+etc.
+
+
+\section{Preparing and loading data}
+\label{sec:prep-load-data}
+
+Data files from any given project are rarely in a form that can be directly
+loaded into the database because a relational database model as the one
+shown in Figures~\ref{fig:ERD-main} and \ref{fig:ERD-series} is very
+difficult to implement in a data acquisition system.  The data acquisition
+system is constrained by scientific objectives, the capabilities and
+limitations of equipment and people, as well as numerous challenges related
+to measurement.  Consequently, the optimal organization of data for the
+acquisition system may not match the relational database model, so some
+effort is required to bring data from one to the other.
+
+The main source of data for the \texttt{gases} database is flat text files,
+where records are separated by the newline character, and columns,
+indicating a property for each record, are separated by comma or
+whitespace.  Files are typically written by data loggers or other devices
+following a program, recording one or more data tables with measurements of
+sensors connected to them at specified intervals.
+
+Preparing data for loading onto the database involves ensuring consistency
+of data types between files and database tables, splitting and/or merging
+files into the respective logging groups defined in meta-data tables.  The
+following scripts, written in the \texttt{AWK} language
+(\url{http://www.gnu.org/software/gawk/manual/gawk.html}), assist with
+these tasks:
+
+\begin{description}
+\item[\texttt{ec4db.awk}] Splits and then combines large, high frequency,
+  files into smaller files containing a particular combination of logging
+  group and database table.
+\item[\texttt{met4db.awk}] Combines all the meteorology (MET) files into a
+  single one corresponding to the \texttt{meteorology\_series} database
+  table.
+\item[\texttt{nav4db.awk}] Cleans and reorganizes the navigation (NAV)
+  files into a single one corresponding to the \texttt{navigation\_series}
+  database table.
+\item[\texttt{nmea2csv\_omg.awk}] Processes \texttt{POSMV} files containing
+  \texttt{NMEA} sentences and generates a table-like file with the
+  necessary navigation data corresponding to the
+  \texttt{navigation\_series} database table.
+\item[\texttt{rad4db.awk}] Cleans and reorganizes the radiation (RAD) files
+  into a single one corresponding to the \texttt{radiation\_series}
+  database table.
+\item[\texttt{underway4db.awk}] Cleans and reorganizes the underway system
+  files into a single one corresponding to the \texttt{underway\_series}
+  database table.
+\end{description}
+
+They are available from \url{https://code.google.com/p/ceos-uofm} where
+they are version-controlled. Note that these scripts are a snapshot of the
+tools used for processing Amundsen 2014 navigation, radiation, and flux
+tower data, so are bound to change frequently, as data acquisition systems
+and data logger programs change according to project.  Additional scripts
+may be required to handle new file types generated during a project, and
+some may not even be used for certain projects.  Consult each script for
+calling instructions, which are included as comments at the beginning of
+each file.  \texttt{AWK} interpreters are installed by default on most
+\texttt{*nix} systems, including Mac operating systems, but make sure the
+``shebang'' at the top of the script points to the executable in the system
+it will be run on.
+
+The result of this process is single files for each database table
+corresponding to a particular logging group.  The tables are loaded onto
+the database using the \texttt{pgloader} Free Software utility
+(\url{https://github.com/dimitri/pgloader}).  This utility requires one or
+more command files, specifying input data files, how the data therein
+should be loaded onto the database, and onto which tables.  It allows the
+assignment of a logging group ID (a property that is not recorded nor
+needed during data acquisition) to each file without polluting it.  It also
+allows tracing and logging of data that were rejected for any reason, or
+accepted, which is very useful for diagnosing problems.  There are many
+other reasons making \texttt{pgloader} the best option for loading data
+onto \texttt{PostgreSQL} databases.
+
+\texttt{pgloader}'s command files consist of sections, specifying which
+database table should be loaded with which file, using what logging group
+ID, and how.  Please consult \texttt{pgloader}'s documentation to clearly
+understand how to write this file.  It uses a language that closely
+resembles \texttt{SQL}, and has a very simple syntax.  Below is an excerpt
+of a section in \texttt{cambridge\_bay\_EC\_2014.pgload}, defining how to
+load database table \texttt{wind3d\_series\_analog}.
+
+\begin{lstlisting}[language=bash, basicstyle=\footnotesize \ttfamily, frame=single, showstringspaces=false]
+LOAD CSV
+     FROM '/home/sluque/Data/Cambridge_Bay/2014/EC/wind_1.4.csv'
+        (
+          "time",
+          record_no,
+          program_version,
+          wind_speed_u,
+	  wind_speed_v,
+          wind_speed_w,
+	  air_temperature_sonic,
+	  anemometer_status
+        )
+     INTO postgresql://USER:PASSWD@SERVER:5433/gases?wind3d_series_analog
+        (
+          logging_group_id integer using "51",
+	  stream_type text using "analog",
+          "time",
+          wind_speed_u,
+	  wind_speed_v,
+	  wind_speed_w,
+          air_temperature_sonic,
+	  anemometer_status
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
+\end{lstlisting}
+
+\texttt{LOAD CSV} is the command doing the work, ending with the semicolon
+on line 29, and there can be multiple commands like this one in the file.
+The command has 5 major clauses: \texttt{FROM}, \texttt{INTO},
+\texttt{WITH}, and \texttt{SET}.  The system path to the file to be loaded
+is declared in the \texttt{FROM} clause in line 2.  Lines 4 to 11 provide
+names for the columns in the file.  Any names for columns to be loaded must
+match names in the database table.  Names for columns that are not going to
+be loaded are irrelevant, but all columns in the file must be
+named\footnote{\textbf{Case is relevant}, and the double quotes ensure that
+  \texttt{PostgreSQL} respects them.  Double quotes also ensure that no
+  conflict occurs between names and special server words, so use them
+  around all column names if there is any doubt.}; this is critical.
+
+The \texttt{INTO} clause in line 13 contains a string with connection
+details for the table to be loaded, where \texttt{USER} and \texttt{PASSWD}
+specify the \texttt{PostgreSQL} user and password, respectively.
+\texttt{SERVER} indicates the server address, which can be the word
+``localhost'' if working from the server machine itself, or the current
+\texttt{URL} of the server machine, if connecting
+remotely\footnote{Currently \url{net82.ceos.umanitoba.ca}}.  The rest of
+the string following the last colon specifies the port, database and table
+to connect to, separated by the characters shown.  Lines 15 to 22 list the
+columns of the database table to be loaded, using names from the
+\texttt{FROM} clause.  Lines 15 and 16 show a special syntax used to supply
+values for columns that are absent from the input file, which consists of
+the column name, the \texttt{PostgreSQL} data type, the word ``using''
+followed by an expression.  Consulting report
+``rprt\_logging\_groups\_summary'' from the \texttt{ceos\_gases.accde}
+interface is the most efficient way to determine what the values for such
+columns should be, which is essential for identifying the data to be
+loaded.
+
+The fourth clause, \texttt{WITH} (lines 24 through 27), tells
+\texttt{pgloader} how to interpret the input file, for example how many
+lines to skip at the beginning of the input file, and other details.
+Lastly, the clause \texttt{SET} is used to set the values of any server
+variables for the duration of the command.
+
+Although the program can be called to process more than one command in one
+or more files, it is preferable to process one command at a time, for
+better control\footnote{This is achieved by keeping all commands in the
+  file ``commented out'', except for one, before calling the
+  \texttt{pgloader} process.}:
+
+\begin{lstlisting}[language=bash, morekeywords={pgloader}, backgroundcolor=\color{lightgray}]
+pgloader -v -D /var/tmp/pgloader_cambridge_bay_2014 \
+    -S EC_summary.log \ -L
+    /var/tmp/pgloader_cambridge_bay_2014/EC_2014.log \
+    --log-min-messages debug --client-min-messages warning \
+    cambridge_bay_EC_2014.pgload
+\end{lstlisting}
+
+\section{Querying the database}
+\label{sec:querying-database}
+
+If the previous steps finished successfully, it is time to move on to the
+last and most interesting step, where data from all the different tables
+can be combined in any form to meet requirements during analysis, reports,
+etc.  In \texttt{PostgreSQL}, as in other relational database management
+systems, this is achieved by writing queries in the \texttt{SQL} language.
+The \texttt{PostgreSQL} manual has an excellent introduction and full
+reference guide to \texttt{SQL}.  Briefly, queries are recipes for the
+database server to retrieve data from one or more related tables to produce
+a new one that presents data derived from joined table(s).  The new table
+does not exist physically, except when the query is executed by a user
+connected to the database, and the results saved to a file or piped to
+another command.  Therefore, queries are cheap in terms of computer memory
+resources; they are nothing more than instructions to be executed when
+requested.  Simple combinations of tables that do not require special
+functions can be performed visually with wizards and other assistance using
+Microsoft Access (or whatever database management system was configured).
+This has the advantage that very little or no knowledge of \texttt{SQL} is
+required.  However, to design the complex queries needed to generate the
+data to output for flux analysis, it is necessary to use a few simple
+functions written in the database server:
+
+\begin{description}
+\item[\texttt{angle\_diff}] Given two angle measurements (degrees), this
+  function returns the smallest rotation between them.
+\item[\texttt{angle\_vectors\_avg}] This function computes the average
+  angle from an array of concatenated \texttt{angle\_vectors} data type
+  singletons.  It returns vector data type.
+\item[\texttt{angle\_vectors\_stddev\_yamartino}] This function computes
+  the standard deviation of an angle from an array of concatenated
+  \texttt{angle\_vectors} data type singletons.  It returns double
+  precision data type.
+\item[\texttt{contrain\_angle360}] This function constrains angles to lie
+  in the range 0-360.
+\item[\texttt{decompose\_angle}] Decompose angle (in degrees units) and
+  magnitude into x (sine) and y (cosine) vectors from two double precision
+  inputs.
+\item[\texttt{truewind}] This function calculates true wind direction and
+  speed, given a \texttt{vessel\_wind\_parameters} data type containing the
+  required parameters.  It returns vector data type.
+\end{description}
+
+Building queries under these circumstances, and indeed performing any
+administrative database operations, is most easily done using
+\texttt{pgAdmin III}, a Free Software tool (\url{www.pgadmin.org}).  It is
+available for most common operating systems.  To install this tool and
+access the server using it, follow these steps:
+
+\begin{enumerate}[\bfseries 1.]
+
+\item Download and install \texttt{pgAdmin III} from the download section
+  of the website and start the application.  Do read at least the first
+  parts of \texttt{pgAdmin III}'s documentation, available from the
+  ``Help'' menu.  What follows is essentially taken from there.
+\item Click on the ``Add Server'' menu or toolbar button.  You should see
+  the following window:
+
+  \begin{figure}[!tbh]
+    \begin{center}
+      \begin{minipage}[t]{0.5\textwidth}
+        \includegraphics[width=\textwidth]{pgadmin_add_server}
+        \caption{\texttt{pgAdmin III}'s ``Add Server'' window.}
+        \label{fig:pgadmin-server-config}
+      \end{minipage}
+    \end{center}
+  \end{figure}
+
+  Fill the text boxes in the ``Properties'' tab according to the server
+  properties details in Appendix~\ref{sec:appendix}.  Ignore the other
+  tabs.  This is analogous to configuring the \texttt{ODBC} driver as shown
+  in Figure~\ref{fig:odbc-pgsql-config}.  \item Double-click on the server
+  that was previously configured; the left pane shows a list of the
+  different servers that have been configured for access.  \texttt{pgAdmin
+    III} follows \texttt{PostgreSQL} hierarchical organization of objects,
+  so the databases and other objects belonging to it are grouped and listed
+  accordingly:
+
+  \begin{figure}[!tbh]
+    \begin{center}
+      \begin{minipage}[t]{\textwidth}
+        \includegraphics[width=\textwidth]{pgadmin_main_window}
+        \caption{\texttt{pgAdmin III}'s main window.}
+        \label{fig:pgadmin-main}
+      \end{minipage}
+    \end{center}
+  \end{figure}
+
+\end{enumerate}
+
+Using the left pane to navigate around the database you can find all the
+information presented in the reports in Appendix~\ref{sec:appendix}, as
+well as additional details about the implementation of the functions listed
+above.  For example, expand the ``Aggregates'' group of the \texttt{public}
+schema to find the implementation of the \texttt{avg} and \texttt{stddev}
+aggregate function to handle input of the \texttt{angle\_vector} data type
+created for this database.  This custom data type is, in turn, visible
+under the ``Types'' group of the \texttt{public} schema.  Feel free to
+explor the database in this manner.  In \texttt{PostgreSQL}, queries can be
+saved as ``views'' and can be used by other views as if they were physical
+tables to create increasingly complex queries, so can be very powerful and
+efficient tools.  For the \texttt{gases} database, views are saved in the
+\texttt{public} schema, so are available to all database users, who can
+also create new views.  The easiest way to create new views in
+\texttt{pgAdmin III} is to right-click on the ``Views'' group in the left
+pane.  Alternatively, if there is an existing view that can be used as a
+template to design a new one, right-click on it and select ``Scripts'' ->
+``CREATE script''.  The \texttt{SQL} code shown in the window can be
+modified as desired.
+
+\section{Organization of views for flux
+  analysis}
+\label{sec:org-views-flux}
+
+\texttt{IDL} code was available to perform calculations needed for flux and
+eddy covariance analysis.  However, it was strongly tied to the data
+acquisition system, so the vast majority of it was dedicated to operations
+that are much more efficiently performed in a database using the
+\texttt{SQL} language.  This part of the code has been moved to their
+\texttt{SQL} equivalent in the \texttt{PostgreSQL} server, so it currently
+focuses on calculations only.  A number of views were written in the
+\texttt{gases} database, building up on one another, leading to a final
+view that would serve as an input table for calculations using \texttt{IDL}
+code.  The analyses have been restricted to the ``ArcticNet Amundsen''
+project so far, so these views were created in the \texttt{amundsen\_flux}
+schema.  \textbf{Do consult} the design and documentation for these views
+in \texttt{pgAdmin III}; they are the source of the summary below.
+
+Note that the values used as criteria for building the views below may vary
+depending on requirements.
+
+\subsection{Building essential continuous time series}
+\label{sec:essential-time-series}
+
+The process starts by building simple, continuous time series for each
+logical unit of interest for flux analysis:
+\begin{inparaenum}[a)]
+\item navigation,
+\item meteorology,
+\item radiation,
+\item motion,
+\item open path gas analysis,
+\item closed path gas analysis, and
+\item 3D wind speed, air temperature, and speed of sound.
+\end{inparaenum}
+
+Data for the first three groups are typically recorded at relatively low
+frequencies (1 s and 1 min), whereas the rest are recorded at 10 Hz (0.1 s)
+frequency.  Therefore, continuous time series for each of these groups are
+first built at their nominal frequencies.  At this stage, views are named
+using the following convention:
+
+\begin{verbatim}
+GROUPNAME_FREQUENCY_YEAR
+\end{verbatim}
+
+where \texttt{GROUPNAME} is one of: meteorology, radiation, motion, opath
+(open path gas analysis), cpath (closed path gas analysis), wind3d (3D wind
+speed, air temperature, and speed of sound); \texttt{FREQUENCY} is the
+nominal frequency at which data were recorded for the group, and
+\texttt{YEAR} is the four-digit year for the project that the view is built
+on.  Some views may have one or more identifier words between
+\texttt{GROUPNAME} and \texttt{FREQUENCY}.
+
+The following views are created at this stage (the year part of the name is
+replaced by an asterisk to generalize):
+
+\begin{description}
+\item[\texttt{navigation\_1s\_*}] This view ensures that speed over ground
+  is presented in m/s units.
+\item[\texttt{meteorology\_1min\_*}] This view ensures that wind direction
+  is provided in the ship frame of reference, i.e.~the offset between
+  anemometer and the ship's bow is added/subtracted as
+  necessary\footnote{Prior to tower relocation on deck -23$\degree$ was
+    added}.
+\item[\texttt{radiation\_1min\_*}] PAR values greater than 2000 or smaller
+  than or equal to -2.0 are set to \texttt{NULL} because they are assumed
+  to be invalid.  Values between -2.0 and 0 are set to 0 for some reason.
+  K\_down values greater than 800.0 or smaller than or equal to -2.0 are
+  also set to \texttt{NULL}, and values between -2.0 and 0 are set to 0.
+  Finally, LW\_in values greater than 550.0 or smaller than 0 are set to
+  \texttt{NULL}.
+\item[\texttt{motion\_10hz\_*}] No calculations are performed in this view.
+\item[\texttt{opath\_10hz\_*}] No calculations are performed in this view.
+\item[\texttt{cpath\_10hz\_*}] No calculations are performed in this view.
+\item[\texttt{wind3d\_analog\_10hz\_*}] No calculations are performed in
+  this view.
+\item[\texttt{wind3d\_serial\_10hz\_*}] No calculations are performed in
+  this view.
+\end{description}
+
+These views rely on function \texttt{generate\_series} to generate a
+continuous time variable covering the study period and match against data
+in the joined tables.
+
+
+\subsection{Selecting time periods for analysis}
+\label{sec:select-periods}
+
+Data recorded at low frequencies are used to select periods of time of a
+specified duration that are adequate for flux analysis, based on several
+criteria, including recorded values and their averages over each time
+period.  Therefore, navigation data available via the
+\texttt{navigation\_1s\_*} view are averaged over 1 min intervals in a new
+view named \texttt{navigation\_1min\_*}, which also includes the standard
+deviation for each column.  The following three views form the basis for
+subsequent queries:
+\begin{inparaenum}[a)]
+\item \texttt{navigation\_1min\_*},
+\item \texttt{meteorology\_1min\_*}, and
+\item \texttt{radiation\_1min\_*},
+\end{inparaenum}.
+
+A duration of 20 min was chosen at CEOS to conduct flux analysis.
+Twenty-minute averages and standard deviations are needed for choosing
+adequate periods, but data recorded at nominal frequency (1 s and 1 min)
+for each chosen period are required for the final view.  This was
+approached by combining all three views of data at 1 min frequency, but
+used ``window'' functions to generate the 20 min statistics for every
+record.  This allowed the comparison of all 1-min records to be compared
+against the statistics for the 20-min period they belonged to, so that a
+number flags could be built for each imposed criterion.  Finally, a view
+was written to present the 20-min statistics of all period deemed to be
+adequate for flux analysis.  Given the complexity of the queries, this was
+accomplished via three views:
+
+\begin{description}
+\item[\texttt{lowfreq\_1w20min\_*}] This view builds flags that are used
+  for filtering data, and draws in the 1-min average data, calculating a
+  20-min average window of all the fields.  We set wind speed and direction
+  to \texttt{NULL} when wind direction is considered to be
+  invalid\footnote{Currently wind direction between 90 and 270}.  We set
+  relative humidity and air temperature to \texttt{NULL} when wind
+  direction is invalid according to stricter criteria\footnote{Currently
+    wind direction between 170 and 190}.  Finally, we set atmospheric
+  pressure to \texttt{NULL} when it drops below a given
+  threshold\footnote{Currently when below 94.0}.
+\item[\texttt{lowfreq\_1w20min\_flags\_*}] This view builds on the previous
+  one by adding another flag to test for the following conditions in each
+  record (flag value in parenthesis):
+  \begin{inparaenum}[a)]
+  \item the average wind direction over 20-min period is below $260\degree$
+    or above $100\degree$ (1),
+  \item the difference between wind direction and the 20-min average is
+    larger than $50\degree$ (5),
+  \item the difference between speed over ground and the 20-min average is
+    larger than 10 m/s (3),
+  \item the difference between heading and the 20-min average is larger
+    than $90\degree$ (4),
+  \item the standard deviation in heading is greater than $5\degree$ (6),
+  \item the standard deviation in speed over ground is greater than 1 (7),
+    and
+  \item the standard deviation in wind direction over the 20-min period is
+    greater than 15 (8).
+  \end{inparaenum}  The flag has a value of zero if no conditions apply.
+\item[\texttt{lowfreq\_20min\_fluxable\_*}] This view builds on the
+  previous one by presenting the 20-min statistics for every period deemed
+  to be adequate for flux analysis, and calculates the number of successful
+  records within the period, based on the flag generated in
+  \texttt{lowfreq\_1w20min\_flags\_*}.  A period is deemed to be adequate
+  for flux analysis if it is complete (every minute has a flag value), and
+  the flag value is 0 or 7.
+\end{description}
+
+
+\subsection{Generating the final view}
+\label{sec:final-view}
+
+The final view is built by combining \texttt{lowfreq\_20min\_*} with the
+matching \texttt{navigation\_1s\_*} and all the views of data recorded at
+high frequency, provided they are complete for that period.  This final
+view is named \texttt{flux\_10hz\_*}, and given the network of dependencies
+with previously described views and operations therein, can take several
+minutes to several hours or more to execute, so \textbf{do be patient}.
+
+The easiest way to output this table to file is using \texttt{psql}, the
+command-line \texttt{PostgreSQL} client, which is part of the
+\texttt{PostgreSQL} distribution, and is also included in \texttt{pgAdmin
+  III}.  The same functionality is available by other means, as described
+below.  Because \texttt{IDL} code for processing data from this view
+requires individual files for each study period, an \texttt{AWK} script
+(\texttt{split\_flux.awk}) was written to perform this trivial operation:
+
+\begin{lstlisting}[language=awk, frame=single]
+BEGIN {
+    FS=OFS=","
+    fprefix="EC"
+}
+
+FNR > 1 {
+    split($1, dt, /[: -]/)
+    fn=sprintf("%s_%s%s%s%s%s%s.csv", fprefix, dt[1], dt[2], dt[3],
+	       dt[4], dt[5], dt[6])
+    print > fn
+}
+\end{lstlisting}
+
+Putting it all together in an interactive shell and \texttt{psql} client
+session (using the 2013 view as an example):
+
+\begin{lstlisting}[language=bash, morekeywords={psql, copy},
+backgroundcolor=\color{lightgray}, breaklines=true]
+psql -h net82.ceos.umanitoba.ca -U ceos -d gases
+\copy (SELECT * FROM flux_10hz_2013) TO PROGRAM 'split_flux.awk -' CSV
+\end{lstlisting}
+
+The first line starts a \texttt{psql} session, establishing a connection to
+the database server and the \texttt{gases} database.  Once at the
+\texttt{psql} prompt\footnote{Do not break lines at the \texttt{psql}
+  prompt when using ``meta-commands'', such as \lstinline|\\copy|.}, the
+second line outputs the view's data and pipes it to the \texttt{AWK}
+script\footnote{Ensure that the full path to the executable file is
+  specified in the \texttt{psql} meta-command.}.  Files will be written to
+the current directory.  The same task can be performed from \texttt{pgAdmin
+  III}; simply select ``\texttt{psql} console'' from the ``Plugins'' menu
+and execute the second line above.  If none of these options are available,
+then the view can be accessed as a ``linked table'' in Microsoft Access'
+\texttt{ceos\_gases.accde}:
+
+\begin{enumerate}[\bfseries 1.]
+\item select ``External Data'' -> ``ODBC database'', and then follow the
+  wizard.
+\item Select ``link to the data source by creating a linked table'', and in
+  the following screen click on the ``Machine Data Source'' and locate the
+  \texttt{PostgreSQL} source as configured in
+  section~\ref{sec:generation-meta-data}.
+\item In the following screen, locate the desired table
+  \texttt{public.flux\_10hz\_*}.
+\item Microsoft Access will ask to select which fields can act as primary
+  key, even though the view does not present one explicitly.  The fields
+  \texttt{time\_20min} and \texttt{time\_study} can be selected for this
+  purpose, as both of them combined serve as a primary key.
+\item Right-click ``Export'' -> ``Text file''.
+\end{enumerate}
+
+The output file would be very large, and would need to be split by bringing
+the file to a \texttt{*nix} system to be able to use
+\texttt{split\_flux.awk}, or split it via other means.  Similar approaches
+are available in other database management systems.
+
+
+\bibliography{biblioSPL}
+\bibliographystyle{meps}
+
+
+% Appendices
+\appendix
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{section}{Appendix}
+\pagestyle{plain}
+\section*{Appendix}
+\label{sec:appendix}
+
+\includepdf[pages=-,fitpaper=true,pagecommand={},scale=0.86,rotateoversize=true]%
+{gases_db_report}
+
+
+\end{document}
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% TeX-PDF-mode: t
+%%% End:
