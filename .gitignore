@@ -1,5 +1,15 @@
 auto/
 *.csv
+*.png
+*.html
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.toc
+*.pdf
+/misc.sql
 /exploration.R
 /dbload_procedure.*
 !/dbload_procedure.org
@@ -7,3 +17,5 @@ db_quicklook.*
 !db_quicklook.org
 db_exploration.*
 !db_exploration.org
+guide/DB
+guide/Images
