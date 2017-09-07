@@ -1,10 +1,10 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2014-08-28T22:17:42+0000
-# Last-Updated: 2015-07-02T17:49:25+0000
+# Last-Updated: 2017-09-06T20:45:51+0000
 #           By: Sebastian Luque
-# 
-# Commentary: 
+#
+# Commentary:
 #
 # Prepare data for loading onto database.
 # -------------------------------------------------------------------------
@@ -14,6 +14,7 @@ ROOTDIR=~/Data/ArcticNet/2010
 NAV=${ROOTDIR}/NAV
 NAV_SHIP=${NAV}/Ship/Processed
 MET=${ROOTDIR}/MET
+MET_AAVOS=${ROOTDIR}/MET/AAVOS/RTE
 UNDERWAY=${ROOTDIR}/UW_pCO2
 RAD=${ROOTDIR}/RAD
 FLUX=${ROOTDIR}/Flux
@@ -29,6 +30,8 @@ AWKPATH=${AWKPATH} ./nav4db.awk ${NAV}/*.dat | \
     awk -F, '!x[$1]++' > ${NAV_SHIP}/navproc_all.csv
 AWKPATH=${AWKPATH} ./met4db.awk ${MET}/*.dat | \
     awk -F, '!x[$1]++' > ${MET}/MET_all.csv
+AWKPATH=${AWKPATH} ./AAVOS_rte4db.awk ${MET_AAVOS}/*.RAW | \
+    awk -F, '!x[$1]++' > ${MET}/MET_AAVOS.csv
 ./underway4db.awk ${UNDERWAY}/*.txt | \
     awk '!x[$0]++' > ${UNDERWAY}/AMD_2010.csv
 ./underway4db_misc.awk ${UWTEMPERATURE}/* | \

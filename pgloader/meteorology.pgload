@@ -1,5 +1,5 @@
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2010/MET/MET_all.csv' 
+     FROM '/home/sluque/Data/ArcticNet/2010/MET/MET_all.csv'
         (
           "time",
 	  program_version,
@@ -9,13 +9,13 @@ LOAD CSV
 	  air_temperature,
 	  relative_humidity,
 	  surface_temperature,
-	  wind_speed, 
+	  wind_speed,
 	  wind_direction,
 	  wind_direction_sd,
 	  "PAR",
 	  pitch,
 	  roll,
-	  battery_voltage_sd, 
+	  battery_voltage_sd,
 	  logger_temperature_sd,
 	  atmospheric_pressure_sd,
 	  air_temperature_sd,
@@ -44,7 +44,7 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2010/MET/MET_all.csv' 
+     FROM '/home/sluque/Data/ArcticNet/2010/MET/MET_all.csv'
         (
           "time",
 	  program_version,
@@ -54,13 +54,13 @@ LOAD CSV
 	  air_temperature,
 	  relative_humidity,
 	  surface_temperature,
-	  wind_speed, 
+	  wind_speed,
 	  wind_direction,
 	  wind_direction_sd,
 	  "PAR",
 	  pitch,
 	  roll,
-	  battery_voltage_sd, 
+	  battery_voltage_sd,
 	  logger_temperature_sd,
 	  atmospheric_pressure_sd,
 	  air_temperature_sd,
@@ -86,7 +86,7 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2010/MET/MET_all.csv' 
+     FROM '/home/sluque/Data/ArcticNet/2010/MET/MET_all.csv'
         (
           "time",
 	  program_version,
@@ -96,13 +96,13 @@ LOAD CSV
 	  air_temperature,
 	  relative_humidity,
 	  surface_temperature,
-	  wind_speed, 
+	  wind_speed,
 	  wind_direction,
 	  wind_direction_sd,
 	  "PAR",
 	  pitch,
 	  roll,
-	  battery_voltage_sd, 
+	  battery_voltage_sd,
 	  logger_temperature_sd,
 	  atmospheric_pressure_sd,
 	  air_temperature_sd,
@@ -126,7 +126,7 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2010/Logs/metlog_4db.csv' 
+     FROM '/home/sluque/Data/ArcticNet/2010/Logs/metlog_4db.csv'
         (
           observation_time_beg,
 	  observation_time_end,
@@ -148,3 +148,32 @@ LOAD CSV
      SET client_encoding to 'utf-8',
          standard_conforming_strings to 'on';
 
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2010/MET/MET_AAVOS.csv'
+        (
+          "time",
+	  wind_speed,
+	  true_wind_direction,
+	  wind_direction,
+	  atmospheric_pressure,
+	  air_temperature,
+	  relative_humidity,
+	  surface_temperature
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?meteorology_series
+        (
+          logging_group_id integer using "108",
+          "time",
+	  atmospheric_pressure,
+	  air_temperature,
+	  relative_humidity,
+	  surface_temperature,
+	  wind_speed,
+	  wind_direction
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
