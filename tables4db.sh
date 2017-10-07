@@ -1,7 +1,7 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2014-08-28T22:17:42+0000
-# Last-Updated: 2016-11-19T22:44:41+0000
+# Last-Updated: 2017-10-06T01:20:01+0000
 #           By: Sebastian P. Luque
 #
 # Commentary:
@@ -49,9 +49,9 @@ AWKPATH=${AWKPATH} ./nmea2csv.awk ${NAV_CNAV}/LEG*/*.log | \
 # MET
 AWKPATH=${AWKPATH} ./met4db.awk ${METCO2}/*.dat | \
     awk -F, '!x[$1]++' > ${METCO2}/MET_all.csv
-# # AAVOS
-# AWKPATH=${AWKPATH} ./AAVOS_proc4db.awk ${MET_AAVOS}/LEG_0[234]/*.csv | \
-#     awk -F, '!x[$1]++' > ${MET_AAVOS}/AAVOS_LEG01-02.csv
+# AAVOS
+AWKPATH=${AWKPATH} ./AAVOS_proc4db.awk ${MET_AAVOS}/LEG_0[234]/*.csv | \
+    awk -F, '!x[$1]++' > ${MET_AAVOS}/AAVOS_LEG01-04.csv
 
 # Underway
 ./underway4db.awk ${UNDERWAY}/*.txt | \

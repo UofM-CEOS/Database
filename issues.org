@@ -1,6 +1,21 @@
 #+STARTUP: content indent hideblocks
 #+TITLE: Data issues
 #+OPTIONS: ^:{}
+#+PROPERTY: header-args:python :session *Python* :tangle yes
+
+#+NAME: session_init
+#+BEGIN_SRC python :session :results silent :exports none
+import matplotlib as mpl
+mpl.use("Agg")
+mpl.rcParams['mathtext.fontset']='stix'
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import psycopg2 as pg
+from mpl_toolkits.basemap import Basemap
+plt.style.use('ggplot')
+conn = pg.connect("host=net82.ceos.umanitoba.ca port=5433 dbname=gases")
+#+END_SRC
 
 * Navigation
 
@@ -10,7 +25,95 @@ processed data from U Laval to rely on it completely.
 
 * Meteorology
 
-Data from AAVOS instrument not loaded, as they are unprocessed.
+Tower data showing a 94 min gap starting at 2016-08-03 16:42:00 and ending
+at 2016-08-03 18:16:00.  Interestingly, there's a 1-min gap at 2016-08-01
+15:04:00 where some problem occurred, and Tonya mentioned a power outage
+that caused the logger(s) on the tower to generate wrong timestamps.  The
+following data seem to be mis-timestamped, starting at 2016-08-01 15:05:00
+and ending on 2016-08-03 16:41:00, as they appear shifted back compared to
+AVOS data by exactly 94 min.  Therefore, the following operation realigns
+the data for this period by shifting them forward:
+
+#+BEGIN_SRC sql
+UPDATE meteorology_series
+SET "time" = "time" + '94 minutes'::INTERVAL
+WHERE "time" > '2016-08-01 15:04:00' AND "time" < '2016-08-03 16:42:00'
+AND logging_group_id = 98;
+#+END_SRC
+
+After this shift both datasets align well.
+
+#+NAME: wind_ceos_avos
+#+BEGIN_SRC python :session :results file :exports results
+qry = """
+SELECT time_study, atmospheric_pressure, air_temperature,
+relative_humidity, surface_temperature,
+wind_speed, wind_direction
+FROM amundsen_flux.meteorology_ceos_1min_2016
+"""
+met = pd.read_sql(qry, conn, parse_dates=['time_study'],
+                index_col="time_study")
+qry = """
+SELECT time_study, atmospheric_pressure, air_temperature,
+relative_humidity, surface_temperature,
+wind_speed, wind_direction
+FROM amundsen_flux.meteorology_avos_1s_2016
+"""
+avos = pd.read_sql(qry, conn, parse_dates=['time_study'],
+                   index_col="time_study")
+met_sub = met['2016-08-01':'2016-08-03']
+avos_sub = avos['2016-08-01':'2016-08-03']
+
+kPalims = (90, 105)
+tmplims = (0, 20)
+rhlims = (30, 110)
+sstlims = (-5, 25)
+wdslims = (0, 25)               # wind speed (m/s)
+
+fig, axs = plt.subplots(2, 1, sharex=True)
+fig.set_size_inches((11, 7))
+met_sub[['wind_speed']].plot(ax=axs[0], ylim=wdslims, legend=False)
+avos_sub[['wind_speed']].plot(ax=axs[0], ylim=wdslims, legend=False)
+axs[0].set_ylabel('Wind speed (m/s)'); axs[0].set_xlabel('')
+met_sub[['wind_direction']].plot(ax=axs[1], rot=0, legend=False)
+avos_sub[['wind_direction']].plot(ax=axs[1], rot=0, legend=False)
+axs[1].set_ylabel('Wind direction ($^\circ$)'); axs[1].set_xlabel('')
+leg = axs[1].legend(loc=9, bbox_to_anchor=(0.5, -0.2), frameon=False,
+                    borderaxespad=0, ncol=2)
+leg.get_texts()[0].set_text("CEOS")
+leg.get_texts()[1].set_text("AVOS")
+fig.savefig("wind_ceos_avos.png", bbox_inches="tight"); plt.close()
+"wind_ceos_avos.png"
+#+END_SRC
+
+#+ATTR_LATEX: :width \textwidth
+#+RESULTS: wind_ceos_avos
+[[file:wind_ceos_avos.png]]
+
+#+NAME: meteorology_ceos_avos
+#+BEGIN_SRC python :session :results file :exports results
+fig, axs = plt.subplots(3, 1, sharex=True)
+fig.set_size_inches((11, 9))
+met_sub[['atmospheric_pressure']].plot(ax=axs[0], ylim=kPalims, legend=False)
+avos_sub[['atmospheric_pressure']].plot(ax=axs[0], ylim=kPalims, legend=False)
+axs[0].set_ylabel('Atmospheric pressure (kPa)'); axs[0].set_xlabel('')
+met_sub[['air_temperature']].plot(ax=axs[1], ylim=tmplims, legend=False)
+avos_sub[['air_temperature']].plot(ax=axs[1], ylim=tmplims, legend=False)
+axs[1].set_ylabel('Air temperature ($^\circ$C)'); axs[1].set_xlabel('')
+met_sub[['relative_humidity']].plot(ax=axs[2], ylim=rhlims, legend=False)
+avos_sub[['relative_humidity']].plot(ax=axs[2], ylim=rhlims, legend=False)
+axs[2].set_ylabel('Relative humidity (%)'); axs[2].set_xlabel('')
+leg = axs[2].legend(loc=9, bbox_to_anchor=(0.5, -0.2), frameon=False,
+                    borderaxespad=0, ncol=2)
+leg.get_texts()[0].set_text("CEOS")
+leg.get_texts()[1].set_text("AVOS")
+fig.savefig("meteorology_ceos_avos.png", bbox_inches="tight"); plt.close()
+"meteorology_ceos_avos.png"
+#+END_SRC
+
+#+ATTR_LATEX: :width \textwidth
+#+RESULTS: meteorology_ceos_avos
+[[file:meteorology_ceos_avos.png]]
 
 * Radiation
 

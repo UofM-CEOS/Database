@@ -1,7 +1,7 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2014-02-05T22:44:42+0000
-# Last-Updated: 2016-10-05T16:47:54+0000
+# Last-Updated: 2017-10-07T01:15:23+0000
 #           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary:

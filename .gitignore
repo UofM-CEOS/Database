@@ -10,3 +10,6 @@ db_quicklook.*
 !db_quicklook.org
 db_exploration.*
 !db_exploration.org
+*.pdf
+*.tex
+/issues.py

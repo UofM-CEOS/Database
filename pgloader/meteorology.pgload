@@ -85,3 +85,33 @@ LOAD CSV
           fields terminated by ','
      SET client_encoding to 'utf-8',
          standard_conforming_strings to 'on';
+
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2016/MET/AAVOS/Processed/AAVOS_LEG01-04.csv'
+        (
+          "time",
+	  wind_speed [null if "NaN"],
+          true_wind_direction [null if "NaN"],
+          wind_direction [null if "NaN"],
+	  atmospheric_pressure [null if "NaN"],
+	  air_temperature [null if "NaN"],
+	  relative_humidity [null if "NaN"],
+	  surface_temperature [null if "NaN"]
+        )
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?meteorology_series
+        (
+          logging_group_id integer using "106",
+          "time",
+	  wind_direction,
+	  wind_speed,
+	  atmospheric_pressure,
+	  air_temperature,
+	  relative_humidity,
+	  surface_temperature
+        )
+     WITH skip header = 1,
+          fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';
