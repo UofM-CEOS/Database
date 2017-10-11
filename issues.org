@@ -1,6 +1,21 @@
 #+STARTUP: content indent hideblocks
 #+TITLE: Data issues
 #+OPTIONS: ^:{}
+#+PROPERTY: header-args:python :session *Python* :tangle yes
+
+#+NAME: session_init
+#+BEGIN_SRC python :session :results silent :exports none
+import matplotlib as mpl
+mpl.use("Agg")
+mpl.rcParams['mathtext.fontset']='stix'
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import psycopg2 as pg
+from mpl_toolkits.basemap import Basemap
+plt.style.use('ggplot')
+conn = pg.connect("host=localhost port=5433 dbname=gases")
+#+END_SRC
 
 * Navigation
 
