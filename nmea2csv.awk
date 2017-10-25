@@ -1,9 +1,7 @@
 #! /usr/bin/gawk -f
 # Author: Sebastian Luque
 # Created: 2014-01-30T21:50:04+0000
-# Last-Updated: 2016-09-23T16:04:19+0000
-#           By: Sebastian P. Luque
-# copyright (c) 2014-2016 Sebastian P. Luque
+# copyright (c) 2014-2017 Sebastian P. Luque
 #
 # This program is Free Software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -52,19 +50,21 @@
 BEGIN {
     FS=OFS=","
     printf "date_time,longitude,latitude,altitude,heading,roll,pitch,"
-    printf "heave,cog,sog_knots,sog_kmh\n"
+    printf "heave,cog,sog_knots,sog_kmh,nsatellites,dilution_precision\n"
 }
 
 {$1=toupper($1)}
 
 $1 ~ /\$INZDA/ || $1 ~ /\$GPZDA/ {
+    # Block counter
+    nblock++
     yyyymmdd=sprintf("%s-%s-%s", $5, $4, $3)
     # Make sure we print as in BEGIN.  This is the last sentence for C-NAV,
     # so we have collected all the data from the rules below
     if ($1 ~ /\$GPZDA/) {
-	printf "%s %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", yyyymmdd, hhmmss,
-	    lon, lat, altitude, heading, roll, pitch, heave, cog,
-	    sog_knots, sog_kmh
+	printf "%s %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",
+	    yyyymmdd, hhmmss, lon, lat, altitude, heading, roll, pitch,
+	    heave, cog, sog_knots, sog_kmh, nsatellites, dilution_precision
     }
     next
 }
@@ -94,6 +94,8 @@ $1 ~ /\$INGGA/ || $1 ~ /\$GPGGA/ {
     lon_dec=substr($5, 4) / 60
     lon=lon_deg + lon_dec
     lon=($6 == "E") ? lon : sprintf("-%s", lon)
+    nsatellites=$8
+    dilution_precision=$9
     altitude=$10
     next
 }
@@ -104,11 +106,12 @@ $1 ~ /\$INVTG/ || $1 ~ /\$GPVTG/ {
     cog=$2
     sog_knots=$6
     sog_kmh=$8
-    # Make sure we print as in BEGIN.  This is the last sentence for POSMV
-    if ($1 ~ /\$INVTG/) {
-	printf "%s %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", yyyymmdd, hhmmss,
-	    lon, lat, altitude, heading, roll, pitch, heave, cog,
-	    sog_knots, sog_kmh
+    # Make sure we print as in BEGIN.  This is the last sentence for POSMV,
+    # but make sure we're at the end of the block
+    if ($1 ~ /\$INVTG/ && nblock) {
+	printf "%s %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",
+	    yyyymmdd, hhmmss, lon, lat, altitude, heading, roll, pitch,
+	    heave, cog, sog_knots, sog_kmh, nsatellites, dilution_precision
     }
 }
 
