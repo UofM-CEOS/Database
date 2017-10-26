@@ -51,11 +51,22 @@ BEGIN {
     FS=OFS=","
     printf "date_time,longitude,latitude,altitude,heading,roll,pitch,"
     printf "heave,cog,sog_knots,sog_kmh,nsatellites,dilution_precision\n"
+    INZDA_NF=7
+    GPZDA_NF=7
+    PASHR_NF=12
+    GPGGA_NF=15
+    INGGA_NF=15
+    INVTG_NF=9
+    GPVTG_NF=10
 }
 
 {$1=toupper($1)}
 
 $1 ~ /\$INZDA/ || $1 ~ /\$GPZDA/ {
+    # Both messages have 7 fields, if not it's corrupted.  Note this means
+    # we also do not print anything for the whole block of messages.
+    if (($1 ~ /\$INZDA/ && NF != INZDA_NF) ||
+	($1 ~ /\$GPZDA/ && NF != GPZDA_NF)) next
     # Block counter
     nblock++
     yyyymmdd=sprintf("%s-%s-%s", $5, $4, $3)
@@ -70,6 +81,21 @@ $1 ~ /\$INZDA/ || $1 ~ /\$GPZDA/ {
 }
 
 $1 ~ /\$PASHR/ || $1 ~ /\$GPGGA/ {
+    # PASHR has 12 fields, and GPGGA 15, so skip if we don't.  Note this
+    # means the printing statements in other patterns will have missing
+    # values for variables collected here
+    if (($1 ~ /\$PASHR/ && NF != PASHR_NF) ||
+	($1 ~ /\$GPGGA/ && NF != GPGGA_NF)) {
+	hh=""
+	mm=""
+	ss=""
+	hhmmss=""
+	heading=""
+	roll=""
+	pitch=""
+	heave=""
+	next
+    }
     hh=substr($2, 1, 2)
     mm=substr($2, 3, 2)
     ss=substr($2, 5)
@@ -86,6 +112,19 @@ $1 ~ /\$PASHR/ || $1 ~ /\$GPGGA/ {
 # Both sentences have the required data in the same positions.  Always
 # verify this is the case.
 $1 ~ /\$INGGA/ || $1 ~ /\$GPGGA/ {
+    if (($1 ~ /\$INGGA/ && NF != INGGA_NF) ||
+	($1 ~ /\$GPGGA/ && NF != GPGGA_NF)) {
+	lat_deg=""
+	lat_dec=""
+	lat=""
+	lon_deg=""
+	lon_dec=""
+	lon=""
+	nsatellites=""
+	dilution_precision=""
+	altitude=""
+	next
+    }
     lat_deg=substr($3, 1, 2)
     lat_dec=substr($3, 3) / 60
     lat=lat_deg + lat_dec
@@ -101,8 +140,15 @@ $1 ~ /\$INGGA/ || $1 ~ /\$GPGGA/ {
 }
 
 # Both sentences have the required data in the same positions.  Always
-# verify this is the case.
+# verify this is the case.  INVTG has 9 fields, and GPVTG has 10
 $1 ~ /\$INVTG/ || $1 ~ /\$GPVTG/ {
+    if (($1 ~ /\$INVTG/ && NF != INVTG_NF) ||
+	($1 ~ /\$GPVTG/ && NF != GPVTG_NF)) {
+	cog=""
+	sog_knots=""
+	sog_kmh=""
+	next
+    }
     cog=$2
     sog_knots=$6
     sog_kmh=$8
