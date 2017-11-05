@@ -1,10 +1,8 @@
 #! /usr/bin/igawk -f
 # Author: Sebastian Luque
 # Created: 2014-02-12T04:33:42+0000
-# Last-Updated: 2015-06-30T18:45:32+0000
-#           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
-# Commentary: 
+# Commentary:
 #
 # This is used to produce several files to be loaded onto database, which
 # combines the data from the project.
@@ -62,7 +60,7 @@
 # -------------------------------------------------------------------------
 # Code:
 
-@include doy2isodate.awk
+# @include doy2isodate.awk
 
 BEGIN {
     FS=OFS=","

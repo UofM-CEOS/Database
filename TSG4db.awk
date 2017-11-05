@@ -1,14 +1,12 @@
 #! /usr/bin/gawk -f
 # Author: Sebastian Luque
 # Created: 2015-10-10T21:35:25+0000
-# Last-Updated: 2016-10-06T02:37:49+0000
-#           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary:
 #
 # Prepare thermosalinograph cnv data for loading into database.
 #
-# In 2015, file format (semicolon separated) was:
+# The file format (semicolon separated) is documented as:
 #
 # [1]  time_pc [YYYY/MM/DD HH:MM:SS]
 # [2]  time_gps [HH:MM:SS]
