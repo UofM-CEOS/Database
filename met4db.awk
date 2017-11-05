@@ -1,8 +1,6 @@
 #! /usr/bin/gawk -f
 # Author: Sebastian Luque
 # Created: 2014-02-09T03:05:41+0000
-# Last-Updated: 2016-09-23T17:53:45+0000
-#           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary:
 #
@@ -14,7 +12,7 @@
 # meteorology_series table this means the following fields (based on the
 # TOA5 header therein):
 #
-# In 2016, it was:
+# In 2017, it was:
 #
 # [1]  timestamp [YYYY-MM-DD HH:MM:SS]
 # [2]  record number [D+]
@@ -25,19 +23,19 @@
 # [7]  air temperature [D+]
 # [8]  relative humidity [D+]
 # [9]  surface temperature [D+]
-# [10] CO2ppm [D+]
-# [11] H2Oppt [D+]
-# [12] IRGA_P [D+]
-# [13] IRGA_T [D+]
-# [14] W_s_WVc(1) [D+] -> mean horizontal wind speed
-# [15] W_s_WVc(2) [D+] -> unit vector mean wind direction
-# [16] W_s_WVc(3) [D+] -> standard deviation of wind direction
-# [17] standard deviation battery voltage [D+]
-# [18] standard deviation panel temperature [D+]
-# [19] standard deviation atmospheric pressure [D+]
-# [20] standard deviation air temperature [D+]
-# [21] standard deviation relative humidity [D+]
-# [22] standard deviation surface temperature [D+]
+# [10] W_s_WVc(1) [D+] -> mean horizontal wind speed
+# [11] W_s_WVc(2) [D+] -> unit vector mean wind direction
+# [12] W_s_WVc(3) [D+] -> standard deviation of wind direction
+# [13] standard deviation battery voltage [D+]
+# [14] standard deviation panel temperature [D+]
+# [15] standard deviation atmospheric pressure [D+]
+# [16] standard deviation air temperature [D+]
+# [17] standard deviation relative humidity [D+]
+# [18] standard deviation surface temperature [D+]
+# [19] POSMV variable 1
+# [20] POSMV variable 2
+# ...
+# [60] POSMV variable 42
 #
 # Example call (file written to current directory):
 #
@@ -47,16 +45,19 @@
 
 BEGIN {
     FS=OFS=","
+    ncols=18
     print "time,record_no,program_version,battery_voltage",
 	"logger_temperature,atmospheric_pressure,air_temperature",
-	"relative_humidity,surface_temperature,cp_CO2_fraction",
-	"cp_H2O_fraction,cp_pressure,cp_temperature",
+	"relative_humidity,surface_temperature",
 	"wind_speed,wind_direction,wind_direction_sd,battery_voltage_sd",
 	"logger_temperature_sd,atmospheric_pressure_sd,air_temperature_sd",
 	"relative_humidity_sd,surface_temperature_sd"
 }
 
-FNR > 4
+FNR > 4 {
+    for (i=1; i <= (ncols - 1); i++) { printf "%s,", $i }
+    print $ncols
+}
 
 
 ##_ + Emacs Local Variables

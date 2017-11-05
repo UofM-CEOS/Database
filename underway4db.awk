@@ -1,14 +1,12 @@
 #! /usr/bin/gawk -f
 # Author: Sebastian Luque
 # Created: 2014-01-09T21:39:59+0000
-# Last-Updated: 2016-09-23T18:47:50+0000
-#           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary:
 #
 # See the pgloader configuration file for details.
 #
-# We have the following file structure (2016):
+# We have the following file structure (2017):
 #
 # [1]  record_type [string]
 # [2]  uw_diag [integer]
@@ -22,28 +20,34 @@
 # [10] "uw H2O cell A (raw value)" [D+]
 # [11] "uw H2O cell B (raw value)" [D+]
 # [12] "uw H2O fraction (mm/m)" [D+]
-# [13] uw temperature analyzer [D+]
-# [14] uw pressure analyzer [D+]
-# [15] equ pressure [D+]
-# [16] "H2O flow" [D+]
-# [17] air flow analyzer [D+]
-# [18] equ speed pump [D+]
-# [19] ventilation flow [D+]
-# [20] condensation_atm [D+]
-# [21] condensation_equ [D+]
-# [22] drip 1 [D+]
-# [23] drip 2 [D+]
-# [24] condenser temperature [D+]
-# [25] temperature dry box [D+]
-# [26] N/A -- garbage [0]
-# [27] ctd pressure [D+]
-# [28] ctd temperature [D+]
-# [29] ctd conductivity [D+]
-# [30] "ctd O2 saturation" [D+]
-# [31] "ctd O2 concentration" [D+]
-# [32] "uw pH" [D+]
-# [33] uw redox potential [D+]
-# [34] temperature external [D+]
+# [13] "uw temperature analyzer" [D+]
+# [14] "uw pressure analyzer" [D+]
+# [15] "uw analyzer diag" [D+]
+# [16] "uw relative humidity" [D+]
+# [17] "C AGC" [D+]
+# [18] "H AGC" [D+]
+# [19] "Flow V" [D+]
+# [20] equ pressure [D+]
+# [21] "H2O flow" [D+]
+# [22] air flow analyzer [D+]
+# [23] equ speed pump [D+]
+# [24] ventilation flow [D+]
+# [25] condensation_atm [D+]
+# [26] condensation_equ [D+]
+# [27] drip 1 [D+]
+# [28] drip 2 [D+]
+# [29] condenser temperature [D+]
+# [30] temperature dry box [D+]
+# [31] ctd pressure [D+]
+# [32] ctd temperature [D+]
+# [33] ctd conductivity [D+]
+# [34] "ctd O2 saturation" [D+]
+# [35] "ctd O2 concentration" [D+]
+# [36] "uw pH" [D+]
+# [37] uw redox potential [D+]
+# [38] temperature external [D+]
+# [39] turbidity [D+]
+# [40] fluorometer [D+]
 #
 # -------------------------------------------------------------------------
 # Code:
@@ -51,8 +55,8 @@
 BEGIN {
     FS="\t"
     OFS=","
-    ncols=34			# number of columns
-    year=2016
+    ncols=40			# number of columns
+    year=2017
 }
 
 NF > ncols || $1 !~ /[[:alpha:]]/ { next } # obviously garbage
@@ -72,7 +76,7 @@ FNR > 1 {
     printf "%s,%s,%s,", dtime, $1, $2
     # Print commas to get the same number of (ncols) fields always
     for (i=5; i <= (ncols - 1); i++) { printf "%s,", $i }
-    printf "%s\n", $ncols
+    print $ncols
 }
 
 

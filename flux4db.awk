@@ -1,8 +1,6 @@
 #! /usr/bin/igawk -f
 # Author: Sebastian Luque
 # Created: 2014-02-12T04:33:42+0000
-# Last-Updated: 2016-09-28T18:33:16+0000
-#           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary:
 #
@@ -48,7 +46,7 @@
 # -------------------------------------------------------------------------
 # Code:
 
-@include doy2isodate.awk
+# @include doy2isodate.awk
 
 BEGIN {
     FS=OFS=","
