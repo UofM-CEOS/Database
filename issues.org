@@ -1,6 +1,6 @@
 #+STARTUP: content indent hideblocks
-#+TITLE: Data issues
-#+OPTIONS: ^:{}
+#+TITLE: Data assimilation issues
+#+OPTIONS: ^:{} toc:nil
 #+PROPERTY: header-args:python :session *Python* :tangle yes
 
 #+NAME: session_init
@@ -19,126 +19,109 @@ conn = pg.connect("host=net82.ceos.umanitoba.ca port=5433 dbname=gases")
 
 * Navigation
 
-Unprocessed POSMV and C-NAV data show substantial noise and some amount of
-write error due to the logger itself, and it would be wise to wait for
-processed data from U Laval to rely on it completely.
+- No processed data from POSMV or CNAV are available at time of loading, so
+  data will have to be merged manually via a view on the database.
+  Requested and received complete merged product from U Laval.
+- Somehow no data were saved to the portable drive between mid-June to
+  mid-July.
+
+Missing data due to turning off of most systems at this time, so no longer
+an issue.
 
 * Meteorology
 
-Tower data showing a 94 min gap starting at 2016-08-03 16:42:00 and ending
-at 2016-08-03 18:16:00.  Interestingly, there's a 1-min gap at 2016-08-01
-15:04:00 where some problem occurred, and Tonya mentioned a power outage
-that caused the logger(s) on the tower to generate wrong timestamps.  The
-following data seem to be mis-timestamped, starting at 2016-08-01 15:05:00
-and ending on 2016-08-03 16:41:00, as they appear shifted back compared to
-AVOS data by exactly 94 min.  Therefore, the following operation realigns
-the data for this period by shifting them forward:
-
-#+BEGIN_SRC sql
-UPDATE meteorology_series
-SET "time" = "time" + '94 minutes'::INTERVAL
-WHERE "time" > '2016-08-01 15:04:00' AND "time" < '2016-08-03 16:42:00'
-AND logging_group_id = 98;
-#+END_SRC
-
-After this shift both datasets align well.
-
-#+NAME: wind_ceos_avos
-#+BEGIN_SRC python :session :results file :exports results
-qry = """
-SELECT time_study, atmospheric_pressure, air_temperature,
-relative_humidity, surface_temperature,
-wind_speed, wind_direction
-FROM amundsen_flux.meteorology_ceos_1min_2016
-"""
-met = pd.read_sql(qry, conn, parse_dates=['time_study'],
-                index_col="time_study")
-qry = """
-SELECT time_study, atmospheric_pressure, air_temperature,
-relative_humidity, surface_temperature,
-wind_speed, wind_direction
-FROM amundsen_flux.meteorology_avos_1s_2016
-"""
-avos = pd.read_sql(qry, conn, parse_dates=['time_study'],
-                   index_col="time_study")
-met_sub = met['2016-08-01':'2016-08-03']
-avos_sub = avos['2016-08-01':'2016-08-03']
-
-kPalims = (90, 105)
-tmplims = (0, 20)
-rhlims = (30, 110)
-sstlims = (-5, 25)
-wdslims = (0, 25)               # wind speed (m/s)
-
-fig, axs = plt.subplots(2, 1, sharex=True)
-fig.set_size_inches((11, 7))
-met_sub[['wind_speed']].plot(ax=axs[0], ylim=wdslims, legend=False)
-avos_sub[['wind_speed']].plot(ax=axs[0], ylim=wdslims, legend=False)
-axs[0].set_ylabel('Wind speed (m/s)'); axs[0].set_xlabel('')
-met_sub[['wind_direction']].plot(ax=axs[1], rot=0, legend=False)
-avos_sub[['wind_direction']].plot(ax=axs[1], rot=0, legend=False)
-axs[1].set_ylabel('Wind direction ($^\circ$)'); axs[1].set_xlabel('')
-leg = axs[1].legend(loc=9, bbox_to_anchor=(0.5, -0.2), frameon=False,
-                    borderaxespad=0, ncol=2)
-leg.get_texts()[0].set_text("CEOS")
-leg.get_texts()[1].set_text("AVOS")
-fig.savefig("wind_ceos_avos.png", bbox_inches="tight"); plt.close()
-"wind_ceos_avos.png"
-#+END_SRC
-
-#+ATTR_LATEX: :width \textwidth
-#+RESULTS: wind_ceos_avos
-[[file:wind_ceos_avos.png]]
-
-#+NAME: meteorology_ceos_avos
-#+BEGIN_SRC python :session :results file :exports results
-fig, axs = plt.subplots(3, 1, sharex=True)
-fig.set_size_inches((11, 9))
-met_sub[['atmospheric_pressure']].plot(ax=axs[0], ylim=kPalims, legend=False)
-avos_sub[['atmospheric_pressure']].plot(ax=axs[0], ylim=kPalims, legend=False)
-axs[0].set_ylabel('Atmospheric pressure (kPa)'); axs[0].set_xlabel('')
-met_sub[['air_temperature']].plot(ax=axs[1], ylim=tmplims, legend=False)
-avos_sub[['air_temperature']].plot(ax=axs[1], ylim=tmplims, legend=False)
-axs[1].set_ylabel('Air temperature ($^\circ$C)'); axs[1].set_xlabel('')
-met_sub[['relative_humidity']].plot(ax=axs[2], ylim=rhlims, legend=False)
-avos_sub[['relative_humidity']].plot(ax=axs[2], ylim=rhlims, legend=False)
-axs[2].set_ylabel('Relative humidity (%)'); axs[2].set_xlabel('')
-leg = axs[2].legend(loc=9, bbox_to_anchor=(0.5, -0.2), frameon=False,
-                    borderaxespad=0, ncol=2)
-leg.get_texts()[0].set_text("CEOS")
-leg.get_texts()[1].set_text("AVOS")
-fig.savefig("meteorology_ceos_avos.png", bbox_inches="tight"); plt.close()
-"meteorology_ceos_avos.png"
-#+END_SRC
-
-#+ATTR_LATEX: :width \textwidth
-#+RESULTS: meteorology_ceos_avos
-[[file:meteorology_ceos_avos.png]]
+Doubts on which wind direction from AAVOS should be used for loading have
+crept in.  See email to Colline Gombault on 2017-11-03.  Resolved by
+establishing that it was a mistake on the header of their processed files,
+whereby apparent wind was labelled "true" wind.  It is indeed apparent
+wind, as indicated in the raw data format description.
 
 * Radiation
 
-Something happened between 2016-07-24 and 2016-07-30, as there seems to be
-a different program running altogether.
+All well.
 
 * Flux
 
-** There were incorrectly timestamped data
+** Offsets
+:PROPERTIES:
+:EXPORT_DATE:
+:EXPORT_FILE_NAME: instrument_offsets
+:EXPORT_OPTIONS: toc:nil
+:EXPORT_AUTHOR:
+:END:
 
-Data correspond to 2008-02-13 19:35:55.7 through 2008-02-19 21:32:54.3.
-Chatting with Tonya, the missing data were due to a power cut issue whereby
-the clock on the logger got misconfigured on 2016-06-01.  When power was
-restored, the logger resumed logging with the wrong timestamp until the
-problem was fixed on 2016-06-08.  This was fixed by lining them up against
-the first *correct* timestamp after the power was restored (2016-06-08
-14:46:43.9).  Thus, the last timestamped data could be made continuous with
-the first *correct* timestamped data.  However, there were still gaps in
-the data:
+Brian B emailed some estimates of offsets between flux instruments
 
-- 2016-07-22 03:36:07.8 - 2016-08-01 20:24:51.6
-- 2016-08-02 00:00:00.0 - 2016-08-06 23:56:45.4
+[[gnus:nnimap+Exchange:INBOX#BD333764-4EB5-4D3B-A84E-0C79593896C1@ucalgary.ca][Email from Brian Butterworth: Re: mounting measurements]]
+
+*** Sonic anemometers
+
+Angular offset from straight forward:
+
+| Anemometer          | Forward offset (degrees from forward) |
+|---------------------+---------------------------------------|
+| CSAT3               | 0                                     |
+| Gill WindMaster Pro | 0                                     |
+
+It was not clear what the angular offset of the Gill WindMaster Pro spar
+is.  In photos, it seems to be zero, which was corroborated by measuring
+mounting arm and plate in relation to mounting position of anemometer.
+
+*** Relative to CSAT3
+
+| Instrument | x (cm) | y (cm) | z (cm) |
+|------------+--------+--------+--------|
+| LGR        |    -30 |      3 |    -20 |
+| LI-7200    |    -23 |      3 |    -18 |
+| LI-7500A   |    -40 |     31 |     30 |
+| Motion Pak | -64.77 |      0 |  -13.5 |
+
+*** Relative to Gill WindMaster Pro
+
+There seems to be a mistake in BB's email regarding the offsets of Gill
+sonic anemometer relative to CSAT3.  The correct interpretation seems to
+be: x=25 cm, y=-43 cm, z=-139 cm.  Therefore, using these, we derive:
+
+| Instrument | x (cm) | y (cm) | z (cm) |
+|------------+--------+--------+--------|
+| LGR        |    -55 |    -46 |    119 |
+| LI-7200    |    -48 |    -46 |    121 |
+| LI-7500A   |    -65 |    -74 |    169 |
+| Motion Pak | -89.77 |    -43 | -125.5 |
+
+** Heights
+
+Actual heights of instruments above deck were not measured, but can be
+derived from photos and comparing with 2016, as well as taking into account
+the offsets determined above.  This leads to the following heights above
+the water line:
+
+| Instrument                      | height (m) |
+|---------------------------------+------------|
+| Motion Pak                      |     16.725 |
+| WindMaster Pro measuring volume |      15.47 |
+| LI-7200 inlet                   |      16.68 |
+| LI-7500A measuring volume       |      17.16 |
+| LGR inlet                       |      16.66 |
+| CSAT3 measuring volume          |      16.86 |
+| RM Young wind monitor           |      17.62 |
+| HMP155A temperature/RH sensor   |      16.13 |
+| SI-111 IR sensor                |        8.4 |
+| BPA4116 barometer               |       9.97 |
+
+** Tower down periods
+
+Looking at Motion Pak data, it seems as if there was only one tower-down
+period: 2017-07-10 21:35 - 2017-07-11 00:10
+
+** Units
+
+Although units in data output from LGR are all ppm (umol/mol), it is not
+clear at all whether CH4, CO2, and H2O correspond to dry or wet air moles.
+Waiting for Brian/LGR to clarify this.
+
+Resolved by LGR, confirming analog outputs correspond to dry mole ratios.
 
 * Underway pCO2
 
-** External temperature data unavailable
-
-- Data from CEOS logger not available
+All well.

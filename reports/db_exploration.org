@@ -1,11 +1,11 @@
 #+STARTUP: content indent hideblocks
-#+TITLE: Exploration of variables 2016
+#+TITLE: Exploration of variables 2017
 #+OPTIONS: ^:{}
 #+LATEX_HEADER: \usepackage[margin=2.5cm]{geometry}
 #+PROPERTY: header-args:python :session *Python* :tangle yes
 
 #+NAME: session_init
-#+BEGIN_SRC python :session :results silent :exports none
+#+BEGIN_SRC python :results silent :exports none
 import matplotlib as mpl
 mpl.use("Agg")
 mpl.rcParams['mathtext.fontset']='stix'
@@ -21,14 +21,14 @@ conn=pg.connect("host=localhost port=5433 dbname=gases")
 * Ship track
 
 #+NAME: ship_track
-#+BEGIN_SRC python :session :results file :exports results
+#+BEGIN_SRC python :results file :exports results
 qry="""
   SELECT time_study_1min AS time_study,
   longitude_avg AS longitude, latitude_avg AS latitude,
   speed_over_ground_avg AS sog, course_over_ground_avg as cog,
   heading_avg as heading, pitch_avg as pitch, roll_avg as roll,
   heave_avg as heave
-  FROM amundsen_flux.navigation_1min_2016
+  FROM amundsen_flux.navigation_1min_2017
   """
 nav=pd.read_sql(qry, conn, parse_dates=['time_study'],
                 index_col="time_study")
@@ -65,7 +65,7 @@ plt.savefig("ship_track.png"); plt.close()
 As measured by Applanix instrument on the ship.
 
 #+NAME: ship_motion
-#+BEGIN_SRC python :session :results file :exports results
+#+BEGIN_SRC python :results file :exports results
 soglims = (0, 10)
 fig, axs = plt.subplots(3, 1, sharex=True)
 fig.set_size_inches((11, 9))
@@ -89,17 +89,17 @@ fig.savefig('navigation.png', bbox_inches='tight'); plt.close()
 Measurements at the tower.
 
 #+NAME: meteorology_01
-#+BEGIN_SRC python :session :results file :exports results
+#+BEGIN_SRC python :results file :exports results
 qry="""
   SELECT time_study, atmospheric_pressure, air_temperature,
   relative_humidity, surface_temperature,
   wind_speed, wind_direction
-  FROM amundsen_flux.meteorology_ceos_1min_2016
+  FROM amundsen_flux.meteorology_ceos_1min_2017
   """
 met=pd.read_sql(qry, conn, parse_dates=['time_study'],
                 index_col="time_study")
-kPalims = (60, 110)
-tmplims = (-50, 30)
+kPalims = (80, 110)
+tmplims = (-40, 30)
 rhlims = (30, 110)
 sstlims = (-5, 25)
 fig, axs = plt.subplots(4, 1, sharex=True)
@@ -122,7 +122,7 @@ fig.savefig("meteorology_01.png", bbox_inches="tight"); plt.close()
 [[file:meteorology_01.png]]
 
 #+NAME: meteorology_02
-#+BEGIN_SRC python :session :results file :exports results
+#+BEGIN_SRC python :results file :exports results
 wdslims = (0, 25)               # wind speed (m/s)
 fig, axs = plt.subplots(2, 1, sharex=True)
 fig.set_size_inches((11, 7))
@@ -141,12 +141,12 @@ fig.savefig("meteorology_02.png", bbox_inches="tight"); plt.close()
 Measurements from AVOS system.
 
 #+NAME: meteorology_03
-#+BEGIN_SRC python :session :results file :exports results
+#+BEGIN_SRC python :results file :exports results
 qry="""
   SELECT time_study, atmospheric_pressure, air_temperature,
   relative_humidity, surface_temperature,
   wind_speed, wind_direction
-  FROM amundsen_flux.meteorology_avos_1s_2016
+  FROM amundsen_flux.meteorology_avos_1s_2017
   """
 avos=pd.read_sql(qry, conn, parse_dates=['time_study'],
                  index_col="time_study")
@@ -166,7 +166,13 @@ met[['surface_temperature']].plot(ax=axs[3], ylim=sstlims,
 avos[['surface_temperature']].plot(ax=axs[3], ylim=sstlims,
                                    rot=0, legend=False)
 axs[3].set_ylabel('Surface temperature ($^\circ$C)'); axs[3].set_xlabel('')
-fig.savefig("meteorology_03.png", bbox_inches="tight"); plt.close()
+leg = axs[3].legend(loc=9, bbox_to_anchor=(0.5, -0.1), frameon=False,
+                    borderaxespad=0, ncol=3)
+leg.get_texts()[0].set_text("CEOS")
+leg.get_texts()[1].set_text("AVOS")
+fig.savefig("meteorology_03.png", bbox_extra_artists=(leg,),
+            bbox_inches="tight")
+plt.close()
 "meteorology_03.png"
 #+END_SRC
 
@@ -175,7 +181,7 @@ fig.savefig("meteorology_03.png", bbox_inches="tight"); plt.close()
 [[file:meteorology_03.png]]
 
 #+NAME: meteorology_04
-#+BEGIN_SRC python :session :results file :exports results
+#+BEGIN_SRC python :results file :exports results
 wdslims = (0, 25)               # wind speed (m/s)
 fig, axs = plt.subplots(2, 1, sharex=True)
 fig.set_size_inches((11, 7))
@@ -185,7 +191,13 @@ axs[0].set_ylabel('Wind speed (m/s)'); axs[0].set_xlabel('')
 met[['wind_direction']].plot(ax=axs[1], rot=0, legend=False)
 avos[['wind_direction']].plot(ax=axs[1], rot=0, legend=False)
 axs[1].set_ylabel('Wind direction ($^\circ$)'); axs[1].set_xlabel('')
-fig.savefig("meteorology_04.png", bbox_inches="tight"); plt.close()
+leg = axs[1].legend(loc=9, bbox_to_anchor=(0.5, -0.1), frameon=False,
+                    borderaxespad=0, ncol=3)
+leg.get_texts()[0].set_text("CEOS")
+leg.get_texts()[1].set_text("AVOS")
+fig.savefig("meteorology_04.png", bbox_extra_artists=(leg,),
+            bbox_inches="tight")
+plt.close()
 "meteorology_04.png"
 #+END_SRC
 
@@ -196,10 +208,10 @@ fig.savefig("meteorology_04.png", bbox_inches="tight"); plt.close()
 * Radiation
 
 #+NAME: radiation_01
-#+BEGIN_SRC python :session :results file :exports results
+#+BEGIN_SRC python :results file :exports results
 qry="""
   SELECT time_study, "PAR", "K_down", "LW_down"
-  FROM amundsen_flux.radiation_1min_2016
+  FROM amundsen_flux.radiation_1min_2017
   """
 rad=pd.read_sql(qry, conn, parse_dates=['time_study'],
                 index_col="time_study")
@@ -227,7 +239,7 @@ fig.savefig("radiation_01.png", bbox_inches="tight"); plt.close()
 One-minute average as an overview:
 
 #+NAME: tower_motion
-#+BEGIN_SRC python :session :results file :exports results
+#+BEGIN_SRC python :results file :exports results
 qry="""
   SELECT date_trunc('minute', time_study) AS time_study,
   avg(acceleration_x) AS acceleration_x,
@@ -236,7 +248,7 @@ qry="""
   avg(rate_x) AS rate_x,
   avg(rate_y) AS rate_y,
   avg(rate_z) AS rate_z
-  FROM amundsen_flux.motion_10hz_2016
+  FROM amundsen_flux.motion_10hz_2017
   GROUP BY date_trunc('minute', time_study)
   ORDER BY date_trunc('minute', time_study)
   """
@@ -249,7 +261,7 @@ fig.set_size_inches((11, 7))
 mot[['acceleration_x',
      'acceleration_y',
      'acceleration_z']].plot(ax=axs[0], ylim=acclims, legend=False)
-axs[0].set_ylabel('Translational acceleration ($m/s^{2}$)')
+axs[0].set_ylabel('Translational acceleration ($G$)')
 axs[0].set_xlabel('')
 mot[['rate_x',
      'rate_y',
@@ -271,12 +283,12 @@ plt.close()
 #+RESULTS: tower_motion
 [[file:motion.png]]
 
-* Sonic anemometer
+* Sonic anemometers
 
-One-minute average as an overview (analog signal):
+One-minute average of CSAT3 anemometer as an overview (SDM signal):
 
 #+NAME: sonic_anemometer_01
-#+BEGIN_SRC python :session :results file :exports results
+#+BEGIN_SRC python :results file :exports results
 qry="""
   SELECT time_study_1min AS time_study,
   wind_speed_u_avg AS wind_speed_u,
@@ -284,7 +296,7 @@ qry="""
   wind_speed_w_avg AS wind_speed_w,
   air_temperature_sonic_avg AS air_temperature_sonic,
   sound_speed_avg AS sound_speed
-  FROM amundsen_flux.wind3d_analog_1min_2016
+  FROM amundsen_flux.wind3d1_serial_1min_2017
   """
 wind3d=pd.read_sql(qry, conn, parse_dates=['time_study'],
                    index_col="time_study")
@@ -308,12 +320,49 @@ plt.close()
 #+RESULTS: sonic_anemometer_01
 [[file:sonic_anemometer_01.png]]
 
+
+One-minute average of Gill WindMaster Pro anemometer as an overview (analog
+signal):
+
+#+NAME: sonic_anemometer_02
+#+BEGIN_SRC python :results file :exports results
+qry="""
+  SELECT time_study_1min AS time_study,
+  wind_speed_u_avg AS wind_speed_u,
+  wind_speed_v_avg AS wind_speed_v,
+  wind_speed_w_avg AS wind_speed_w,
+  air_temperature_sonic_avg AS air_temperature_sonic,
+  sound_speed_avg AS sound_speed
+  FROM amundsen_flux.wind3d2_analog_1min_2017
+  """
+wind3d=pd.read_sql(qry, conn, parse_dates=['time_study'],
+                   index_col="time_study")
+fig, axs = plt.subplots(4, 1, sharex=True)
+fig.set_size_inches((11, 12.5))
+wind3d[['wind_speed_u']].plot(ax=axs[0], legend=False)
+axs[0].set_ylabel('U wind speed ($m/s$)'); axs[0].set_xlabel('')
+wind3d[['wind_speed_v']].plot(ax=axs[1], legend=False)
+axs[1].set_ylabel('V wind speed ($m/s$)'); axs[1].set_xlabel('')
+wind3d[['wind_speed_w']].plot(ax=axs[2], rot=0, legend=False)
+axs[2].set_ylabel('W wind speed ($m/s$)'); axs[2].set_xlabel('')
+wind3d[['air_temperature_sonic']].plot(ax=axs[3], rot=0, legend=False)
+axs[3].set_ylabel('Air temperature ($\circ$C)'); axs[3].set_xlabel('')
+fig.tight_layout()
+fig.savefig('sonic_anemometer_02.png', bbox_inches='tight')
+plt.close()
+'sonic_anemometer_02.png'
+#+END_SRC
+
+#+ATTR_LATEX: :width \textwidth
+#+RESULTS: sonic_anemometer_02
+[[file:sonic_anemometer_02.png]]
+
 * Open path gas analyzer
 
 One-minute average as an overview:
 
 #+NAME: opath_01
-#+BEGIN_SRC python :session :results file :exports results
+#+BEGIN_SRC python :results file :exports results
 qry="""
   SELECT time_study_1min AS time_study,
   "op_CO2_density_avg" AS "op_CO2_density",
@@ -323,7 +372,7 @@ qry="""
   op_cooler_voltage_avg AS op_cooler_voltage,
   op_bandwidth_avg AS op_bandwidth,
   op_delay_interval_avg AS op_delay_interval
-  FROM amundsen_flux.opath_1min_2016
+  FROM amundsen_flux.opath_1min_2017
   """
 opath=pd.read_sql(qry, conn, parse_dates=['time_study'],
                   index_col="time_study")
@@ -357,105 +406,82 @@ plt.close()
 #+RESULTS: opath_01
 [[file:open_path_01.png]]
 
-* Closed path gas analyzer
+* Closed path gas analyzers
 
-One-minute average MET analyzer as an overview:
+One-minute averages for LGR analyzer and LI-7200 closed path analyzer in
+enclosure for flux analyses, with Nafion dryer, as an overview:
 
 #+NAME: cpath_01
-#+BEGIN_SRC python :session :results file :exports results
+#+BEGIN_SRC python :results file :exports results
+# LGR -- We assume the mole fractions are actually dry, just as for the
+# LI-7200, and that both CO2 and H2O fractions are in umol/mol, so convert
+# H2O to mmol/mol (already done in database, along with other filters for
+# invalid data).
 qry="""
-  SELECT time_study,
-  "cp_CO2_fraction",
-  "cp_H2O_fraction",
-  cp_pressure,
-  cp_temperature,
-  cp_temperature_in,
-  cp_temperature_cell,
-  cp_temperature_out
-  FROM amundsen_flux.cpath_1min_2016
+  SELECT time_study_1min,
+  "cp_CO2_dry_fraction_avg" AS "cp_CO2_dry_fraction",
+  "cp_H2O_dry_fraction_avg" AS "cp_H2O_dry_fraction"
+  FROM amundsen_flux.cpath1_1min_2017
   """
-cpath=pd.read_sql(qry, conn, parse_dates=['time_study'],
-                  index_col="time_study")
+cpath1=pd.read_sql(qry, conn, parse_dates=['time_study_1min'],
+                   index_col="time_study_1min")
+# LI-7200
+qry="""
+  SELECT time_study_1min,
+  "cp_CO2_dry_fraction_avg" AS "cp_CO2_dry_fraction",
+  "cp_H2O_dry_fraction_avg" AS "cp_H2O_dry_fraction",
+  cp_pressure_avg AS cp_pressure,
+  cp_temperature_avg AS cp_temperature,
+  cp_temperature_in_avg AS cp_temperature_in,
+  cp_temperature_cell_avg AS cp_temperature_cell,
+  cp_temperature_out_avg AS cp_temperature_out
+  FROM amundsen_flux.cpath2_1min_2017
+  """
+cpath2=pd.read_sql(qry, conn, parse_dates=['time_study_1min'],
+                   index_col="time_study_1min")
 CO2flims = (350, 450)
 H2Oflims = (0, 20)
-kPalims = (40, 110)             # reassigned
+# kPalims = (40, 110)             # reassigned
 tmplims = (-20, 50)             # reassigned
 fig, axs = plt.subplots(4, 1, sharex=True)
 fig.set_size_inches((11, 12.5))
-cpath[['cp_CO2_fraction']].plot(ax=axs[0], legend=False,
-                                ylim=CO2flims)
-axs[0].set_ylabel('$CO_2$ fraction ($\mu mol/mol$)')
+cpath1[['cp_CO2_dry_fraction']].plot(ax=axs[0], legend=False,
+                                     ylim=CO2flims)
+cpath2[['cp_CO2_dry_fraction']].plot(ax=axs[0], legend=False,
+                                     ylim=CO2flims)
+axs[0].set_ylabel('$CO_2$ dry fraction ($\mu mol/mol$)')
 axs[0].set_xlabel('')
-cpath[['cp_H2O_fraction']].plot(ax=axs[1], legend=False,
-                                ylim=H2Oflims)
-axs[1].set_ylabel('$H_2O$ fraction ($mmol/mol$)')
+cpath1[['cp_H2O_dry_fraction']].plot(ax=axs[1], legend=False,
+                                     ylim=H2Oflims)
+cpath2[['cp_H2O_dry_fraction']].plot(ax=axs[1], legend=False,
+                                     ylim=H2Oflims)
+axs[1].set_ylabel('$H_2O$ dry fraction ($mmol/mol$)')
 axs[1].set_xlabel('')
-cpath[['cp_pressure']].plot(ax=axs[2], legend=False,
-                            ylim=kPalims)
-axs[2].set_ylabel('Cell pressure (Kpa)')
+cpath2[['cp_pressure']].plot(ax=axs[2], legend=False,
+                             ylim=kPalims)
+axs[2].set_ylabel('Cell pressure (kPa)')
 axs[2].set_xlabel('')
-cpath[['cp_temperature']].plot(ax=axs[3], rot=0, legend=False,
-                               ylim=tmplims)
-axs[3].set_ylabel('Air temperature ($^\circ$C)')
+cpath2[['cp_temperature_in']].plot(ax=axs[3], rot=0, legend=False,
+                                   ylim=tmplims)
+axs[3].set_ylabel('Incoming air temperature ($^\circ$C)')
 axs[3].set_xlabel('')
+leg = axs[0].legend(loc=9, bbox_to_anchor=(0.5, 1.1), frameon=False,
+                    borderaxespad=0, ncol=3)
+leg.get_texts()[0].set_text("LGR")
+leg.get_texts()[1].set_text("LI-7200")
 fig.tight_layout()
-fig.savefig('closed_path_01.png', bbox_inches='tight')
+fig.savefig('closed_path.png', bbox_inches='tight')
 plt.close()
-'closed_path_01.png'
+'closed_path.png'
 #+END_SRC
 
 #+ATTR_LATEX: :width \textwidth
 #+RESULTS: cpath_01
-[[file:closed_path_01.png]]
-
-One-minute average from 10 Hz closed path analyzer in enclosure for flux
-analyses, with Nafion dryer:
-
-#+NAME: cpath_02
-#+BEGIN_SRC python :session :results file :exports results
-qry="""
-  SELECT date_trunc('minute', time_study) AS time_study,
-  avg("cp_CO2_fraction") AS "cp_CO2_fraction",
-  avg("cp_H2O_fraction") AS "cp_H2O_fraction",
-  avg(cp_pressure) AS cp_pressure,
-  avg(cp_temperature) AS cp_temperature,
-  avg(cp_temperature_in) AS cp_temperature_in,
-  avg(cp_temperature_cell) AS cp_temperature_cell,
-  avg(cp_temperature_out) AS cp_temperature_out
-  FROM amundsen_flux.cpath_10hz_2016
-  GROUP BY 1
-  """
-cpath=pd.read_sql(qry, conn, parse_dates=['time_study'],
-                  index_col="time_study")
-fig, axs = plt.subplots(4, 1, sharex=True)
-fig.set_size_inches((11, 12.5))
-cpath[['cp_CO2_fraction']].plot(ax=axs[0], legend=False,
-                                ylim=CO2flims)
-axs[0].set_ylabel('$CO_2$ fraction ($\mu mol/mol$)')
-axs[0].set_xlabel('')
-cpath[['cp_H2O_fraction']].plot(ax=axs[1], legend=False,
-                                ylim=H2Oflims)
-axs[1].set_ylabel('$H_2O$ fraction ($mmol/mol$)')
-axs[1].set_xlabel('')
-cpath[['cp_pressure']].plot(ax=axs[2], legend=False,
-                            ylim=kPalims)
-axs[2].set_ylabel('Cell pressure (Kpa)')
-axs[2].set_xlabel('')
-cpath[['cp_temperature']].plot(ax=axs[3], rot=0, legend=False,
-                               ylim=tmplims)
-axs[3].set_ylabel('Air temperature ($^\circ$C)')
-axs[3].set_xlabel('')
-fig.tight_layout()
-fig.savefig('closed_path_02.png', bbox_inches='tight')
-plt.close()
-'closed_path_02.png'
-#+END_SRC
-
-#+ATTR_LATEX: :width \textwidth
-#+RESULTS: cpath_02
-[[file:closed_path_02.png]]
+[[file:closed_path.png]]
 
 * Underway
+
+One-minute average overview:
 
 #+NAME: underway_01
 #+BEGIN_SRC python :results file :exports results
@@ -468,7 +494,7 @@ qry="""
     bad_ctd_flag, "bad_CO2_flag", "bad_H2O_flag", "bad_H2O_flow_flag",
     bad_pressure_analyzer_flag, bad_temperature_analyzer_flag,
     bad_equ_temperature_flag, bad_temperature_external_flag
-  FROM amundsen_flux.underway_1s_2016;
+  FROM amundsen_flux.underway_1s_2017;
   """
 pCO2=pd.read_sql(qry, conn, parse_dates=['time_study', 'time_1min'],
                  index_col="time_study")
@@ -516,10 +542,6 @@ plt.savefig("underway_equ.png", bbox_inches="tight"); plt.close()
 
 #+NAME: underway_02
 #+BEGIN_SRC python :results file :exports results
-# ax=pCO2[["temperature_external"]].dropna().plot(figsize=(10, 5), rot=0,
-#                                                 style="-.",
-#                                                 ylim=H2O_temp_lims,
-#                                                 legend=False)
 ax=pCO2[["tsg_temperature"]].dropna().plot(figsize=(10, 5), rot=0,
                                            style="-.",
                                            ylim=sstlims,
