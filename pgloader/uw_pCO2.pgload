@@ -1,5 +1,5 @@
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2016/UW_pCO2/UWpCO2_2016.csv'
+     FROM '/home/sluque/Data/ArcticNet/2017/UW_pCO2/UWpCO2_2017.csv'
         (
           "time",
           record_type,
@@ -14,6 +14,11 @@ LOAD CSV
 	  "uw_H2O_fraction",
 	  uw_temperature_analyzer,
 	  uw_pressure_analyzer,
+	  uw_analyzer_diag,
+	  uw_relative_humidity,
+	  "C_AGC",
+	  "H_AGC",
+	  flow_v,
 	  equ_pressure,
 	  "H2O_flow",
 	  air_flow_analyzer,
@@ -25,7 +30,6 @@ LOAD CSV
 	  drip_2,
 	  condenser_temperature,
 	  temperature_dry_box,
-	  garbage,
 	  ctd_pressure,
 	  ctd_temperature,
 	  ctd_conductivity,
@@ -33,11 +37,13 @@ LOAD CSV
 	  "ctd_O2_concentration",
 	  "uw_pH",
 	  uw_redox_potential,
-	  temperature_external
+	  temperature_external,
+	  turbidity,
+	  fluorometer
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?underway_series
         (
-          logging_group_id integer using "96",
+          logging_group_id integer using "110",
           "time",
           record_type,
 	  uw_diag,
@@ -79,19 +85,17 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2016/UW_pCO2/UW_H2O_temperature.csv'
+     FROM '/home/sluque/Data/ArcticNet/2017/UW_pCO2/TSW/UW_H2O_temperature.csv'
      	(
 	  "time",
+	  record_number,
 	  battery_voltage,
 	  logger_temperature,
-	  temperature_external,
-  	  battery_voltage_sd,
-	  logger_temperature_sd,
-	  temperature_external_sd
+	  temperature_external
 	)
      INTO postgresql://sluque:Gases01@localhost:5433/gases?underway_series
         (
-          logging_group_id integer using "104",
+          logging_group_id integer using "112",
           "time",
           record_type text using "EXTERNAL_TEMPERATURE",
 	  temperature_external
@@ -105,24 +109,20 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2016/UW_pCO2/UW_H2O_temperature.csv'
+     FROM '/home/sluque/Data/ArcticNet/2017/UW_pCO2/TSW/UW_H2O_temperature.csv'
      	(
 	  "time",
+	  record_number,
 	  battery_voltage,
 	  logger_temperature,
-	  temperature_external,
-  	  battery_voltage_sd,
-	  logger_temperature_sd,
-	  temperature_external_sd
+	  temperature_external
 	)
      INTO postgresql://sluque:Gases01@localhost:5433/gases?logger_series
         (
-          logging_group_id integer using "104",
+          logging_group_id integer using "112",
           "time",
 	  battery_voltage,
-	  logger_temperature,
-  	  battery_voltage_sd,
-	  logger_temperature_sd
+	  logger_temperature
 	)
      WITH skip header = 1,
      	  fields optionally enclosed by '"',
@@ -132,7 +132,7 @@ LOAD CSV
          standard_conforming_strings to 'on';
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2016/UW_pCO2/TSG/TSG.csv'
+     FROM '/home/sluque/Data/ArcticNet/2017/UW_pCO2/TSG/TSG.csv'
      	(
 	  "time",
 	  time_logger,
@@ -149,7 +149,7 @@ LOAD CSV
 	)
      INTO postgresql://sluque:Gases01@localhost:5433/gases?underway_series
         (
-          logging_group_id integer using "105",
+          logging_group_id integer using "111",
           "time",
           record_type text using "EXTERNAL_TEMPERATURE",
 	  tsg_temperature,

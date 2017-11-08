@@ -1,8 +1,6 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2014-02-05T22:44:42+0000
-# Last-Updated: 2017-10-07T01:15:23+0000
-#           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary:
 #
@@ -16,34 +14,26 @@
 
 # Load tables
 
-pgloader -D /var/tmp/pgloader/AMD2016 -S navigation_summary.log \
-    -L /var/tmp/pgloader/AMD2016/navigation.log \
+pgloader -D /var/tmp/pgloader/AMD2017 -S navigation_summary.log \
+    -L /var/tmp/pgloader/AMD2017/navigation.log \
     --log-min-messages debug --client-min-messages warning \
     pgloader/navigation.pgload
-pgloader -D /var/tmp/pgloader/AMD2016 -S meteorology_summary.log \
-    -L /var/tmp/pgloader/AMD2016/meteorology.log \
+pgloader -D /var/tmp/pgloader/AMD2017 -S meteorology_summary.log \
+    -L /var/tmp/pgloader/AMD2017/meteorology.log \
     --log-min-messages debug --client-min-messages warning \
     pgloader/meteorology.pgload
-pgloader -D /var/tmp/pgloader/AMD2016 -S rad_summary.log \
-    -L /var/tmp/pgloader/AMD2016/radiation.log \
+pgloader -D /var/tmp/pgloader/AMD2017 -S rad_summary.log \
+    -L /var/tmp/pgloader/AMD2017/radiation.log \
     --log-min-messages debug --client-min-messages warning \
     pgloader/radiation.pgload
-pgloader -D /var/tmp/pgloader/AMD2016 -S flux_avg_summary.log \
-    -L /var/tmp/pgloader/AMD2016/flux_avg.log \
-    --log-min-messages debug --client-min-messages warning \
-    pgloader/flux_avg.pgload
-pgloader -D /var/tmp/pgloader/AMD2016 -S flux_summary.log \
-    -L /var/tmp/pgloader/AMD2016/flux.log \
-    --log-min-messages debug --client-min-messages warning \
-    pgloader/flux.pgload
-pgloader -D /var/tmp/pgloader/AMD2016 -S UWpCO2_summary.log \
-    -L /var/tmp/pgloader/AMD2016/uw_pCO2.log \
+pgloader -D /var/tmp/pgloader/AMD2017 -S UWpCO2_summary.log \
+    -L /var/tmp/pgloader/AMD2017/uw_pCO2.log \
     --log-min-messages debug --client-min-messages warning \
     pgloader/uw_pCO2.pgload
-pgloader -D /var/tmp/pgloader/AMD2016 -S Logs_summary.log \
-    -L /var/tmp/pgloader/AMD2016/logs.log \
+pgloader -D /var/tmp/pgloader/AMD2017 -S flux_summary.log \
+    -L /var/tmp/pgloader/AMD2017/flux.log \
     --log-min-messages debug --client-min-messages warning \
-    pgloader/logs.pgload
+    pgloader/flux.pgload
 
 
 
