@@ -1,8 +1,8 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2016-10-08T17:00:02+0000
-# Last-Updated: 2016-11-08T15:11:50+0000
-#           By: Sebastian P. Luque
+# Last-Updated: 2017-11-12T23:41:59+0000
+#           By: Sebastian Luque
 #
 # Commentary:
 #
@@ -11,15 +11,15 @@
 # -------------------------------------------------------------------------
 # Code:
 
-ROOTDIR=/mnt/CEOS_Tim/AMD/2016/FromDB
+ROOTDIR=/mnt/CEOS_Tim/AMD/2017/FromDB
 # Core low frequency views
-NAV=navigation_1min_2016
+NAV=navigation_1min_2017
 NAVODIR=${ROOTDIR}/Navigation_1min
-MET=meteorology_ceos_1min_2016
+MET=meteorology_ceos_1min_2017
 METODIR=${ROOTDIR}/Meteorology_CEOS_1min
-RAD=radiation_1min_2016
+RAD=radiation_1min_2017
 RADODIR=${ROOTDIR}/Radiation_1min
-UWPCO2=underway_1s_2016
+UWPCO2=underway_1s_2017
 UWPCO2ODIR=${ROOTDIR}/UWpCO2_1s
 # Program to split into daily files
 SPLITISO_PRG=$(realpath -e "$(dirname $0)"/../../split_YYYYMMDDHHMMSS.awk)
