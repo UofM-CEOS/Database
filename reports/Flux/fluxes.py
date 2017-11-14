@@ -6,8 +6,15 @@ import matplotlib.pyplot as plt
 
 logging.basicConfig(level=logging.DEBUG)
 
+# # Test reading files with config
+# config = eddycov.db_flux.parse_config("flux1_AMD2017.cfg")
+# ec_file = config['EC Inputs']['input_files'][0]
+# ecdf, ec_flags = (eddycov.db_flux.prepare_period(ec_file,
+#                                                  config))
+
 # Perform the corrections
-eddycov.main("flux_AMD2016.cfg")
+eddycov.main("flux1_AMD2017.cfg")
+eddycov.main("flux2_AMD2017.cfg")
 
 # # Check output
 # tilts = pd.read_csv("tilts_1440.csv", index_col=0, parse_dates=True)
