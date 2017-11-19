@@ -2,7 +2,7 @@
 # Author: Sebastian Luque
 # Created: 2014-01-30T21:50:04+0000
 # copyright (c) 2014-2017 Sebastian P. Luque
-#
+# -------------------------------------------------------------------------
 # This program is Free Software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)

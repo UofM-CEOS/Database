@@ -1,10 +1,8 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2014-02-05T22:44:42+0000
-# Last-Updated: 2015-07-01T13:43:08+0000
-#           By: Sebastian Luque
 # -------------------------------------------------------------------------
-# Commentary: 
+# Commentary:
 #
 # This script is for preparing and loading data onto database, using
 # pgloader.

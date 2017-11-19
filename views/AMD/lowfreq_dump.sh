@@ -1,9 +1,7 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2016-10-08T17:00:02+0000
-# Last-Updated: 2017-01-18T18:38:31+0000
-#           By: Sebastian P. Luque
-#
+# -------------------------------------------------------------------------
 # Commentary:
 #
 # Dump low frequency core views and tables to file(s) for miscellaneous

@@ -1,9 +1,7 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2014-08-28T22:17:42+0000
-# Last-Updated: 2016-11-22T21:30:33+0000
-#           By: Sebastian P. Luque
-#
+# -------------------------------------------------------------------------
 # Commentary:
 #
 # Prepare data for loading onto database.

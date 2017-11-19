@@ -1,11 +1,9 @@
 #! /usr/bin/gawk -f
 # Author: Sebastian P. Luque
 # Created: 2014-09-17T17:07:20+0000
-# Last-Updated: 2015-06-30T18:47:45+0000
-#           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
-# Commentary: 
-# 
+# Commentary:
+#
 # Split large tables from the database into daily files, provided the first
 # column is ISO date (YYYY-MM-DD and optional time stamp).
 #

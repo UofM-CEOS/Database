@@ -1,11 +1,9 @@
 #! /usr/bin/gawk -f
 # Author: Sebastian Luque
 # Created: 2014-02-10T23:24:53+0000
-# Last-Updated: 2015-06-30T18:46:23+0000
-#           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
-# Commentary: 
-# 
+# Commentary:
+#
 # See the pgloader configuration file for details.
 #
 # This prepares the NAV files from this year for loading into database.

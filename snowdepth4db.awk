@@ -1,8 +1,6 @@
 #! /usr/bin/gawk -f
 # Author: Sebastian Luque
 # Created: 2014-10-03T21:09:06+0000
-# Last-Updated: 2015-06-30T18:47:29+0000
-#           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
 # Commentary:
 #

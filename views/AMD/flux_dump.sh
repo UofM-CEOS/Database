@@ -1,10 +1,7 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2016-10-08T17:00:02+0000
-# Last-Updated: 2017-01-20T17:06:02+0000
-# Last-Updated: 2017-01-20T04:58:46+0000
-#           By: Sebastian P. Luque
-#
+# -------------------------------------------------------------------------
 # Commentary:
 #
 # Dump core views and tables to file(s) for flux analyses.
@@ -84,6 +81,7 @@ ORDER BY time_20min, time_study;
 \H
 \o colnames.html
 SELECT DISTINCT ON (cols.ordinal_position, cols.column_name)
+    cols.ordinal_position,
     cols.column_name,
     col_description(cl.oid, cols.ordinal_position::INT)
 FROM information_schema.columns cols
@@ -145,6 +143,7 @@ ORDER BY time_20min, time_study;
 \H
 \o colnames.html
 SELECT DISTINCT ON (cols.ordinal_position, cols.column_name)
+    cols.ordinal_position,
     cols.column_name,
     col_description(cl.oid, cols.ordinal_position::INT)
 FROM information_schema.columns cols
@@ -196,6 +195,7 @@ SELECT time_20min, time_study, longitude, latitude, speed_over_ground,
 \H
 \o colnames.html
 SELECT DISTINCT ON (cols.ordinal_position, cols.column_name)
+    cols.ordinal_position,
     cols.column_name,
     col_description(cl.oid, cols.ordinal_position::INT)
 FROM information_schema.columns cols
@@ -235,6 +235,7 @@ SELECT time_20min, time_study, longitude, latitude, speed_over_ground,
 \H
 \o colnames.html
 SELECT DISTINCT ON (cols.ordinal_position, cols.column_name)
+    cols.ordinal_position,
     cols.column_name,
     col_description(cl.oid, cols.ordinal_position::INT)
 FROM information_schema.columns cols

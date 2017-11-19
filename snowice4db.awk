@@ -1,16 +1,14 @@
 #! /usr/bin/gawk -f
 # Author: Sebastian P. Luque
 # Created: 2014-09-25T22:01:24+0000
-# Last-Updated: 2015-06-30T18:47:35+0000
-#           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
-# Commentary: 
+# Commentary:
 #
 # Snow and ice data are typically collected via the multiplexer, so many
 # columns for the same variable, but measured at a different depth or some
 # other reference.  We need to put them into "long" ("melted") form for
 # input into database.
-# 
+#
 # -------------------------------------------------------------------------
 # Code:
 
