@@ -1,7 +1,7 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2016-10-08T17:00:02+0000
-# Last-Updated: 2016-11-22T21:12:07+0000
+# Last-Updated: 2017-11-22T22:56:43+0000
 #           By: Sebastian P. Luque
 #
 # Commentary:
@@ -80,10 +80,12 @@ ORDER BY time_20min, time_study;
 \copy (SELECT * FROM lowfreq_1w20min) TO PROGRAM 'awk -v fprefix=L1 -f ${SPLITYMD_PRG} -' CSV
 \H
 \o colnames.html
-SELECT cols.column_name, col_description(cl.oid, cols.ordinal_position::INT)
+SELECT cols.ordinal_position, cols.column_name,
+  col_description(cl.oid, cols.ordinal_position::INT)
 FROM pg_class cl, information_schema.columns cols
 WHERE cols.table_catalog='gases' AND cols.table_schema='amundsen_flux' AND
-cols.table_name = '${LFREQ1}' AND cols.table_name = cl.relname;
+cols.table_name = '${LFREQ1}' AND cols.table_name = cl.relname
+ORDER BY cols.ordinal_position::INT;
 EOF
 psql -p5433 -f${TMPDIR}/lfreq1_dump.sql gases
 
@@ -134,10 +136,12 @@ ORDER BY time_20min, time_study;
 \copy (SELECT * FROM lowfreq_1w20min_flags) TO PROGRAM 'awk -v fprefix=L2 -f ${SPLITYMD_PRG} -' CSV
 \H
 \o colnames.html
-SELECT cols.column_name, col_description(cl.oid, cols.ordinal_position::INT)
+SELECT cols.ordinal_position, cols.column_name,
+  col_description(cl.oid, cols.ordinal_position::INT)
 FROM pg_class cl, information_schema.columns cols
 WHERE cols.table_catalog='gases' AND cols.table_schema='amundsen_flux' AND
-cols.table_name = '${LFREQ2}' AND cols.table_name = cl.relname;
+cols.table_name = '${LFREQ2}' AND cols.table_name = cl.relname
+ORDER BY cols.ordinal_position::INT;
 EOF
 psql -p5433 -f${TMPDIR}/lfreq2_dump.sql gases
 
@@ -178,10 +182,12 @@ SELECT time_20min, time_study, longitude, latitude, speed_over_ground,
 \copy (SELECT * FROM flux_10hz) TO PROGRAM 'awk -v fprefix=EC -f ${SPLITISO_PRG} -' CSV
 \H
 \o colnames.html
-SELECT cols.column_name, col_description(cl.oid, cols.ordinal_position::INT)
+SELECT cols.ordinal_position, cols.column_name,
+  col_description(cl.oid, cols.ordinal_position::INT)
 FROM pg_class cl, information_schema.columns cols
 WHERE cols.table_catalog='gases' AND cols.table_schema='amundsen_flux' AND
-cols.table_name = '${HFREQ1}' AND cols.table_name = cl.relname;
+cols.table_name = '${HFREQ1}' AND cols.table_name = cl.relname
+ORDER BY cols.ordinal_position::INT;
 EOF
 psql -p5433 -f${TMPDIR}/hfreq1_dump.sql gases
 
