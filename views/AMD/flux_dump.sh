@@ -20,7 +20,8 @@ LFREQ1ODIR=${ROOTDIR}/LowFreq_1w20min
 LFREQ2=lowfreq_1w20min_2014_flags
 LFREQ2ODIR=${ROOTDIR}/LowFreq_1w20min_flags
 LFREQ3=lowfreq_20min_fluxable_2014
-LFREQ3FILE=${ROOTDIR}/LowFreq_20min_fluxable/L3_2014.csv
+LFREQ3ODIR=${ROOTDIR}/LowFreq_20min_fluxable
+LFREQ3OFILE=L3_2014.csv
 # Core high frequency views
 HFREQ1=flux1_10hz_2014
 HFREQ1ODIR=${ROOTDIR}/Flux1_10hz
@@ -31,6 +32,8 @@ SPLITISO_PRG=$(realpath -e "$(dirname $0)"/../../split_YYYYMMDDHHMMSS.awk)
 SPLITYMD_PRG=$(realpath -e "$(dirname $0)"/../../split_YYYYMMDD.awk)
 
 TMPDIR=$(mktemp -d -p /var/tmp)
+
+mkdir -p ${LFREQ1ODIR} ${LFREQ2ODIR} ${LFREQ3ODIR} ${HFREQ1ODIR} ${HFREQ2ODIR}
 
 cat <<EOF > ${TMPDIR}/lfreq1_dump.sql
 CREATE OR REPLACE TEMPORARY VIEW lowfreq_1w20min AS
@@ -165,7 +168,8 @@ SELECT time_20min, longitude, latitude, speed_over_ground, course_over_ground,
        true_wind_speed, true_wind_direction, "PAR", "K_down", "LW_down",
        nfluxable
 FROM amundsen_flux.${LFREQ3};
-\copy (SELECT * FROM lowfreq_20min_fluxable) TO '${LFREQ3FILE}' CSV HEADER
+\cd ${LFREQ3ODIR}
+\copy (SELECT * FROM lowfreq_20min_fluxable) TO '${LFREQ3OFILE}' CSV HEADER
 EOF
 psql -p5433 -f${TMPDIR}/lfreq3_dump.sql gases
 
