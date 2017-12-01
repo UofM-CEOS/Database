@@ -1,8 +1,8 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2014-08-28T22:17:42+0000
-# Last-Updated: 2017-10-06T01:20:01+0000
-#           By: Sebastian P. Luque
+# Last-Updated: 2017-12-01T03:54:35+0000
+#           By: Sebastian Luque
 #
 # Commentary:
 #
@@ -20,6 +20,7 @@ MET_AAVOS=${ROOTDIR}/MET/AAVOS/Processed
 UNDERWAY=${ROOTDIR}/UW_pCO2
 UWTEMPERATURE=${UNDERWAY}/TSW
 TSG=${UNDERWAY}/TSG
+TSG_proc=${TSG}/Processed/Data
 RAD=${ROOTDIR}/RAD
 FLUX=${ROOTDIR}/EC
 FLUXDIAG=${FLUX}/DIAG
@@ -33,7 +34,7 @@ TEMPDIR=$(mktemp -d -p /var/local/tmp)
 fromdos ${NAV_POSMV}/*/* ${NAV_CNAV}/*/* ${NAV_BEST}/*/* \
 	${METCO2}/Converted/*.dat ${METCO2}/*.dat ${MET_AAVOS}/LEG*/*.log \
 	${RAD}/*.dat ${UNDERWAY}/*.txt ${UWTEMPERATURE}/*.dat \
-	${FLUX}/Converted/*.dat ${FLUX}/*.dat
+	${TSG_proc}/* ${FLUX}/Converted/*.dat ${FLUX}/*.dat
 
 # NAV
 # POSMV data
@@ -58,6 +59,8 @@ AWKPATH=${AWKPATH} ./AAVOS_proc4db.awk ${MET_AAVOS}/LEG_0[234]/*.csv | \
     awk '!x[$0]++' > ${UNDERWAY}/UWpCO2_2016.csv
 ./TSG4db.awk ${TSG}/*.cnv | \
     awk 'NR == 1 || !x[$0]++' > ${TSG}/TSG.csv
+./TSG_proc4db.awk ${TSG_proc}/TSG_*[0-9].int | \
+    awk 'NR == 1 || !x[$0]++' > ${TSG_proc}/TSG_proc.csv
 ./underway_indeplogger4db.awk ${UWTEMPERATURE}/* | \
     awk '!x[$0]++' > ${UNDERWAY}/UW_H2O_temperature.csv
 
