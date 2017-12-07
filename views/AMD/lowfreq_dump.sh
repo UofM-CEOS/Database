@@ -1,7 +1,7 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2016-10-08T17:00:02+0000
-# Last-Updated: 2016-11-08T15:11:50+0000
+# Last-Updated: 2017-12-07T16:31:39+0000
 #           By: Sebastian P. Luque
 #
 # Commentary:
@@ -19,8 +19,8 @@ MET=meteorology_ceos_1min_2016
 METODIR=${ROOTDIR}/Meteorology_CEOS_1min
 RAD=radiation_1min_2016
 RADODIR=${ROOTDIR}/Radiation_1min
-UWPCO2=underway_1s_2016
-UWPCO2ODIR=${ROOTDIR}/UWpCO2_1s
+UWPCO2=underway_1min_2016
+UWPCO2ODIR=${ROOTDIR}/UWpCO2_1min
 # Program to split into daily files
 SPLITISO_PRG=$(realpath -e "$(dirname $0)"/../../split_YYYYMMDDHHMMSS.awk)
 SPLITYMD_PRG=$(realpath -e "$(dirname $0)"/../../split_YYYYMMDD.awk)
@@ -68,18 +68,20 @@ psql -p5433 -f${TMPDIR}/rad_dump.sql gases
 
 # Underway
 cat <<EOF > ${TMPDIR}/uwpCO2_dump.sql
-CREATE OR REPLACE TEMPORARY VIEW underway_1s AS
-SELECT time_study, time_1min, equ_temperature, "uw_CO2_fraction",
+CREATE OR REPLACE TEMPORARY VIEW underway_1min AS
+SELECT time_study_1min, equ_temperature, "uw_CO2_fraction",
        "uw_H2O_fraction", uw_temperature_analyzer, uw_pressure_analyzer,
        equ_pressure, "H2O_flow", air_flow_analyzer, condensation_equ,
        ctd_pressure, ctd_temperature, ctd_conductivity, "ctd_O2_saturation",
        "ctd_O2_concentration", temperature_external, tsg_temperature,
-       bad_ctd_flag, "bad_CO2_flag", "bad_H2O_flag", "bad_H2O_flow_flag",
-       bad_pressure_analyzer_flag, bad_temperature_analyzer_flag,
-       bad_equ_temperature_flag, bad_temperature_external_flag
+       tsg_salinity, tsg_conductivity, tsg_sound_speed, "tsg_H2O_flow",
+       tsg_fluorescence, nbad_ctd_flag, "nbad_CO2_flag", "nbad_H2O_flag",
+       "nbad_H2O_flow_flag", nbad_pressure_analyzer_flag,
+       nbad_temperature_analyzer_flag, nbad_equ_temperature_flag,
+       nbad_temperature_external_flag
 FROM amundsen_flux.${UWPCO2};
 \cd ${UWPCO2ODIR}
-\copy (SELECT * FROM underway_1s) TO 'underway_1s.csv' CSV HEADER
+\copy (SELECT * FROM underway_1min) TO 'underway_1min.csv' CSV HEADER
 EOF
 psql -p5433 -f${TMPDIR}/uwpCO2_dump.sql gases
 
