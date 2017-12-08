@@ -1,7 +1,7 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # -------------------------------------------------------------------------
-# Commentary: 
+# Commentary:
 #
 # This script is for preparing and loading data onto database, using
 # pgloader.

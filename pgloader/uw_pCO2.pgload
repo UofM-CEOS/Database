@@ -165,3 +165,35 @@ LOAD CSV
           fields terminated by ','
      SET client_encoding to 'utf-8',
          standard_conforming_strings to 'on';
+
+
+LOAD CSV
+     FROM '/home/sluque/Data/ArcticNet/2015/UW_pCO2/TSG/Processed/Latest/Data/TSG_proc.csv'
+     	(
+	  "time",
+	  latitude,
+	  longitude,
+	  tsg_temperature,
+	  tsg_salinity,
+	  tsg_fluorescence,
+	  tsg_sound_speed,
+	  speed_over_ground,
+	  "tsg_H2O_flow"
+	)
+     INTO postgresql://sluque:Gases01@localhost:5433/gases?underway_series
+        (
+          logging_group_id integer using "128",
+          "time",
+          record_type text using "EXTERNAL_TEMPERATURE",
+	  tsg_temperature,
+	  tsg_salinity,
+	  tsg_sound_speed,
+	  "tsg_H2O_flow",
+	  tsg_fluorescence
+	)
+     WITH skip header = 1,
+     	  fields optionally enclosed by '"',
+          fields escaped by double-quote,
+          fields terminated by ','
+     SET client_encoding to 'utf-8',
+         standard_conforming_strings to 'on';

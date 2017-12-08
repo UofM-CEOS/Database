@@ -1,10 +1,8 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2014-08-28T22:17:42+0000
-# Last-Updated: 2016-03-11T22:20:18+0000
-#           By: Sebastian P. Luque
 # -------------------------------------------------------------------------
-# Commentary: 
+# Commentary:
 #
 # Prepare data for loading onto database.
 #
@@ -26,6 +24,7 @@ MET_AAVOS=${ROOTDIR}/MET/AAVOS
 UNDERWAY=${ROOTDIR}/UW_pCO2
 UWTEMPERATURE=${UNDERWAY}/Tsw
 TSG=${UNDERWAY}/TSG
+TSG_proc=${TSG}/Processed/Latest/Data
 RAD_LOGGERNET=${ROOTDIR}/RAD
 RAD_DAILY=${RAD_LOGGERNET}/LoggerNet
 LOGFILE1=${ROOTDIR}/Logs/met_log.csv
@@ -45,6 +44,8 @@ AWKPATH=${AWKPATH} ./AAVOS_proc4db.awk ${MET_AAVOS}/LEG_0[234]/*.csv | \
     awk '!x[$0]++' > ${UNDERWAY}/UW_water_temperature.csv
 ./TSG4db.awk ${TSG}/LEG_0[234]/*.cnv | \
     awk 'NR == 1 || !x[$0]++' > ${TSG}/TSG.csv
+./TSG_proc4db.awk ${TSG_proc}/TSG_*[0-9].int | \
+    awk 'NR == 1 || !x[$0]++' > ${TSG_proc}/TSG_proc.csv
 AWKPATH=${AWKPATH} ./rad4db.awk ${RAD_LOGGERNET}/*.dat \
        ${RAD_DAILY}/*.dat | \
     awk '!x[$0]++' > ${RAD_LOGGERNET}/RAD_all.csv
