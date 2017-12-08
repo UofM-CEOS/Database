@@ -170,14 +170,14 @@ LOAD CSV
      FROM '/home/sluque/Data/ArcticNet/2016/UW_pCO2/TSG/Processed/Data/TSG_proc.csv'
      	(
 	  "time",
-	  latitude,
-	  longitude,
-	  tsg_temperature,
-	  tsg_salinity,
-	  tsg_fluorescence,
-	  tsg_sound_speed,
-	  speed_over_ground,
-	  "tsg_H2O_flow"
+	  latitude [null if "NaN"],
+	  longitude [null if "NaN"],
+	  tsg_temperature [null if "NaN"],
+	  tsg_salinity [null if "NaN"],
+	  tsg_fluorescence [null if "NaN"],
+	  tsg_sound_speed [null if "NaN"],
+	  speed_over_ground [null if "NaN"],
+	  "tsg_H2O_flow" [null if "NaN"]
 	)
      INTO postgresql://sluque:Gases01@localhost:5433/gases?underway_series
         (
