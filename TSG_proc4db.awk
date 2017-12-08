@@ -12,7 +12,7 @@
 # files, and form the basis from which they calculated 1-min averages, as
 # well as other major corrections including comparisons with Rosette data.
 #
-# The header of this input file in 2016 was:
+# The header of this input file in 2015 was:
 #
 # [1]  Acquisition date [yyyy/mm/dd]
 # [2]  Acquisition hour [HH:MM:SS]
@@ -23,7 +23,6 @@
 # [7]  Fluorescence [ug/L]
 # [8]  Sound velocity [m/s]
 # [9]  Vessel speed [Knt]
-# [10] Water flow rate [L/min]
 #
 # Simple whitespace separates each field.
 #
@@ -37,7 +36,7 @@ BEGIN {
     FS=" +"
     OFS=","
     skip_rows=21
-    ncols=10
+    ncols=9
     print "time,latitude,longitude,H2O_temperature",
 	"salinity,fluorescence,sound_velocity,speed_over_ground,H2O_flow_rate"
 }
