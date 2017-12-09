@@ -1,10 +1,10 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2014-08-28T22:17:42+0000
-# Last-Updated: 2015-07-03T21:56:30+0000
+# Last-Updated: 2017-12-08T04:36:41+0000
 #           By: Sebastian P. Luque
-# 
-# Commentary: 
+#
+# Commentary:
 #
 # Prepare data for loading onto database.
 # -------------------------------------------------------------------------
@@ -16,6 +16,8 @@ SHIPNAV=${ROOTDIR}/NAV/Tower
 MET=${ROOTDIR}/MET
 UNDERWAY=${ROOTDIR}/UW_pCO2
 UWTEMPERATURE=${UNDERWAY}/Tsw
+TSG=${UNDERWAY}/TSG
+TSG_proc=${TSG}/Processed/Data
 RAD=${ROOTDIR}/RAD/STD
 EC_AVG=${ROOTDIR}/LI-7500A
 EC=${ROOTDIR}/EC
@@ -32,6 +34,8 @@ LOGFILE2=${ROOTDIR}/met_log_2014.csv
     awk '!x[$0]++' > ${UNDERWAY}/AMD_2014.csv
 ./underway4db_misc.awk ${UWTEMPERATURE}/* | \
     awk '!x[$0]++' > ${UNDERWAY}/AMD_water_temperature_2014.csv
+./TSG_proc4db.awk ${TSG_proc}/TSG_*[0-9].int | \
+    awk 'NR == 1 || !x[$0]++' > ${TSG_proc}/TSG_proc.csv
 ./rad4db.awk ${RAD}/*.dat | \
     awk '!x[$0]++' > ${RAD}/rad_all.csv
 ./flux_avg4db.awk ${EC_AVG}/*.dat

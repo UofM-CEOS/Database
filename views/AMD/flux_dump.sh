@@ -1,9 +1,7 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2016-10-08T17:00:02+0000
-# Last-Updated: 2017-01-20T04:58:46+0000
-#           By: Sebastian Luque
-#
+# -------------------------------------------------------------------------
 # Commentary:
 #
 # Dump core views and tables to file(s) for flux analyses.
@@ -22,7 +20,8 @@ LFREQ1ODIR=${ROOTDIR}/LowFreq_1w20min
 LFREQ2=lowfreq_1w20min_2014_flags
 LFREQ2ODIR=${ROOTDIR}/LowFreq_1w20min_flags
 LFREQ3=lowfreq_20min_fluxable_2014
-LFREQ3FILE=${ROOTDIR}/LowFreq_20min_fluxable/L3_2014.csv
+LFREQ3ODIR=${ROOTDIR}/LowFreq_20min_fluxable
+LFREQ3OFILE=L3_2014.csv
 # Core high frequency views
 HFREQ1=flux1_10hz_2014
 HFREQ1ODIR=${ROOTDIR}/Flux1_10hz
@@ -33,6 +32,8 @@ SPLITISO_PRG=$(realpath -e "$(dirname $0)"/../../split_YYYYMMDDHHMMSS.awk)
 SPLITYMD_PRG=$(realpath -e "$(dirname $0)"/../../split_YYYYMMDD.awk)
 
 TMPDIR=$(mktemp -d -p /var/tmp)
+
+mkdir -p ${LFREQ1ODIR} ${LFREQ2ODIR} ${LFREQ3ODIR} ${HFREQ1ODIR} ${HFREQ2ODIR}
 
 cat <<EOF > ${TMPDIR}/lfreq1_dump.sql
 CREATE OR REPLACE TEMPORARY VIEW lowfreq_1w20min AS
@@ -68,7 +69,9 @@ SELECT time_20min, time_study, longitude, longitude_avg, latitude, latitude_avg,
        ctd_conductivity, ctd_conductivity_avg, "ctd_O2_saturation",
        "ctd_O2_saturation_avg", "ctd_O2_concentration", "ctd_O2_concentration_avg",
        "uw_pH", "uw_pH_avg", uw_redox_potential, uw_redox_potential_avg,
-       temperature_external, temperature_external_avg,
+       temperature_external, temperature_external_avg, tsg_temperature,
+       tsg_temperature_avg, tsg_salinity, tsg_salinity_avg, tsg_conductivity,
+       tsg_conductivity_avg, tsg_sound_speed, tsg_sound_speed_avg,
        temperature_in, temperature_in_avg,
        bad_wind_direction_flag, very_bad_wind_direction_flag,
        bad_ice_flag, bad_atmospheric_pressure_flag, bad_anemometer_flag,
@@ -83,7 +86,7 @@ ORDER BY time_20min, time_study;
 \H
 \o colnames.html
 SELECT DISTINCT ON (cols.ordinal_position, cols.column_name)
-    cols.column_name,
+    cols.ordinal_position, cols.column_name,
     col_description(cl.oid, cols.ordinal_position::INT)
 FROM information_schema.columns cols
     JOIN pg_class cl ON cols.table_name = cl.relname
@@ -129,7 +132,9 @@ SELECT time_20min, time_study, longitude, longitude_avg, latitude, latitude_avg,
        ctd_temperature_avg, ctd_conductivity, ctd_conductivity_avg, "ctd_O2_saturation",
        "ctd_O2_saturation_avg", "ctd_O2_concentration", "ctd_O2_concentration_avg",
        "uw_pH", "uw_pH_avg", uw_redox_potential, uw_redox_potential_avg,
-       temperature_external, temperature_external_avg,
+       temperature_external, temperature_external_avg, tsg_temperature,
+       tsg_temperature_avg, tsg_salinity, tsg_salinity_avg, tsg_conductivity,
+       tsg_conductivity_avg, tsg_sound_speed, tsg_sound_speed_avg,
        temperature_in, temperature_in_avg,
        bad_wind_direction_flag, very_bad_wind_direction_flag,
        bad_ice_flag, bad_atmospheric_pressure_flag, bad_anemometer_flag,
@@ -144,7 +149,7 @@ ORDER BY time_20min, time_study;
 \H
 \o colnames.html
 SELECT DISTINCT ON (cols.ordinal_position, cols.column_name)
-    cols.column_name,
+    cols.ordinal_position, cols.column_name,
     col_description(cl.oid, cols.ordinal_position::INT)
 FROM information_schema.columns cols
     JOIN pg_class cl ON cols.table_name = cl.relname
@@ -165,7 +170,8 @@ SELECT time_20min, longitude, latitude, speed_over_ground, course_over_ground,
        true_wind_speed, true_wind_direction, "PAR", "K_down", "LW_down",
        nfluxable
 FROM amundsen_flux.${LFREQ3};
-\copy (SELECT * FROM lowfreq_20min_fluxable) TO '${LFREQ3FILE}' CSV HEADER
+\cd {LFREQ3ODIR}
+\copy (SELECT * FROM lowfreq_20min_fluxable) TO '${LFREQ3OFILE}' CSV HEADER
 EOF
 psql -p5433 -f${TMPDIR}/lfreq3_dump.sql gases
 
@@ -195,7 +201,7 @@ SELECT time_20min, time_study, longitude, latitude, speed_over_ground,
 \H
 \o colnames.html
 SELECT DISTINCT ON (cols.ordinal_position, cols.column_name)
-    cols.column_name,
+    cols.ordinal_position, cols.column_name,
     col_description(cl.oid, cols.ordinal_position::INT)
 FROM information_schema.columns cols
     JOIN pg_class cl ON cols.table_name = cl.relname
@@ -234,7 +240,7 @@ SELECT time_20min, time_study, longitude, latitude, speed_over_ground,
 \H
 \o colnames.html
 SELECT DISTINCT ON (cols.ordinal_position, cols.column_name)
-    cols.column_name,
+    cols.ordinal_position, cols.column_name,
     col_description(cl.oid, cols.ordinal_position::INT)
 FROM information_schema.columns cols
     JOIN pg_class cl ON cols.table_name = cl.relname
