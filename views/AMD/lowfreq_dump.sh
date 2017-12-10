@@ -58,7 +58,8 @@ cat <<EOF > ${TMPDIR}/rad_dump.sql
 CREATE OR REPLACE TEMPORARY VIEW radiation_1min AS
 SELECT time_study, "PAR", "PAR_sd", "K_down", "K_down_sd", temperature_thermopile,
        temperature_thermopile_sd, temperature_case, temperature_case_sd,
-       temperature_dome, temperature_dome_sd, "LW_down", "LW_down_sd"
+       temperature_dome, temperature_dome_sd, "LW_down", "LW_down_sd",
+       "UV_a", "UV_a_sd", "UV_b", "UV_b_sd"
 FROM amundsen_flux.${RAD};
 \cd ${RADODIR}
 \copy (SELECT * FROM radiation_1min) TO 'radiation_1min.csv' CSV HEADER
