@@ -70,8 +70,8 @@ SELECT time_20min, time_study, longitude, longitude_avg, latitude, latitude_avg,
        temperature_external, temperature_external_avg, tsg_temperature,
        tsg_temperature_avg, tsg_salinity, tsg_salinity_avg, tsg_conductivity,
        tsg_conductivity_avg, tsg_sound_speed, tsg_sound_speed_avg, "tsg_H2O_flow",
-       "tsg_H2O_flow_avg", temperature_in, temperature_in_avg,
-       bad_wind_direction_flag, very_bad_wind_direction_flag,
+       "tsg_H2O_flow_avg", tsg_fluorescence, tsg_fluorescence_avg, temperature_in,
+       temperature_in_avg, bad_wind_direction_flag, very_bad_wind_direction_flag,
        bad_ice_flag, bad_atmospheric_pressure_flag, bad_anemometer_flag,
        bad_barometer_flag, bad_trh_sensor_flag, bad_ir_sensor_flag,
        nbad_ctd_flag, "nbad_CO2_flag", "nbad_H2O_flag", "nbad_H2O_flow_flag",
@@ -128,8 +128,8 @@ SELECT time_20min, time_study, longitude, longitude_avg, latitude, latitude_avg,
        temperature_external, temperature_external_avg, tsg_temperature,
        tsg_temperature_avg, tsg_salinity, tsg_salinity_avg, tsg_conductivity,
        tsg_conductivity_avg, tsg_sound_speed, tsg_sound_speed_avg, "tsg_H2O_flow",
-       "tsg_H2O_flow_avg", temperature_in, temperature_in_avg,
-       bad_wind_direction_flag, very_bad_wind_direction_flag,
+       "tsg_H2O_flow_avg", tsg_fluorescence, tsg_fluorescence_avg, temperature_in,
+       temperature_in_avg, bad_wind_direction_flag, very_bad_wind_direction_flag,
        bad_ice_flag, bad_atmospheric_pressure_flag, bad_anemometer_flag,
        bad_barometer_flag, bad_trh_sensor_flag, bad_ir_sensor_flag,
        nbad_ctd_flag, "nbad_CO2_flag", "nbad_H2O_flag", "nbad_H2O_flow_flag",
@@ -158,7 +158,7 @@ SELECT time_20min, longitude, latitude, speed_over_ground, course_over_ground,
        true_wind_speed, true_wind_direction, "PAR", "K_down", "LW_down",
        nfluxable
 FROM amundsen_flux.${LFREQ3};
-\cd {LFREQ3ODIR}
+\cd ${LFREQ3ODIR}
 \copy (SELECT * FROM lowfreq_20min_fluxable) TO '${LFREQ3OFILE}' CSV HEADER
 EOF
 psql -p5433 -f${TMPDIR}/lfreq3_dump.sql gases
