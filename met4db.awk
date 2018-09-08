@@ -12,7 +12,7 @@
 # meteorology_series table this means the following fields (based on the
 # TOA5 header therein):
 #
-# In 2017, it was:
+# In 2018, it was:
 #
 # [1]  timestamp [YYYY-MM-DD HH:MM:SS]
 # [2]  record number [D+]

@@ -8,62 +8,59 @@
 # -------------------------------------------------------------------------
 # Code:
 
-ROOTDIR=~/Data/ArcticNet/2017
+ROOTDIR=~/Data/ArcticNet/2018
 NAV=${ROOTDIR}/NAV
-NAV_POSMV=${NAV}/POSMV
-NAV_CNAV=${NAV}/CNAV
+# NAV_POSMV=${NAV}/POSMV
+# NAV_CNAV=${NAV}/CNAV
 NAV_BEST=${NAV}/Best
-METCEOS=${ROOTDIR}/MET/CEOS
-MET_AAVOS=${ROOTDIR}/MET/AAVOS
+MET_CEOS=${ROOTDIR}/MET/CEOS
+MET_AVOS=${ROOTDIR}/MET/AVOS
 UNDERWAY=${ROOTDIR}/UW_pCO2
-UWTEMPERATURE=${UNDERWAY}/TSW
-TSG=${UNDERWAY}/TSG
+TSG=${UNDERWAY}/AMD_TSG
 RAD=${ROOTDIR}/RAD
 FLUX=${ROOTDIR}/EC
-FLUXDIAG=${FLUX}/DIAG
-LOGFILE1=${ROOTDIR}/Logs/met_log.csv
-LOGFILE2=${ROOTDIR}/Logs/closed_path_log.csv
-LOGFILE3=${ROOTDIR}/Logs/complete_tower_log.csv
+# FLUXDIAG=${FLUX}/DIAG
+# LOGFILE1=${ROOTDIR}/Logs/met_log.csv
+# LOGFILE2=${ROOTDIR}/Logs/closed_path_log.csv
+# LOGFILE3=${ROOTDIR}/Logs/complete_tower_log.csv
 AWKPATH=/usr/local/src/awk
 TEMPDIR=$(mktemp -d -p /var/local/tmp)
 
 # Convert from DOS EOL
-fromdos ${NAV_POSMV}/*/* ${NAV_CNAV}/*/* ${NAV_BEST}/*/* \
-	${METCEOS}/2017-*/AMD_MET_2017*.dat ${MET_AAVOS}/LEG_*/*.log \
-	${RAD}/2017-*/*.dat ${UNDERWAY}/*.txt ${UWTEMPERATURE}/*.dat \
-	${TSG}/LEG_*/* ${FLUX}/2017-*/*.dat
+fromdos ${NAV_BEST}/*/* \
+	${MET_CEOS}/*/2018-*/AMD_MET_2018*.dat \
+	${RAD}/*/2018-*/*.dat ${UNDERWAY}/*dat.txt \
+	${TSG}/LEG_*/TSG_rawdata* ${FLUX}/*/2018-*/*.dat
 
 # NAV
-# POSMV data
-AWKPATH=${AWKPATH} ./nmea2csv.awk ${NAV_POSMV}/LEG_0[1234]/*.log | \
-    awk -F, '!x[$1]++' > ${NAV_POSMV}/POSMV_all.csv
-# CNAV data
-AWKPATH=${AWKPATH} ./nmea2csv.awk ${NAV_CNAV}/LEG_0[1234]/*.log | \
-    awk -F, '!x[$1]++' > ${NAV_CNAV}/CNAV_all.csv
+# # POSMV data
+# AWKPATH=${AWKPATH} ./nmea2csv.awk ${NAV_POSMV}/LEG_0[1234]/*.log | \
+#     awk -F, '!x[$1]++' > ${NAV_POSMV}/POSMV_all.csv
+# # CNAV data
+# AWKPATH=${AWKPATH} ./nmea2csv.awk ${NAV_CNAV}/LEG_0[1234]/*.log | \
+#     awk -F, '!x[$1]++' > ${NAV_CNAV}/CNAV_all.csv
 # Best
 ./nav_proc4db.awk -v skip=23 ${NAV_BEST}/LEG_0[1234]/*.int | \
     awk -F, '!x[$1]++' > ${NAV_BEST}/navproc_all.csv
 
 # MET
-AWKPATH=${AWKPATH} ./met4db.awk ${METCEOS}/2017-*/AMD_MET_2017*.dat | \
-    awk -F, '!x[$1]++' > ${METCEOS}/MET_all.csv
-# AAVOS
-AWKPATH=${AWKPATH} ./AAVOS_rte4db.awk ${MET_AAVOS}/LEG_*/*.log | \
-    awk -F, '!x[$1]++' > ${MET_AAVOS}/AAVOS_LEG01-04.csv
+AWKPATH=${AWKPATH} ./met4db.awk ${MET_CEOS}/*/2018-*/AMD_MET_2018*.dat | \
+    awk -F, '!x[$1]++' > ${MET_CEOS}/MET_all.csv
+# # AAVOS
+# AWKPATH=${AWKPATH} ./AAVOS_rte4db.awk ${MET_AVOS}/LEG_*/*.log | \
+#     awk -F, '!x[$1]++' > ${MET_AVOS}/AVOS_LEG01-04.csv
 
 # Underway
 ./underway4db.awk ${UNDERWAY}/*dat.txt | \
-    awk '!x[$0]++' > ${UNDERWAY}/UWpCO2_2017.csv
+    awk '!x[$0]++' > ${UNDERWAY}/UWpCO2_2018.csv
 ./TSG4db.awk ${TSG}/LEG_*/*.cnv | \
     awk 'NR == 1 || !x[$0]++' > ${TSG}/TSG.csv
 # # Temporary for loading leg 4
 # ./TSG4db.awk ${TSG}/LEG_04/*.cnv | \
 #     awk 'NR == 1 || !x[$0]++' > ${TSG}/TSG_LEG_04.csv
-./underway_indeplogger4db.awk ${UWTEMPERATURE}/* | \
-    awk '!x[$0]++' > ${UWTEMPERATURE}/UW_H2O_temperature.csv
 
 # RAD
-AWKPATH=${AWKPATH} ./rad4db.awk ${RAD}/2017-*/*.dat | \
+AWKPATH=${AWKPATH} ./rad4db.awk ${RAD}/*/2018-*/AMD_RAD_2018-*.dat | \
     awk '!x[$0]++' > ${RAD}/RAD_all.csv
 
 # Flux
@@ -97,7 +94,7 @@ FNR < 5 {
 }
 EOF
 
-for f in ${FLUX}/*.dat ${FLUX}/2017-*/AMD_EC*.dat; do
+for f in ${FLUX}/*/2018-*/AMD_EC*.dat; do
     fnew=$(echo ${f%*.dat}_fixed.dat | awk '{gsub(/ /, "_"); print}')
     awk -F, -v OFS="," -f ${TEMPDIR}/fix_progversion.awk "$f" > $fnew
 done
@@ -121,9 +118,9 @@ FNR < 4 && versions[version] == 1 { print > fname }
 FNR > 4 { print > fname }
 EOF
 awk -F, -f${TEMPDIR}/merge_flux_parse_toa5.awk -v freq=10Hz \
-    ${FLUX}/2017-*/AMD_EC_10Hz*fixed.dat
+    ${FLUX}/*/2018-*/AMD_EC_10Hz*fixed.dat
 awk -F, -f${TEMPDIR}/merge_flux_parse_toa5.awk -v freq=5min \
-    ${FLUX}/2017-*/AMD_EC_5min*fixed.dat
+    ${FLUX}/*/2018-*/AMD_EC_5min*fixed.dat
 
 # Split based on flux subgroup; we ignore version 1.0 which did not include
 # the final setup with Gill sonic anemometer.  Remove duplicates too

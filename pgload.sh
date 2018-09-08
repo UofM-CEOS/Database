@@ -14,24 +14,24 @@
 
 # Load tables
 
-pgloader -D /var/tmp/pgloader/AMD2017 -S navigation_summary.log \
-    -L /var/tmp/pgloader/AMD2017/navigation.log \
+pgloader -D /var/tmp/pgloader/AMD2018 -S navigation_summary.log \
+    -L /var/tmp/pgloader/AMD2018/navigation.log \
     --log-min-messages debug --client-min-messages warning \
     pgloader/navigation.pgload
-pgloader -D /var/tmp/pgloader/AMD2017 -S meteorology_summary.log \
-    -L /var/tmp/pgloader/AMD2017/meteorology.log \
+pgloader -D /var/tmp/pgloader/AMD2018 -S meteorology_summary.log \
+    -L /var/tmp/pgloader/AMD2018/meteorology.log \
     --log-min-messages debug --client-min-messages warning \
     pgloader/meteorology.pgload
-pgloader -D /var/tmp/pgloader/AMD2017 -S rad_summary.log \
-    -L /var/tmp/pgloader/AMD2017/radiation.log \
+pgloader -D /var/tmp/pgloader/AMD2018 -S rad_summary.log \
+    -L /var/tmp/pgloader/AMD2018/radiation.log \
     --log-min-messages debug --client-min-messages warning \
     pgloader/radiation.pgload
-pgloader -D /var/tmp/pgloader/AMD2017 -S UWpCO2_summary.log \
-    -L /var/tmp/pgloader/AMD2017/uw_pCO2.log \
+pgloader -D /var/tmp/pgloader/AMD2018 -S UWpCO2_summary.log \
+    -L /var/tmp/pgloader/AMD2018/uw_pCO2.log \
     --log-min-messages debug --client-min-messages warning \
     pgloader/uw_pCO2.pgload
-pgloader -D /var/tmp/pgloader/AMD2017 -S flux_summary.log \
-    -L /var/tmp/pgloader/AMD2017/flux.log \
+pgloader -D /var/tmp/pgloader/AMD2018 -S flux_summary.log \
+    -L /var/tmp/pgloader/AMD2018/flux.log \
     --log-min-messages debug --client-min-messages warning \
     pgloader/flux.pgload
 

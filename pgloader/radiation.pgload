@@ -1,11 +1,13 @@
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2017/RAD/RAD_all.csv'
+     FROM '/home/sluque/Data/ArcticNet/2018/RAD/RAD_all.csv'
         (
           "time",
 	  record_number,
 	  program_version,
           battery_voltage [null if "NAN"],
 	  logger_temperature [null if "NAN"],
+	  battery_voltage_sd [null if "NAN"],
+	  logger_temperature_sd [null if "NAN"],
 	  "K_down" [null if "NAN"],
 	  temperature_thermopile [null if "NAN"],
 	  temperature_case [null if "NAN"],
@@ -14,8 +16,13 @@ LOAD CSV
 	  "PIR_dome_resistance" [null if "NAN"],
 	  "LW_down" [null if "NAN"],
 	  "PAR" [null if "NAN"],
-	  battery_voltage_sd [null if "NAN"],
-	  logger_temperature_sd [null if "NAN"],
+	  "temperature_UV_mV" [null if "NAN"],
+	  "UVb_mV" [null if "NAN"],
+	  "UVa_mV" [null if "NAN"],
+	  "UV_sensor_temperature" [null if "NAN"],
+	  "UV_b" [null if "NAN"],
+	  "UV_a" [null if "NAN"],
+	  "temperature_UV_flag" [null if "NAN"],
 	  "K_down_sd" [null if "NAN"],
 	  temperature_thermopile_sd [null if "NAN"],
 	  temperature_case_sd [null if "NAN"],
@@ -23,11 +30,17 @@ LOAD CSV
 	  "PIR_case_resistance_sd" [null if "NAN"],
 	  "PIR_dome_resistance_sd" [null if "NAN"],
 	  "LW_down_sd" [null if "NAN"],
-	  "PAR_sd" [null if "NAN"]
+	  "PAR_sd" [null if "NAN"],
+	  "temperature_UV_mV_sd" [null if "NAN"],
+	  "UVb_mV_sd" [null if "NAN"],
+	  "UVa_mV_sd" [null if "NAN"],
+	  "UV_sensor_temperature_sd" [null if "NAN"],
+	  "UV_b_sd" [null if "NAN"],
+	  "UV_a_sd" [null if "NAN"]
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?radiation_series
         (
-          logging_group_id integer using "109",
+          logging_group_id integer using "137",
           "time",
 	  "K_down",
 	  temperature_thermopile,
@@ -35,14 +48,20 @@ LOAD CSV
 	  temperature_dome,
 	  "LW_down",
 	  "PAR",
+	  "UV_sensor_temperature",
+	  "UV_b",
+	  "UV_a",
 	  "K_down_sd",
 	  temperature_thermopile_sd,
 	  temperature_case_sd,
 	  temperature_dome_sd,
 	  "LW_down_sd",
-	  "PAR_sd"
+	  "PAR_sd",
+  	  "UV_sensor_temperature_sd",
+	  "UV_b_sd",
+	  "UV_a_sd"
         )
-     WITH skip_header = 1,
+     WITH skip header = 1,
      	  fields optionally enclosed by '"',
           fields escaped by double-quote,
           fields terminated by ','
@@ -51,13 +70,15 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2017/RAD/RAD_all.csv'
+     FROM '/home/sluque/Data/ArcticNet/2018/RAD/RAD_all.csv'
         (
           "time",
 	  record_number,
 	  program_version,
           battery_voltage [null if "NAN"],
 	  logger_temperature [null if "NAN"],
+	  battery_voltage_sd [null if "NAN"],
+	  logger_temperature_sd [null if "NAN"],
 	  "K_down" [null if "NAN"],
 	  temperature_thermopile [null if "NAN"],
 	  temperature_case [null if "NAN"],
@@ -66,8 +87,13 @@ LOAD CSV
 	  "PIR_dome_resistance" [null if "NAN"],
 	  "LW_down" [null if "NAN"],
 	  "PAR" [null if "NAN"],
-	  battery_voltage_sd [null if "NAN"],
-	  logger_temperature_sd [null if "NAN"],
+	  "temperature_UV_mV" [null if "NAN"],
+	  "UVb_mV" [null if "NAN"],
+	  "UVa_mV" [null if "NAN"],
+	  "UV_sensor_temperature" [null if "NAN"],
+	  "UV_b" [null if "NAN"],
+	  "UV_a" [null if "NAN"],
+	  "temperature_UV_flag" [null if "NAN"],
 	  "K_down_sd" [null if "NAN"],
 	  temperature_thermopile_sd [null if "NAN"],
 	  temperature_case_sd [null if "NAN"],
@@ -75,18 +101,24 @@ LOAD CSV
 	  "PIR_case_resistance_sd" [null if "NAN"],
 	  "PIR_dome_resistance_sd" [null if "NAN"],
 	  "LW_down_sd" [null if "NAN"],
-	  "PAR_sd" [null if "NAN"]
+	  "PAR_sd" [null if "NAN"],
+	  "temperature_UV_mV_sd" [null if "NAN"],
+	  "UVb_mV_sd" [null if "NAN"],
+	  "UVa_mV_sd" [null if "NAN"],
+	  "UV_sensor_temperature_sd" [null if "NAN"],
+	  "UV_b_sd" [null if "NAN"],
+	  "UV_a_sd" [null if "NAN"]
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?logger_series
         (
-          logging_group_id integer using "109",
+          logging_group_id integer using "137",
           "time",
           battery_voltage,
 	  logger_temperature,
 	  battery_voltage_sd,
 	  logger_temperature_sd
         )
-     WITH skip_header= = 1,
+     WITH skip header = 1,
      	  fields optionally enclosed by '"',
           fields escaped by double-quote,
           fields terminated by ','

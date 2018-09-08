@@ -1,5 +1,5 @@
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2017/UW_pCO2/UWpCO2_2017.csv'
+     FROM '/home/sluque/Data/ArcticNet/2018/UW_pCO2/UWpCO2_2018.csv'
         (
           "time",
           record_type,
@@ -43,7 +43,7 @@ LOAD CSV
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?underway_series
         (
-          logging_group_id integer using "110",
+          logging_group_id integer using "134",
           "time",
           record_type,
 	  uw_diag,
@@ -85,54 +85,7 @@ LOAD CSV
 
 
 LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2017/UW_pCO2/TSW/UW_H2O_temperature.csv'
-     	(
-	  "time",
-	  record_number,
-	  battery_voltage,
-	  logger_temperature,
-	  temperature_external
-	)
-     INTO postgresql://sluque:Gases01@localhost:5433/gases?underway_series
-        (
-          logging_group_id integer using "112",
-          "time",
-          record_type text using "EXTERNAL_TEMPERATURE",
-	  temperature_external
-	)
-     WITH skip header = 1,
-     	  fields optionally enclosed by '"',
-          fields escaped by double-quote,
-          fields terminated by ','
-     SET client_encoding to 'utf-8',
-         standard_conforming_strings to 'on';
-
-
-LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2017/UW_pCO2/TSW/UW_H2O_temperature.csv'
-     	(
-	  "time",
-	  record_number,
-	  battery_voltage,
-	  logger_temperature,
-	  temperature_external
-	)
-     INTO postgresql://sluque:Gases01@localhost:5433/gases?logger_series
-        (
-          logging_group_id integer using "112",
-          "time",
-	  battery_voltage,
-	  logger_temperature
-	)
-     WITH skip header = 1,
-     	  fields optionally enclosed by '"',
-          fields escaped by double-quote,
-          fields terminated by ','
-     SET client_encoding to 'utf-8',
-         standard_conforming_strings to 'on';
-
-LOAD CSV
-     FROM '/home/sluque/Data/ArcticNet/2017/UW_pCO2/TSG/TSG.csv'
+     FROM '/home/sluque/Data/ArcticNet/2018/UW_pCO2/AMD_TSG/TSG.csv'
      	(
 	  "time",
 	  time_logger,
@@ -149,7 +102,7 @@ LOAD CSV
 	)
      INTO postgresql://sluque:Gases01@localhost:5433/gases?underway_series
         (
-          logging_group_id integer using "111",
+          logging_group_id integer using "138",
           "time",
           record_type text using "EXTERNAL_TEMPERATURE",
 	  tsg_temperature,

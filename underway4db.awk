@@ -6,7 +6,7 @@
 #
 # See the pgloader configuration file for details.
 #
-# We have the following file structure (2017):
+# We have the following file structure (2018):
 #
 # [1]  record_type [string]
 # [2]  uw_diag [integer]
@@ -56,7 +56,7 @@ BEGIN {
     FS="\t"
     OFS=","
     ncols=40			# number of columns
-    year=2017
+    year=2018
 }
 
 NF > ncols || $1 !~ /[[:alpha:]]/ { next } # obviously garbage
