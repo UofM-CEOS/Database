@@ -1,9 +1,7 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2014-08-28T22:17:42+0000
-# Last-Updated: 2017-09-06T20:45:51+0000
-#           By: Sebastian Luque
-#
+# -------------------------------------------------------------------------
 # Commentary:
 #
 # Prepare data for loading onto database.
@@ -16,6 +14,7 @@ NAV_SHIP=${NAV}/Ship/Processed
 MET=${ROOTDIR}/MET
 MET_AAVOS=${ROOTDIR}/MET/AAVOS/RTE
 UNDERWAY=${ROOTDIR}/UW_pCO2
+TSG=${UNDERWAY}/TSG/Processed/Data
 RAD=${ROOTDIR}/RAD
 FLUX=${ROOTDIR}/Flux
 FLUX_AVG=${FLUX}/IRGA
@@ -36,6 +35,8 @@ AWKPATH=${AWKPATH} ./AAVOS_rte4db.awk ${MET_AAVOS}/*.RAW | \
     awk '!x[$0]++' > ${UNDERWAY}/AMD_2010.csv
 ./underway4db_misc.awk ${UWTEMPERATURE}/* | \
     awk '!x[$0]++' > ${UNDERWAY}/AMD_water_temperature_2014.csv
+./TSG_proc4db.awk ${TSG}/TSG_*[0-9].int | \
+    awk 'NR == 1 || !x[$0]++' > ${TSG}/TSG_proc.csv
 AWKPATH=${AWKPATH} ./rad4db.awk ${RAD}/*.dat | \
     awk '!x[$0]++' > ${RAD}/rad_all.csv
 AWKPATH=${AWKPATH} ./flux_avg4db.awk ${FLUX_AVG}/*.dat | \

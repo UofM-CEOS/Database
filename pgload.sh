@@ -1,8 +1,6 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2014-02-05T22:44:42+0000
-# Last-Updated: 2017-09-06T22:37:35+0000
-#           By: Sebastian Luque
 # -------------------------------------------------------------------------
 # Commentary:
 #
@@ -16,39 +14,39 @@
 
 # Load tables
 
-pgloader -D /var/tmp/pgloader_amundsen_2010 \
+pgloader -D /var/tmp/pgloader/AMD2010 \
     -S navigation_summary.log \
-    -L /var/tmp/pgloader_amundsen_2010/navigation_2010.log \
+    -L /var/tmp/pgloader/AMD2010/navigation_2010.log \
     --log-min-messages debug --client-min-messages warning \
     pgloader/navigation.pgload
-pgloader -D /var/tmp/pgloader_amundsen_2010 \
+pgloader -D /var/tmp/pgloader/AMD2010 \
     -S meteorology_summary.log \
-    -L /var/tmp/pgloader_amundsen_2010/meteorology_2010.log \
+    -L /var/tmp/pgloader/AMD2010/meteorology_2010.log \
     --log-min-messages debug --client-min-messages warning \
     pgloader/meteorology.pgload
-pgloader -D /var/tmp/pgloader_amundsen_2010 \
+pgloader -D /var/tmp/pgloader/AMD2010 \
     -S flux_avg_summary.log \
-    -L /var/tmp/pgloader_amundsen_2010/flux_avg_2010.log \
+    -L /var/tmp/pgloader/AMD2010/flux_avg_2010.log \
     --log-min-messages debug --client-min-messages warning \
     pgloader/flux_avg.pgload
-pgloader -D /var/tmp/pgloader_amundsen_2010 \
+pgloader -D /var/tmp/pgloader/AMD2010 \
     -S flux_summary.log \
-    -L /var/tmp/pgloader_amundsen_2010/flux_2010.log \
+    -L /var/tmp/pgloader/AMD2010/flux_2010.log \
     --log-min-messages debug --client-min-messages warning \
     pgloader/flux.pgload
-pgloader -D /var/tmp/pgloader_amundsen_2010 \
+pgloader -D /var/tmp/pgloader/AMD2010 \
     -S rad_summary.log \
-    -L /var/tmp/pgloader_amundsen_2010/rad_2010.log \
+    -L /var/tmp/pgloader/AMD2010/rad_2010.log \
     --log-min-messages debug --client-min-messages warning \
     pgloader/radiation.pgload
-pgloader -D /var/tmp/pgloader_amundsen_2010 \
+pgloader -D /var/tmp/pgloader/AMD2010 \
     -S UWpCO2_summary.log \
-    -L /var/tmp/pgloader_amundsen_2010/UWpCO2_2010.log \
+    -L /var/tmp/pgloader/AMD2010/UWpCO2_2010.log \
     --log-min-messages debug --client-min-messages warning \
     pgloader/uw_pCO2.pgload
-pgloader -D /var/tmp/pgloader_amundsen_2010 \
+pgloader -D /var/tmp/pgloader/AMD2010 \
     -S Logs_summary.log \
-    -L /var/tmp/pgloader_amundsen_2010/Logs_2010.log \
+    -L /var/tmp/pgloader/AMD2010/Logs_2010.log \
     --log-min-messages debug --client-min-messages warning \
     pgloader/logs.pgload
 
