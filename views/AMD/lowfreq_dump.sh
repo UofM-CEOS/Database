@@ -1,7 +1,7 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2016-10-08T17:00:02+0000
-# Last-Updated: 2017-11-12T23:41:59+0000
+# Last-Updated: 2018-11-05T20:44:28+0000
 #           By: Sebastian Luque
 #
 # Commentary:
@@ -11,16 +11,16 @@
 # -------------------------------------------------------------------------
 # Code:
 
-ROOTDIR=/mnt/CEOS_Tim/AMD/2017/FromDB
+ROOTDIR=/mnt/CEOS_Tim/AMD/2018/FromDB
 # Core low frequency views
-NAV=navigation_1min_2017
+NAV=navigation_1min_2018
 NAVODIR=${ROOTDIR}/Navigation_1min
-MET=meteorology_ceos_1min_2017
+MET=meteorology_ceos_1min_2018
 METODIR=${ROOTDIR}/Meteorology_CEOS_1min
-RAD=radiation_1min_2017
+RAD=radiation_1min_2018
 RADODIR=${ROOTDIR}/Radiation_1min
-UWPCO2=underway_1s_2017
-UWPCO2ODIR=${ROOTDIR}/UWpCO2_1s
+UWPCO2=underway_1min_2018
+UWPCO2ODIR=${ROOTDIR}/UWpCO2_1min
 # Program to split into daily files
 SPLITISO_PRG=$(realpath -e "$(dirname $0)"/../../split_YYYYMMDDHHMMSS.awk)
 SPLITYMD_PRG=$(realpath -e "$(dirname $0)"/../../split_YYYYMMDD.awk)
@@ -59,7 +59,8 @@ cat <<EOF > ${TMPDIR}/rad_dump.sql
 CREATE OR REPLACE TEMPORARY VIEW radiation_1min AS
 SELECT time_study, "PAR", "PAR_sd", "K_down", "K_down_sd", temperature_thermopile,
        temperature_thermopile_sd, temperature_case, temperature_case_sd,
-       temperature_dome, temperature_dome_sd, "LW_down", "LW_down_sd"
+       temperature_dome, temperature_dome_sd, "LW_down", "LW_down_sd",
+       "UV_a", "UV_a_sd", "UV_b", "UV_b_sd"
 FROM amundsen_flux.${RAD};
 \cd ${RADODIR}
 \copy (SELECT * FROM radiation_1min) TO 'radiation_1min.csv' CSV HEADER
@@ -68,18 +69,18 @@ psql -p5433 -f${TMPDIR}/rad_dump.sql gases
 
 # Underway
 cat <<EOF > ${TMPDIR}/uwpCO2_dump.sql
-CREATE OR REPLACE TEMPORARY VIEW underway_1s AS
-SELECT time_study, time_1min, equ_temperature, "uw_CO2_fraction",
+CREATE OR REPLACE TEMPORARY VIEW underway_1min AS
+SELECT time_study_1min, equ_temperature, "uw_CO2_fraction",
        "uw_H2O_fraction", uw_temperature_analyzer, uw_pressure_analyzer,
        equ_pressure, "H2O_flow", air_flow_analyzer, condensation_equ,
        ctd_pressure, ctd_temperature, ctd_conductivity, "ctd_O2_saturation",
-       "ctd_O2_concentration", temperature_external, tsg_temperature,
-       bad_ctd_flag, "bad_CO2_flag", "bad_H2O_flag", "bad_H2O_flow_flag",
-       bad_pressure_analyzer_flag, bad_temperature_analyzer_flag,
-       bad_equ_temperature_flag, bad_temperature_external_flag
+       "ctd_O2_concentration", tsg_temperature,
+       nbad_ctd_flag, "nbad_CO2_flag", "nbad_H2O_flag", "nbad_H2O_flow_flag",
+       nbad_pressure_analyzer_flag, nbad_temperature_analyzer_flag,
+       nbad_equ_temperature_flag, nbad_temperature_external_flag
 FROM amundsen_flux.${UWPCO2};
 \cd ${UWPCO2ODIR}
-\copy (SELECT * FROM underway_1s) TO 'underway_1s.csv' CSV HEADER
+\copy (SELECT * FROM underway_1min) TO 'underway_1min.csv' CSV HEADER
 EOF
 psql -p5433 -f${TMPDIR}/uwpCO2_dump.sql gases
 

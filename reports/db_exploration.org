@@ -1,5 +1,5 @@
 #+STARTUP: content indent hideblocks
-#+TITLE: Exploration of variables 2017
+#+TITLE: Exploration of variables 2018
 #+OPTIONS: ^:{}
 #+LATEX_HEADER: \usepackage[margin=2.5cm]{geometry}
 #+PROPERTY: header-args:python :session *Python* :tangle yes
@@ -8,7 +8,7 @@
 #+BEGIN_SRC python :results silent :exports none
 import matplotlib as mpl
 mpl.use("Agg")
-mpl.rcParams['mathtext.fontset']='stix'
+mpl.rcParams['mathtext.fontset'] = 'stix'
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -22,16 +22,16 @@ conn=pg.connect("host=localhost port=5433 dbname=gases")
 
 #+NAME: ship_track
 #+BEGIN_SRC python :results file :exports results
-qry="""
-  SELECT time_study_1min AS time_study,
+qry = """
+SELECT time_study_1min AS time_study,
   longitude_avg AS longitude, latitude_avg AS latitude,
   speed_over_ground_avg AS sog, course_over_ground_avg as cog,
   heading_avg as heading, pitch_avg as pitch, roll_avg as roll,
   heave_avg as heave
-  FROM amundsen_flux.navigation_1min_2017
-  """
-nav=pd.read_sql(qry, conn, parse_dates=['time_study'],
-                index_col="time_study")
+FROM amundsen_flux.navigation_1min_2018
+"""
+nav = pd.read_sql(qry, conn, parse_dates=['time_study'],
+                  index_col="time_study")
 lonmin=np.min(nav['longitude'])
 latmin=np.min(nav['latitude'])
 lonmax=np.max(nav['longitude'])
@@ -90,14 +90,14 @@ Measurements at the tower.
 
 #+NAME: meteorology_01
 #+BEGIN_SRC python :results file :exports results
-qry="""
-  SELECT time_study, atmospheric_pressure, air_temperature,
+qry = """
+SELECT time_study, atmospheric_pressure, air_temperature,
   relative_humidity, surface_temperature,
   wind_speed, wind_direction
-  FROM amundsen_flux.meteorology_ceos_1min_2017
-  """
-met=pd.read_sql(qry, conn, parse_dates=['time_study'],
-                index_col="time_study")
+FROM amundsen_flux.meteorology_ceos_1min_2018
+"""
+met = pd.read_sql(qry, conn, parse_dates=['time_study'],
+                  index_col="time_study")
 kPalims = (80, 110)
 tmplims = (-40, 30)
 rhlims = (30, 110)
@@ -142,14 +142,14 @@ Measurements from AVOS system.
 
 #+NAME: meteorology_03
 #+BEGIN_SRC python :results file :exports results
-qry="""
-  SELECT time_study, atmospheric_pressure, air_temperature,
+qry = """
+SELECT time_study, atmospheric_pressure, air_temperature,
   relative_humidity, surface_temperature,
   wind_speed, wind_direction
-  FROM amundsen_flux.meteorology_avos_1s_2017
-  """
-avos=pd.read_sql(qry, conn, parse_dates=['time_study'],
-                 index_col="time_study")
+FROM amundsen_flux.meteorology_avos_1s_2018
+"""
+avos = pd.read_sql(qry, conn, parse_dates=['time_study'],
+                   index_col="time_study")
 fig, axs = plt.subplots(4, 1, sharex=True)
 fig.set_size_inches((11, 12.5))
 met[['atmospheric_pressure']].plot(ax=axs[0], ylim=kPalims, legend=False)
@@ -209,23 +209,30 @@ plt.close()
 
 #+NAME: radiation_01
 #+BEGIN_SRC python :results file :exports results
-qry="""
-  SELECT time_study, "PAR", "K_down", "LW_down"
-  FROM amundsen_flux.radiation_1min_2017
-  """
-rad=pd.read_sql(qry, conn, parse_dates=['time_study'],
-                index_col="time_study")
+qry = """
+SELECT time_study, "PAR", "K_down", "LW_down",
+  "UV_b", "UV_a"
+FROM amundsen_flux.radiation_1min_2018
+"""
+rad = pd.read_sql(qry, conn, parse_dates=['time_study'],
+                  index_col="time_study")
 PARlims = (0, 2500)             # umol/m2/s
 Kdnlims = (0, 1200)             # K_down (W/m2)
 LWdlims = (200, 450)            # LW_down (W/m2)
-fig, axs = plt.subplots(3, 1, sharex=True)
-fig.set_size_inches((11, 9))
+UVblims = (0, 5)                # UV_b (W/m2)
+UValims = (0, 10)               # UV_a (W/m2)
+fig, axs = plt.subplots(5, 1, sharex=True)
+fig.set_size_inches((11.5, 11.5))
 rad[['PAR']].plot(ax=axs[0], ylim=PARlims, legend=False)
 axs[0].set_ylabel('PAR ($\mu mol/m^{2}/s$)'); axs[0].set_xlabel('')
 rad[['K_down']].plot(ax=axs[1], ylim=Kdnlims, legend=False)
 axs[1].set_ylabel('K_down ($W/m^{2}$)'); axs[1].set_xlabel('')
 rad[['LW_down']].plot(ax=axs[2], ylim=LWdlims, rot=0, legend=False)
 axs[2].set_ylabel('LW_down ($W/m^{2}$)'); axs[2].set_xlabel('')
+rad[['UV_b']].plot(ax=axs[3], ylim=UVblims, rot=0, legend=False)
+axs[3].set_ylabel('$UV_b$ ($W/m^{2}$)'); axs[3].set_xlabel('')
+rad[['UV_a']].plot(ax=axs[4], ylim=UValims, rot=0, legend=False)
+axs[4].set_ylabel('$UV_a$ ($W/m^{2}$)'); axs[4].set_xlabel('')
 fig.savefig("radiation_01.png", bbox_inches="tight"); plt.close()
 "radiation_01.png"
 #+END_SRC
@@ -240,20 +247,20 @@ One-minute average as an overview:
 
 #+NAME: tower_motion
 #+BEGIN_SRC python :results file :exports results
-qry="""
-  SELECT date_trunc('minute', time_study) AS time_study,
+qry = """
+SELECT date_trunc('minute', time_study) AS time_study,
   avg(acceleration_x) AS acceleration_x,
   avg(acceleration_y) AS acceleration_y,
   avg(acceleration_z) AS acceleration_z,
   avg(rate_x) AS rate_x,
   avg(rate_y) AS rate_y,
   avg(rate_z) AS rate_z
-  FROM amundsen_flux.motion_10hz_2017
-  GROUP BY date_trunc('minute', time_study)
-  ORDER BY date_trunc('minute', time_study)
-  """
-mot=pd.read_sql(qry, conn, parse_dates=['time_study'],
-                index_col="time_study")
+FROM amundsen_flux.motion_10hz_2018
+GROUP BY date_trunc('minute', time_study)
+ORDER BY date_trunc('minute', time_study)
+"""
+mot = pd.read_sql(qry, conn, parse_dates=['time_study'],
+                  index_col="time_study")
 acclims = (-1, 1)               # translational acceleration (m/s2)
 anglims = (-2, 2)               # angular velocity (deg/s)
 fig, axs = plt.subplots(2, 1, sharex=True)
@@ -289,17 +296,17 @@ One-minute average of CSAT3 anemometer as an overview (SDM signal):
 
 #+NAME: sonic_anemometer_01
 #+BEGIN_SRC python :results file :exports results
-qry="""
-  SELECT time_study_1min AS time_study,
+qry = """
+SELECT time_study_1min AS time_study,
   wind_speed_u_avg AS wind_speed_u,
   wind_speed_v_avg AS wind_speed_v,
   wind_speed_w_avg AS wind_speed_w,
   air_temperature_sonic_avg AS air_temperature_sonic,
   sound_speed_avg AS sound_speed
-  FROM amundsen_flux.wind3d1_serial_1min_2017
-  """
-wind3d=pd.read_sql(qry, conn, parse_dates=['time_study'],
-                   index_col="time_study")
+FROM amundsen_flux.wind3d1_serial_1min_2018
+"""
+wind3d = pd.read_sql(qry, conn, parse_dates=['time_study'],
+                     index_col="time_study")
 fig, axs = plt.subplots(4, 1, sharex=True)
 fig.set_size_inches((11, 12.5))
 wind3d[['wind_speed_u']].plot(ax=axs[0], legend=False)
@@ -326,17 +333,17 @@ signal):
 
 #+NAME: sonic_anemometer_02
 #+BEGIN_SRC python :results file :exports results
-qry="""
-  SELECT time_study_1min AS time_study,
+qry = """
+SELECT time_study_1min AS time_study,
   wind_speed_u_avg AS wind_speed_u,
   wind_speed_v_avg AS wind_speed_v,
   wind_speed_w_avg AS wind_speed_w,
   air_temperature_sonic_avg AS air_temperature_sonic,
   sound_speed_avg AS sound_speed
-  FROM amundsen_flux.wind3d2_analog_1min_2017
-  """
-wind3d=pd.read_sql(qry, conn, parse_dates=['time_study'],
-                   index_col="time_study")
+FROM amundsen_flux.wind3d2_analog_1min_2018
+"""
+wind3d = pd.read_sql(qry, conn, parse_dates=['time_study'],
+                     index_col="time_study")
 fig, axs = plt.subplots(4, 1, sharex=True)
 fig.set_size_inches((11, 12.5))
 wind3d[['wind_speed_u']].plot(ax=axs[0], legend=False)
@@ -363,8 +370,8 @@ One-minute average as an overview:
 
 #+NAME: opath_01
 #+BEGIN_SRC python :results file :exports results
-qry="""
-  SELECT time_study_1min AS time_study,
+qry = """
+SELECT time_study_1min AS time_study,
   "op_CO2_density_avg" AS "op_CO2_density",
   "op_H2O_density_avg" AS "op_H2O_density",
   op_pressure_avg AS op_pressure,
@@ -372,10 +379,10 @@ qry="""
   op_cooler_voltage_avg AS op_cooler_voltage,
   op_bandwidth_avg AS op_bandwidth,
   op_delay_interval_avg AS op_delay_interval
-  FROM amundsen_flux.opath_1min_2017
-  """
-opath=pd.read_sql(qry, conn, parse_dates=['time_study'],
-                  index_col="time_study")
+FROM amundsen_flux.opath_1min_2018
+"""
+opath = pd.read_sql(qry, conn, parse_dates=['time_study'],
+                    index_col="time_study")
 CO2dlims = (0, 100)
 H2Odlims = (0, 1000)
 fig, axs = plt.subplots(4, 1, sharex=True)
@@ -411,23 +418,23 @@ plt.close()
 One-minute averages for LGR analyzer and LI-7200 closed path analyzer in
 enclosure for flux analyses, with Nafion dryer, as an overview:
 
-#+NAME: cpath_01
+#+NAME: cpath
 #+BEGIN_SRC python :results file :exports results
 # LGR -- We assume the mole fractions are actually dry, just as for the
 # LI-7200, and that both CO2 and H2O fractions are in umol/mol, so convert
 # H2O to mmol/mol (already done in database, along with other filters for
 # invalid data).
-qry="""
-  SELECT time_study_1min,
+qry = """
+SELECT time_study_1min,
   "cp_CO2_dry_fraction_avg" AS "cp_CO2_dry_fraction",
   "cp_H2O_dry_fraction_avg" AS "cp_H2O_dry_fraction"
-  FROM amundsen_flux.cpath1_1min_2017
-  """
-cpath1=pd.read_sql(qry, conn, parse_dates=['time_study_1min'],
-                   index_col="time_study_1min")
+FROM amundsen_flux.cpath1_1min_2018
+"""
+cpath1 = pd.read_sql(qry, conn, parse_dates=['time_study_1min'],
+                     index_col="time_study_1min")
 # LI-7200
-qry="""
-  SELECT time_study_1min,
+qry = """
+SELECT time_study_1min,
   "cp_CO2_dry_fraction_avg" AS "cp_CO2_dry_fraction",
   "cp_H2O_dry_fraction_avg" AS "cp_H2O_dry_fraction",
   cp_pressure_avg AS cp_pressure,
@@ -435,10 +442,10 @@ qry="""
   cp_temperature_in_avg AS cp_temperature_in,
   cp_temperature_cell_avg AS cp_temperature_cell,
   cp_temperature_out_avg AS cp_temperature_out
-  FROM amundsen_flux.cpath2_1min_2017
-  """
-cpath2=pd.read_sql(qry, conn, parse_dates=['time_study_1min'],
-                   index_col="time_study_1min")
+FROM amundsen_flux.cpath2_1min_2017
+"""
+cpath2 = pd.read_sql(qry, conn, parse_dates=['time_study_1min'],
+                     index_col="time_study_1min")
 CO2flims = (350, 450)
 H2Oflims = (0, 20)
 # kPalims = (40, 110)             # reassigned
@@ -476,7 +483,7 @@ plt.close()
 #+END_SRC
 
 #+ATTR_LATEX: :width \textwidth
-#+RESULTS: cpath_01
+#+RESULTS: cpath
 [[file:closed_path.png]]
 
 * Underway
@@ -485,19 +492,19 @@ One-minute average overview:
 
 #+NAME: underway_01
 #+BEGIN_SRC python :results file :exports results
-qry="""
-  SELECT time_study, time_1min, equ_temperature, "uw_CO2_fraction",
-    "uw_H2O_fraction", uw_temperature_analyzer, uw_pressure_analyzer,
-    equ_pressure, "H2O_flow", air_flow_analyzer, condensation_equ,
-    ctd_pressure, ctd_temperature, ctd_conductivity, "ctd_O2_saturation",
-    "ctd_O2_concentration", temperature_external, tsg_temperature,
-    bad_ctd_flag, "bad_CO2_flag", "bad_H2O_flag", "bad_H2O_flow_flag",
-    bad_pressure_analyzer_flag, bad_temperature_analyzer_flag,
-    bad_equ_temperature_flag, bad_temperature_external_flag
-  FROM amundsen_flux.underway_1s_2017;
-  """
-pCO2=pd.read_sql(qry, conn, parse_dates=['time_study', 'time_1min'],
-                 index_col="time_study")
+qry = """
+SELECT time_study_1min, equ_temperature, "uw_CO2_fraction",
+  "uw_H2O_fraction", uw_temperature_analyzer, uw_pressure_analyzer,
+  equ_pressure, "H2O_flow", air_flow_analyzer, condensation_equ,
+  ctd_pressure, ctd_temperature, ctd_conductivity, "ctd_O2_saturation",
+  "ctd_O2_concentration", tsg_temperature,
+  nbad_ctd_flag, "nbad_CO2_flag", "nbad_H2O_flag", "nbad_H2O_flow_flag",
+  nbad_pressure_analyzer_flag, nbad_temperature_analyzer_flag,
+  nbad_equ_temperature_flag
+FROM amundsen_flux.underway_1min_2018;
+"""
+pCO2 = pd.read_sql(qry, conn, parse_dates=['time_study_1min'],
+                   index_col="time_study_1min")
 # pCO2=pd.read_sql(qry, conn, parse_dates=['time_study'],
 #                  index_col="time_study")
 # Y-limits
@@ -542,12 +549,12 @@ plt.savefig("underway_equ.png", bbox_inches="tight"); plt.close()
 
 #+NAME: underway_02
 #+BEGIN_SRC python :results file :exports results
-ax=pCO2[["tsg_temperature"]].dropna().plot(figsize=(10, 5), rot=0,
-                                           style="-.",
-                                           ylim=sstlims,
-                                           legend=False)
-# pCO2[["tsg_temperature"]].dropna().plot(ax=ax, style="-", legend=False)
-# ax.legend(ax.get_lines(), ["CR23X", "TSG"])
+ax = pCO2[["tsg_temperature"]].dropna().plot(figsize=(10, 5), rot=0,
+                                             style="-.",
+                                             ylim=sstlims,
+                                             legend=False)
+pCO2[["equ_temperature"]].dropna().plot(ax=ax, style="-", legend=False)
+ax.legend(ax.get_lines(), ["TSG", "Equilibrator"])
 ax.set_ylabel('Water temperature\n(C$^\circ$)')
 ax.set_xlabel('')
 plt.savefig("external_temperature.png", bbox_inches="tight"); plt.close()

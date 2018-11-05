@@ -10,8 +10,8 @@
 
 ROOTDIR=~/Data/ArcticNet/2018
 NAV=${ROOTDIR}/NAV
-# NAV_POSMV=${NAV}/POSMV
-# NAV_CNAV=${NAV}/CNAV
+NAV_POSMV=${NAV}/POSMV
+NAV_CNAV=${NAV}/CNAV
 NAV_BEST=${NAV}/Best
 MET_CEOS=${ROOTDIR}/MET/CEOS
 MET_AVOS=${ROOTDIR}/MET/AVOS
@@ -27,18 +27,18 @@ AWKPATH=/usr/local/src/awk
 TEMPDIR=$(mktemp -d -p /var/local/tmp)
 
 # Convert from DOS EOL
-fromdos ${NAV_BEST}/*/* \
+fromdos ${NAV_POSMV}/*/* ${NAV_CNAV}/*/* ${NAV_BEST}/*/* \
 	${MET_CEOS}/*/2018-*/AMD_MET_2018*.dat \
 	${RAD}/*/2018-*/*.dat ${UNDERWAY}/*dat.txt \
 	${TSG}/LEG_*/TSG_rawdata* ${FLUX}/*/2018-*/*.dat
 
 # NAV
-# # POSMV data
-# AWKPATH=${AWKPATH} ./nmea2csv.awk ${NAV_POSMV}/LEG_0[1234]/*.log | \
-#     awk -F, '!x[$1]++' > ${NAV_POSMV}/POSMV_all.csv
-# # CNAV data
-# AWKPATH=${AWKPATH} ./nmea2csv.awk ${NAV_CNAV}/LEG_0[1234]/*.log | \
-#     awk -F, '!x[$1]++' > ${NAV_CNAV}/CNAV_all.csv
+# POSMV data
+AWKPATH=${AWKPATH} ./nmea2csv.awk ${NAV_POSMV}/LEG_0[1234]/*.log | \
+    awk -F, '!x[$1]++' > ${NAV_POSMV}/POSMV_all.csv
+# CNAV data
+AWKPATH=${AWKPATH} ./nmea2csv.awk ${NAV_CNAV}/LEG_0[1234]/*.log | \
+    awk -F, '!x[$1]++' > ${NAV_CNAV}/CNAV_all.csv
 # Best
 ./nav_proc4db.awk -v skip=23 ${NAV_BEST}/LEG_0[1234]/*.int | \
     awk -F, '!x[$1]++' > ${NAV_BEST}/navproc_all.csv
@@ -46,18 +46,15 @@ fromdos ${NAV_BEST}/*/* \
 # MET
 AWKPATH=${AWKPATH} ./met4db.awk ${MET_CEOS}/*/2018-*/AMD_MET_2018*.dat | \
     awk -F, '!x[$1]++' > ${MET_CEOS}/MET_all.csv
-# # AAVOS
-# AWKPATH=${AWKPATH} ./AAVOS_rte4db.awk ${MET_AVOS}/LEG_*/*.log | \
-#     awk -F, '!x[$1]++' > ${MET_AVOS}/AVOS_LEG01-04.csv
+# AAVOS
+AWKPATH=${AWKPATH} ./AAVOS_rte4db.awk ${MET_AVOS}/LEG_*/*.log | \
+    awk -F, '!x[$1]++' > ${MET_AVOS}/AVOS_LEG01-03.csv
 
 # Underway
 ./underway4db.awk ${UNDERWAY}/*dat.txt | \
     awk '!x[$0]++' > ${UNDERWAY}/UWpCO2_2018.csv
 ./TSG4db.awk ${TSG}/LEG_*/*.cnv | \
     awk 'NR == 1 || !x[$0]++' > ${TSG}/TSG.csv
-# # Temporary for loading leg 4
-# ./TSG4db.awk ${TSG}/LEG_04/*.cnv | \
-#     awk 'NR == 1 || !x[$0]++' > ${TSG}/TSG_LEG_04.csv
 
 # RAD
 AWKPATH=${AWKPATH} ./rad4db.awk ${RAD}/*/2018-*/AMD_RAD_2018-*.dat | \
@@ -158,10 +155,10 @@ for f in ${TEMPDIR}/EC_5min_*.csv; do
 done
 
 
-# # Logs
-# ./observer_log4db.awk ${LOGFILE1} > $(dirname ${LOGFILE1})/metlog_4db.csv
-# # ./observer_log4db.awk ${LOGFILE2} > $(dirname ${LOGFILE2})/metlog_4db.csv
-# # ./observer_log4db.awk ${LOGFILE3} > $(dirname ${LOGFILE3})/towerlog_4db.csv
+# Logs
+./observer_log4db.awk ${LOGFILE1} > $(dirname ${LOGFILE1})/metlog_4db.csv
+# ./observer_log4db.awk ${LOGFILE2} > $(dirname ${LOGFILE2})/metlog_4db.csv
+# ./observer_log4db.awk ${LOGFILE3} > $(dirname ${LOGFILE3})/towerlog_4db.csv
 
 
 # Clean up

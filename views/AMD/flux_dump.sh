@@ -13,19 +13,19 @@
 # -------------------------------------------------------------------------
 # Code:
 
-ROOTDIR=/mnt/CEOS_Tim/AMD/2017/FromDB
+ROOTDIR=/mnt/CEOS_Tim/AMD/2018/FromDB
 # Core low frequency views
-LFREQ1=lowfreq_1w20min_2017
+LFREQ1=lowfreq_1w20min_2018
 LFREQ1ODIR=${ROOTDIR}/LowFreq_1w20min
-LFREQ2=lowfreq_1w20min_2017_flags
+LFREQ2=lowfreq_1w20min_2018_flags
 LFREQ2ODIR=${ROOTDIR}/LowFreq_1w20min_flags
-LFREQ3=lowfreq_20min_fluxable_2017
+LFREQ3=lowfreq_20min_fluxable_2018
 LFREQ3ODIR=${ROOTDIR}/LowFreq_20min_fluxable
-LFREQ3OFILE=L3_2017.csv
+LFREQ3OFILE=L3_2018.csv
 # Core high frequency views
-HFREQ1=flux1_10hz_2017
+HFREQ1=flux1_10hz_2018
 HFREQ1ODIR=${ROOTDIR}/Flux1_10hz
-HFREQ2=flux2_10hz_2017
+HFREQ2=flux2_10hz_2018
 HFREQ2ODIR=${ROOTDIR}/Flux2_10hz
 # Program to split into daily files
 SPLITISO_PRG=$(realpath -e "$(dirname $0)"/../../split_YYYYMMDDHHMMSS.awk)
@@ -54,8 +54,8 @@ SELECT time_20min, time_study, longitude, longitude_avg, latitude, latitude_avg,
        cp_temperature, cp_temperature_avg, "op_CO2_density", "op_CO2_density_avg",
        "op_H2O_density", "op_H2O_density_avg", op_pressure, op_pressure_avg,
        op_temperature, op_temperature_avg, "PAR", "PAR_avg", "K_down",
-       "K_down_avg", "LW_down", "LW_down_avg", equ_temperature,
-       equ_temperature_avg, std_value, "uw_CO2_cellA", "uw_CO2_cellA_avg",
+       "K_down_avg", "LW_down", "LW_down_avg", "UV_a", "UV_a_avg", "UV_b", "UV_b_avg",
+       equ_temperature, equ_temperature_avg, std_value, "uw_CO2_cellA", "uw_CO2_cellA_avg",
        "uw_CO2_cellB", "uw_CO2_cellB_avg", "uw_CO2_fraction", "uw_CO2_fraction_avg",
        "uw_H2O_cellA", "uw_H2O_cellA_avg", "uw_H2O_cellB", "uw_H2O_cellB_avg",
        "uw_H2O_fraction", "uw_H2O_fraction_avg", uw_temperature_analyzer,
@@ -69,24 +69,26 @@ SELECT time_20min, time_study, longitude, longitude_avg, latitude, latitude_avg,
        ctd_conductivity, ctd_conductivity_avg, "ctd_O2_saturation",
        "ctd_O2_saturation_avg", "ctd_O2_concentration", "ctd_O2_concentration_avg",
        "uw_pH", "uw_pH_avg", uw_redox_potential, uw_redox_potential_avg,
-       temperature_external, temperature_external_avg, tsg_temperature,
-       tsg_temperature_avg, temperature_in, temperature_in_avg,
+       tsg_temperature, tsg_temperature_avg, temperature_in, temperature_in_avg,
        bad_wind_direction_flag, very_bad_wind_direction_flag,
        bad_ice_flag, bad_atmospheric_pressure_flag, bad_anemometer_flag,
        bad_barometer_flag, bad_trh_sensor_flag, bad_ir_sensor_flag,
        nbad_ctd_flag, "nbad_CO2_flag", "nbad_H2O_flag", "nbad_H2O_flow_flag",
        nbad_pressure_analyzer_flag, nbad_temperature_analyzer_flag,
-       nbad_equ_temperature_flag, nbad_temperature_external_flag
+       nbad_equ_temperature_flag
 FROM amundsen_flux.${LFREQ1}
 ORDER BY time_20min, time_study;
 \cd ${LFREQ1ODIR}
 \copy (SELECT * FROM lowfreq_1w20min) TO PROGRAM 'awk -v fprefix=L1 -f ${SPLITYMD_PRG} -' CSV
 \H
 \o colnames.html
-SELECT cols.column_name, col_description(cl.oid, cols.ordinal_position::INT)
-FROM pg_class cl, information_schema.columns cols
-WHERE cols.table_catalog='gases' AND cols.table_schema='amundsen_flux' AND
-cols.table_name = '${LFREQ1}' AND cols.table_name = cl.relname;
+SELECT pa.attnum AS "column_position", pa.attname AS "column_name",
+    col_description(pa.attrelid, pa.attnum) AS "column_description"
+FROM pg_attribute pa, pg_attribute ta
+WHERE pa.attrelid = 'amundsen_flux.${LFREQ1}'::regclass AND
+    ta.attrelid = 'lowfreq_1w20min'::regclass AND
+    pa.attname = ta.attname
+ORDER BY pa.attnum;
 EOF
 psql -p5433 -f${TMPDIR}/lfreq1_dump.sql gases
 
@@ -123,24 +125,26 @@ SELECT time_20min, time_study, longitude, longitude_avg, latitude, latitude_avg,
        ctd_temperature_avg, ctd_conductivity, ctd_conductivity_avg, "ctd_O2_saturation",
        "ctd_O2_saturation_avg", "ctd_O2_concentration", "ctd_O2_concentration_avg",
        "uw_pH", "uw_pH_avg", uw_redox_potential, uw_redox_potential_avg,
-       temperature_external, temperature_external_avg, tsg_temperature,
-       tsg_temperature_avg, temperature_in, temperature_in_avg,
+       tsg_temperature, tsg_temperature_avg, temperature_in, temperature_in_avg,
        bad_wind_direction_flag, very_bad_wind_direction_flag,
        bad_ice_flag, bad_atmospheric_pressure_flag, bad_anemometer_flag,
        bad_barometer_flag, bad_trh_sensor_flag, bad_ir_sensor_flag,
        nbad_ctd_flag, "nbad_CO2_flag", "nbad_H2O_flag", "nbad_H2O_flow_flag",
        nbad_pressure_analyzer_flag, nbad_temperature_analyzer_flag,
-       nbad_equ_temperature_flag, nbad_temperature_external_flag, fluxable_exception
+       nbad_equ_temperature_flag, fluxable_exception
 FROM amundsen_flux.${LFREQ2}
 ORDER BY time_20min, time_study;
 \cd ${LFREQ2ODIR}
 \copy (SELECT * FROM lowfreq_1w20min_flags) TO PROGRAM 'awk -v fprefix=L2 -f ${SPLITYMD_PRG} -' CSV
 \H
 \o colnames.html
-SELECT cols.column_name, col_description(cl.oid, cols.ordinal_position::INT)
-FROM pg_class cl, information_schema.columns cols
-WHERE cols.table_catalog='gases' AND cols.table_schema='amundsen_flux' AND
-cols.table_name = '${LFREQ2}' AND cols.table_name = cl.relname;
+SELECT pa.attnum AS "column_position", pa.attname AS "column_name",
+    col_description(pa.attrelid, pa.attnum) AS "column_description"
+FROM pg_attribute pa, pg_attribute ta
+WHERE pa.attrelid = 'amundsen_flux.${LFREQ2}'::regclass AND
+    ta.attrelid = 'lowfreq_1w20min_flags'::regclass AND
+    pa.attname = ta.attname
+ORDER BY pa.attnum;
 EOF
 psql -p5433 -f${TMPDIR}/lfreq2_dump.sql gases
 
@@ -190,10 +194,13 @@ SELECT time_20min, time_study, longitude, latitude, speed_over_ground,
 \copy (SELECT * FROM flux_10hz) TO PROGRAM 'awk -v fprefix=EC -f ${SPLITISO_PRG} -' CSV
 \H
 \o colnames.html
-SELECT cols.column_name, col_description(cl.oid, cols.ordinal_position::INT)
-FROM pg_class cl, information_schema.columns cols
-WHERE cols.table_catalog='gases' AND cols.table_schema='amundsen_flux' AND
-cols.table_name = '${HFREQ1}' AND cols.table_name = cl.relname;
+SELECT pa.attnum AS "column_position", pa.attname AS "column_name",
+    col_description(pa.attrelid, pa.attnum) AS "column_description"
+FROM pg_attribute pa, pg_attribute ta
+WHERE pa.attrelid = 'amundsen_flux.${HFREQ1}'::regclass AND
+    ta.attrelid = 'flux_10hz'::regclass AND
+    pa.attname = ta.attname
+ORDER BY pa.attnum;
 EOF
 psql -p5433 -f${TMPDIR}/hfreq1_dump.sql gases
 
@@ -230,10 +237,13 @@ SELECT time_20min, time_study, longitude, latitude, speed_over_ground,
 \copy (SELECT * FROM flux_10hz) TO PROGRAM 'awk -v fprefix=EC -f ${SPLITISO_PRG} -' CSV
 \H
 \o colnames.html
-SELECT cols.column_name, col_description(cl.oid, cols.ordinal_position::INT)
-FROM pg_class cl, information_schema.columns cols
-WHERE cols.table_catalog='gases' AND cols.table_schema='amundsen_flux' AND
-cols.table_name = '${HFREQ2}' AND cols.table_name = cl.relname;
+SELECT pa.attnum AS "column_position", pa.attname AS "column_name",
+    col_description(pa.attrelid, pa.attnum) AS "column_description"
+FROM pg_attribute pa, pg_attribute ta
+WHERE pa.attrelid = 'amundsen_flux.${HFREQ2}'::regclass AND
+    ta.attrelid = 'flux_10hz'::regclass AND
+    pa.attname = ta.attname
+ORDER BY pa.attnum;
 EOF
 psql -p5433 -f${TMPDIR}/hfreq2_dump.sql gases
 

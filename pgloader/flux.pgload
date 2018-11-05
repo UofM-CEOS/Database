@@ -271,17 +271,17 @@ LOAD CSV
           "time",
 	  record_number,
 	  program_version,
-	  "cp_CO2_fraction" [null if "NAN"],
-	  "cp_CH4_fraction" [null if "NAN"],
-	  "cp_H2O_fraction" [null if "NAN"]
+	  "cp_CO2_dry_fraction" [null if "NAN"],
+	  "cp_CH4__dry_fraction" [null if "NAN"],
+	  "cp_H2O__dry_fraction" [null if "NAN"]
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?closed_path_series_main
         (
           logging_group_id integer using "139",
 	  is_main boolean using "t",
           "time",
-	  "cp_CO2_fraction",
-	  "cp_H2O_fraction"
+	  "cp_CO2_dry_fraction",
+	  "cp_H2O_dry_fraction"
         )
      WITH skip header = 2,
           fields optionally enclosed by '"',
@@ -296,17 +296,17 @@ LOAD CSV
           "time",
 	  record_number,
 	  program_version,
-	  "cp_CO2_fraction" [null if "NAN"],
-	  "cp_CH4_fraction" [null if "NAN"],
-	  "cp_H2O_fraction" [null if "NAN"]
+	  "cp_CO2_dry_fraction" [null if "NAN"],
+	  "cp_CH4_dry_fraction" [null if "NAN"],
+	  "cp_H2O_dry_fraction" [null if "NAN"]
         )
      INTO postgresql://sluque:Gases01@localhost:5433/gases?closed_path_series_main
         (
           logging_group_id integer using "141",
 	  is_main boolean using "t",
           "time",
-	  "cp_CO2_fraction",
-	  "cp_H2O_fraction"
+	  "cp_CO2_dry_fraction",
+	  "cp_H2O_dry_fraction"
         )
      WITH skip header = 2,
           fields optionally enclosed by '"',

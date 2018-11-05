@@ -30,7 +30,7 @@ SELECT DISTINCT ON ("time")
   longitude, latitude, speed_over_ground AS sog,
   course_over_ground AS cog, heading, pitch, roll, heave
   FROM navigation_series
-  WHERE logging_group_id='133'
+  WHERE logging_group_id='143'
   ORDER BY "time";
 """
 nav=pd.read_sql(qry, conn, parse_dates=['time'],
@@ -177,6 +177,9 @@ fig.savefig("meteorology_04.png", bbox_inches="tight"); plt.close()
 "meteorology_04.png"
 #+END_SRC
 
+#+RESULTS: meteorology_04
+[[file:meteorology_04.png]]
+
 * Radiation
 
 #+NAME: radiation_01
@@ -256,19 +259,19 @@ plt.close()
 
 #+NAME: underway_01
 #+BEGIN_SRC python :results file :exports results
-qry="""
-SELECT time_study, time_1min, equ_temperature, "uw_CO2_fraction",
+qry = """
+SELECT time_study, equ_temperature, "uw_CO2_fraction",
   "uw_H2O_fraction", uw_temperature_analyzer, uw_pressure_analyzer,
   equ_pressure, "H2O_flow", air_flow_analyzer, condensation_equ,
   ctd_pressure, ctd_temperature, ctd_conductivity, "ctd_O2_saturation",
-  "ctd_O2_concentration", temperature_external, tsg_temperature,
+  "ctd_O2_concentration", tsg_temperature,
   bad_ctd_flag, "bad_CO2_flag", "bad_H2O_flag", "bad_H2O_flow_flag",
   bad_pressure_analyzer_flag, bad_temperature_analyzer_flag,
   bad_equ_temperature_flag, bad_temperature_external_flag
-FROM amundsen_flux.underway_1s_2016;
+FROM amundsen_flux.underway_1s_2018;
 """
-pCO2=pd.read_sql(qry, conn, parse_dates=['time_study', 'time_1min'],
-                 index_col="time_study")
+pCO2 = pd.read_sql(qry, conn, parse_dates=['time_study'],
+                   index_col="time_study")
 
 # Y-limits
 CO2_lims = (100, 1000)
@@ -317,10 +320,10 @@ plt.savefig("underway_equ.png", bbox_inches="tight"); plt.close()
 #                                                 style="-.",
 #                                                 ylim=H2O_temp_lims,
 #                                                 legend=False)
-ax=pCO2[["tsg_temperature"]].dropna().plot(figsize=(10, 5), rot=0,
-                                           style="-.",
-                                           ylim=H2O_temp_lims,
-                                           legend=False)
+ax = pCO2[["tsg_temperature"]].dropna().plot(figsize=(10, 5), rot=0,
+                                             style="-.",
+                                             ylim=H2O_temp_lims,
+                                             legend=False)
 # pCO2[["tsg_temperature"]].dropna().plot(ax=ax, style="-", legend=False)
 # ax.legend(ax.get_lines(), ["CR23X", "TSG"])
 ax.set_ylabel('Water temperature\n(C$^\circ$)')
