@@ -19,13 +19,16 @@ RAD=radiation_1min_2014
 RADODIR=${ROOTDIR}/RAD_1min
 UWPCO2=underway_1min_2014
 UWPCO2ODIR=${ROOTDIR}/UWpCO2_1min
+# For special underway dump for pCO2_Sys
+LFREQ1=lowfreq_1min_2014
+LFREQ1ODIR=${ROOTDIR}/LowFreq_1min
 # Program to split into daily files
 SPLITISO_PRG=$(realpath -e "$(dirname $0)"/../../split_YYYYMMDDHHMMSS.awk)
 SPLITYMD_PRG=$(realpath -e "$(dirname $0)"/../../split_YYYYMMDD.awk)
 
 TMPDIR=$(mktemp -d -p /var/tmp)
 
-mkdir -p ${NAVODIR} ${METODIR} ${RADODIR} ${UWPCO2ODIR}
+mkdir -p ${NAVODIR} ${METODIR} ${RADODIR} ${UWPCO2ODIR} ${LFREQ1ODIR}
 
 # Navigation
 cat <<EOF > ${TMPDIR}/nav_dump.sql
@@ -83,5 +86,47 @@ FROM amundsen_flux.${UWPCO2};
 \copy (SELECT * FROM underway_1min) TO 'underway_1min.csv' CSV HEADER
 EOF
 psql -p5433 -f${TMPDIR}/uwpCO2_dump.sql gases
+
+# Special dump for the purpose of correcting for erroneous standards using
+# pCO2_Sys from D Pierrot
+cat <<EOF > ${TMPDIR}/lfreq1_dump.sql
+CREATE OR REPLACE TEMPORARY VIEW lowfreq_1min AS
+SELECT to_char(time_study, 'DD/MM/YY') AS "date",
+       to_char(time_study, 'HH24:MI:SS') AS "time", longitude, latitude,
+       speed_over_ground, course_over_ground, heading, pitch, roll, heave,
+       atmospheric_pressure * 10 AS atmospheric_pressure, air_temperature,
+       relative_humidity, surface_temperature, wind_speed, wind_direction,
+       round((truewind_vector).magnitude::numeric, 2) AS true_wind_speed,
+       round((truewind_vector).angle::numeric, 2) AS true_wind_direction,
+       wind_speed_u, wind_speed_v, wind_speed_w,
+       air_temperature_sonic, cp_analyzer_status, "cp_CO2_dry_fraction",
+       "cp_H2O_dry_fraction", cp_pressure, cp_temperature, "op_CO2_density",
+       "op_H2O_density", op_pressure, op_temperature, "PAR", "K_down",
+       "LW_down", "UV_a", "UV_b", uw_record_type, equ_temperature, std_value,
+       "uw_CO2_fraction", "uw_H2O_fraction", uw_temperature_analyzer,
+       uw_pressure_analyzer, equ_pressure, "H2O_flow", air_flow_analyzer,
+       equ_speed_pump, ventilation_flow, condensation_atm, condensation_equ,
+       drip_1, drip_2, condenser_temperature, temperature_dry_box,
+       ctd_pressure, ctd_temperature, ctd_conductivity, "ctd_O2_saturation",
+       "ctd_O2_concentration", "uw_pH", uw_redox_potential, tsg_temperature,
+       tsg_conductivity, tsg_salinity, "tsg_H2O_flow"
+FROM private.${LFREQ1}
+WHERE uw_record_type != 'EXTERNAL_TEMPERATURE'
+ORDER BY time_study;
+\cd ${LFREQ1ODIR}
+\copy (SELECT * FROM lowfreq_1min) TO 'L1_2014.csv' CSV HEADER DELIMITER E'\t' NULL '-999'
+\H
+\o colnames.html
+SELECT pa.attnum AS "column_position", pa.attname AS "column_name",
+    col_description(pa.attrelid, pa.attnum) AS "column_description"
+FROM pg_attribute pa, pg_attribute ta
+WHERE pa.attrelid = 'amundsen_flux.lowfreq_1w20min_2014'::regclass AND
+    ta.attrelid = 'lowfreq_1min'::regclass AND
+    pa.attname = ta.attname
+ORDER BY pa.attnum;
+EOF
+psql -p5433 -f${TMPDIR}/lfreq1_dump.sql gases
+
+
 
 rm -rf ${TEMPDIR}
