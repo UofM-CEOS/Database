@@ -61,8 +61,8 @@ SELECT time_20min, time_study, longitude, longitude_avg, latitude, latitude_avg,
        "uw_H2O_fraction", "uw_H2O_fraction_avg", uw_temperature_analyzer,
        uw_temperature_analyzer_avg, uw_pressure_analyzer, uw_pressure_analyzer_avg,
        equ_pressure, equ_pressure_avg, "H2O_flow", "H2O_flow_avg", air_flow_analyzer,
-       air_flow_analyzer_avg, equ_speed_pump, equ_speed_pump_avg, ventilation_flow,
-       ventilation_flow_avg, condensation_atm, condensation_atm_avg,
+       air_flow_analyzer_avg, equ_speed_pump, equ_speed_pump_avg, vent_flow,
+       vent_flow_avg, condensation_atm, condensation_atm_avg,
        condensation_equ, condensation_equ_avg, drip_1, drip_2, condenser_temperature,
        condenser_temperature_avg, temperature_dry_box, temperature_dry_box_avg,
        ctd_pressure, ctd_pressure_avg, ctd_temperature, ctd_temperature_avg,
@@ -80,7 +80,7 @@ SELECT time_20min, time_study, longitude, longitude_avg, latitude, latitude_avg,
 FROM amundsen_flux.${LFREQ1}
 ORDER BY time_20min, time_study;
 \cd ${LFREQ1ODIR}
-\copy (SELECT * FROM lowfreq_1w20min) TO PROGRAM 'awk -v fprefix=L1 -f ${SPLITYMD_PRG} -' CSV
+\copy (SELECT * FROM lowfreq_1w20min) TO PROGRAM 'awk -v fprefix=L1 -v FS="," -f ${SPLITYMD_PRG} -' CSV HEADER
 \H
 \o colnames.html
 SELECT DISTINCT ON (cols.ordinal_position, cols.column_name)
@@ -124,7 +124,7 @@ SELECT time_20min, time_study, longitude, longitude_avg, latitude, latitude_avg,
        uw_temperature_analyzer, uw_temperature_analyzer_avg, uw_pressure_analyzer,
        uw_pressure_analyzer_avg, equ_pressure, equ_pressure_avg, "H2O_flow",
        "H2O_flow_avg", air_flow_analyzer, air_flow_analyzer_avg, equ_speed_pump,
-       equ_speed_pump_avg, ventilation_flow, ventilation_flow_avg, condensation_atm,
+       equ_speed_pump_avg, vent_flow, vent_flow_avg, condensation_atm,
        condensation_atm_avg, condensation_equ, condensation_equ_avg, drip_1, drip_2,
        condenser_temperature, condenser_temperature_avg, temperature_dry_box,
        temperature_dry_box_avg, ctd_pressure, ctd_pressure_avg, ctd_temperature,
@@ -142,7 +142,7 @@ SELECT time_20min, time_study, longitude, longitude_avg, latitude, latitude_avg,
 FROM amundsen_flux.${LFREQ2}
 ORDER BY time_20min, time_study;
 \cd ${LFREQ2ODIR}
-\copy (SELECT * FROM lowfreq_1w20min_flags) TO PROGRAM 'awk -v fprefix=L2 -f ${SPLITYMD_PRG} -' CSV
+\copy (SELECT * FROM lowfreq_1w20min_flags) TO PROGRAM 'awk -v fprefix=L2 -v FS="," -f ${SPLITYMD_PRG} -' CSV HEADER
 \H
 \o colnames.html
 SELECT DISTINCT ON (cols.ordinal_position, cols.column_name)
@@ -195,7 +195,7 @@ SELECT time_20min, time_study, longitude, latitude, speed_over_ground,
        "cp_CO2_signal_strength", "cp_H2O_signal_strength"
   FROM amundsen_flux.${HFREQ1};
 \cd ${HFREQ1ODIR}
-\copy (SELECT * FROM flux_10hz) TO PROGRAM 'awk -v fprefix=EC -f ${SPLITISO_PRG} -' CSV
+\copy (SELECT * FROM flux_10hz) TO PROGRAM 'awk -v fprefix=EC -v FS="," -f ${SPLITISO_PRG} -' CSV HEADER
 \H
 \o colnames.html
 SELECT DISTINCT ON (cols.ordinal_position, cols.column_name)
@@ -235,7 +235,7 @@ SELECT time_20min, time_study, longitude, latitude, speed_over_ground,
        "cp_CO2_signal_strength", "cp_H2O_signal_strength"
   FROM amundsen_flux.${HFREQ2};
 \cd ${HFREQ2ODIR}
-\copy (SELECT * FROM flux_10hz) TO PROGRAM 'awk -v fprefix=EC -f ${SPLITISO_PRG} -' CSV
+\copy (SELECT * FROM flux_10hz) TO PROGRAM 'awk -v fprefix=EC -v FS="," -f ${SPLITISO_PRG} -' CSV HEADER
 \H
 \o colnames.html
 SELECT DISTINCT ON (cols.ordinal_position, cols.column_name)
