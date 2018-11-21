@@ -79,7 +79,7 @@ SELECT time_20min, time_study, longitude, longitude_avg, latitude, latitude_avg,
 FROM amundsen_flux.${LFREQ1}
 ORDER BY time_20min, time_study;
 \cd ${LFREQ1ODIR}
-\copy (SELECT * FROM lowfreq_1w20min) TO PROGRAM 'awk -v fprefix=L1 -f ${SPLITYMD_PRG} -' CSV
+\copy (SELECT * FROM lowfreq_1w20min) TO PROGRAM 'awk -v fprefix=L1 -v FS="," -f ${SPLITYMD_PRG} -' CSV HEADER
 \H
 \o colnames.html
 SELECT pa.attnum AS "column_position", pa.attname AS "column_name",
@@ -135,7 +135,7 @@ SELECT time_20min, time_study, longitude, longitude_avg, latitude, latitude_avg,
 FROM amundsen_flux.${LFREQ2}
 ORDER BY time_20min, time_study;
 \cd ${LFREQ2ODIR}
-\copy (SELECT * FROM lowfreq_1w20min_flags) TO PROGRAM 'awk -v fprefix=L2 -f ${SPLITYMD_PRG} -' CSV
+\copy (SELECT * FROM lowfreq_1w20min_flags) TO PROGRAM 'awk -v fprefix=L2 -v FS="," -f ${SPLITYMD_PRG} -' CSV HEADER
 \H
 \o colnames.html
 SELECT pa.attnum AS "column_position", pa.attname AS "column_name",
@@ -191,7 +191,7 @@ SELECT time_20min, time_study, longitude, latitude, speed_over_ground,
        "cp_CO2_signal_strength_LI7200", "cp_H2O_signal_strength_LI7200"
   FROM amundsen_flux.${HFREQ1};
 \cd ${HFREQ1ODIR}
-\copy (SELECT * FROM flux_10hz) TO PROGRAM 'awk -v fprefix=EC -f ${SPLITISO_PRG} -' CSV
+\copy (SELECT * FROM flux_10hz) TO PROGRAM 'awk -v fprefix=EC -v FS="," -f ${SPLITISO_PRG} -' CSV HEADER
 \H
 \o colnames.html
 SELECT pa.attnum AS "column_position", pa.attname AS "column_name",
@@ -234,7 +234,7 @@ SELECT time_20min, time_study, longitude, latitude, speed_over_ground,
        "cp_CO2_signal_strength_LI7200", "cp_H2O_signal_strength_LI7200"
   FROM amundsen_flux.${HFREQ2};
 \cd ${HFREQ2ODIR}
-\copy (SELECT * FROM flux_10hz) TO PROGRAM 'awk -v fprefix=EC -f ${SPLITISO_PRG} -' CSV
+\copy (SELECT * FROM flux_10hz) TO PROGRAM 'awk -v fprefix=EC -f FS="," -f ${SPLITISO_PRG} -' CSV HEADER
 \H
 \o colnames.html
 SELECT pa.attnum AS "column_position", pa.attname AS "column_name",
