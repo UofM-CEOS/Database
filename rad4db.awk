@@ -1,4 +1,4 @@
-#! /usr/bin/igawk -f
+#! /usr/local/bin/igawk -f
 # Author: Sebastian Luque
 # Created: 2014-02-07T17:50:24+0000
 # -------------------------------------------------------------------------
