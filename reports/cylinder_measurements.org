@@ -1,0 +1,309 @@
+#+STARTUP: content indent hideblocks
+#+TITLE: Gas cylinder lab measurements
+#+AUTHOR:
+#+OPTIONS: ^:{}
+#+OPTIONS: toc:nil
+#+PROPERTY: header-args :tangle yes
+#+PROPERTY: header-args:python :session *Python*
+#+PROPERTY: header-args:sql :engine postgresql
+#+PROPERTY: header-args:sql+ :dbhost net82.ceos.umanitoba.ca
+#+PROPERTY: header-args:sql+ :cmdline -p5433 :database gases
+#+LATEX_CLASS: koma-article
+#+LATEX_CLASS_OPTIONS: [numbers=noenddot]
+#+LATEX_HEADER: \addtokomafont{caption}{\small}
+#+LATEX_HEADER: \setkomafont{captionlabel}{\sffamily\bfseries}
+#+LATEX_HEADER: \usepackage[margin=3cm]{geometry}
+#+LATEX_HEADER: \RequirePackage{fancyvrb}
+#+LATEX_HEADER: \DefineVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\footnotesize}
+
+#+NAME: session_init
+#+BEGIN_SRC python :results silent :exports none
+import os.path as osp
+import glob
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import psycopg2 as pg
+plt.style.use('ggplot')
+#+END_SRC
+
+* Test measurement accuracy
+
+We attempt to measure NOAA standard CO$_2$ cylinders certified at a wide
+range of concentrations.  We span a =LI-7000= with =963.47 ppm= CO$_2$ from
+a NOAA standard cylinder.
+
+#+NAME: co2_certified
+#+HEADER: :var cyldir="/home/sluque/Temp/Cylinder_Measurements"
+#+BEGIN_SRC python :results silent :exports none
+cyl_files = sorted(glob.glob(osp.join(cyldir, "*.txt")))
+# Get the certified values from database
+conn = pg.connect("host=localhost port=5433 dbname=gases")
+qry = """
+SELECT DISTINCT ON (gas_cylinder_id)
+    gas_cylinder_supplier_id,
+    gas_inventory_date,
+    supplier_gas_concentration,
+    gas_concentration
+FROM gas_current_inventory
+WHERE gas_name = 'CO2/Air' AND
+    supplier_gas_concentration IS NOT NULL
+ORDER BY gas_cylinder_id, gas_inventory_date DESC
+"""
+cyl_ids = [x.split("_")[0] for x in cyl_files]
+cyl_co2_certs = pd.read_sql(qry, conn, index_col="gas_cylinder_supplier_id")
+msk = cyl_co2_certs.index.isin(cyl_ids)
+cyl_co2_certs = (cyl_co2_certs[msk]
+                 .sort_values(by="gas_cylinder_supplier_id"))
+#+END_SRC
+
+#+NAME: NOAA_cyls
+#+BEGIN_SRC python :results output latex :exports results
+noaa_files = [x for x in cyl_files if x.startswith("CB")]
+cyls_noaa_l = []
+
+for f in noaa_files:
+    cyl = pd.read_csv(f, sep="\t", header=0, index_col=0, parse_dates=True)
+    # Add file name
+    cyl["filename"] = osp.basename(f)
+    cyls_noaa_l.append(cyl)
+
+cyls_noaa = pd.concat(cyls_noaa_l, sort=False)
+cyls_noaa["cylinder_id"] = (cyls_noaa["filename"]
+                            .transform(lambda x: x.split("_")[0]))
+# Merge
+cyls_noaa_certs = cyls_noaa.merge(cyl_co2_certs, left_on="cylinder_id",
+                                  right_index=True)
+# Group by cylinder_id and supplier_gas_concentration, the latter only
+# possible because we can be sure that each concentration can only be
+# mapped to a single cylinder (careful)
+cyls_noaa_grp = cyls_noaa_certs.groupby(["cylinder_id",
+                                         "supplier_gas_concentration"])
+cyls_noaa_mean = (cyls_noaa_grp.agg(["mean", "std"])
+                  .rename(columns={'mean': "mean", 'std': "SD"})
+                  .round(1)
+                  .loc[:, ["CO2B um/m", "H2OB mm/m", "P kPa"]])
+cyls_noaa_mean.index.rename("CO2 certificate (um/m)",
+                            level=1, inplace=True)
+
+caption = (r"\captionof{table}{Measurements of NOAA CO$_2$ standard "
+           r"cylinders, using LI-7000 spanned at 963.47 ppm CO$_2$.}")
+print(r"\begin{center}\small")
+print(caption)
+print(cyls_noaa_mean.to_latex())
+print(r"\end{center}")
+#+END_SRC
+
+#+RESULTS: NOAA_cyls
+#+BEGIN_EXPORT latex
+\begin{center}
+\captionof{table}{Measurements of NOAA CO$_2$ standard cylinders, using LI-7000 spanned with 963.47 ppm CO$_2$.}
+\begin{tabular}{lrrrrrr}
+\toprule
+{} & \multicolumn{2}{l}{CO2B um/m} & \multicolumn{2}{l}{H2OB mm/m} & \multicolumn{2}{l}{P kPa} \\
+{} &      mean &  std &      mean &  std &  mean &  std \\
+cylinder\_id &           &      &           &      &       &      \\
+\midrule
+CB09172     &     908.8 &  0.1 &       0.1 &  0.0 &  98.3 &  0.0 \\
+CB09690     &     441.1 &  0.1 &       0.0 &  0.0 &  99.4 &  0.0 \\
+CB09693     &     301.3 &  0.1 &       0.0 &  0.0 &  97.8 &  0.0 \\
+\bottomrule
+\end{tabular}
+
+\end{center}
+#+END_EXPORT
+
+Conclusion: measurements are highly accurate using our outlined procedure,
+as the error is =~ 1.0 ppm=, but can be higher for concentrations close the
+span value of the =LI-7000=.
+
+* Flow rate effects
+
+Using a Praxair cylinder certified at =531 ppm=, we vary flow rate by more
+than 100%, and find it did not have a significant effect on the
+measurements:
+
+#+NAME: K12595
+#+BEGIN_SRC python :results output silent :exports none
+# Rows with headers for new run
+header_rows = np.array([268, 567, 802, 1004, 1217, 1428]) - 1
+k12595 = pd.read_csv([x for x in cyl_files if x.startswith("K12595")][0],
+                     sep="\t", header=0, index_col=0,
+                     skiprows=header_rows, parse_dates=True)
+# Flow rate categories: 1.0, 1.5, 2.0, 2.5
+flow_rate_bins = np.array([0.5, 1.25, 1.75, 2.25, 2.75])
+k12595["flow_A SLPM"] = pd.cut(k12595["Aux1"], flow_rate_bins,
+                               labels=["1.0", "1.5", "2.0", "2.5"])
+k12595["flow_B LPM"] = pd.cut(k12595["Aux2"], flow_rate_bins,
+                              labels=["1.0", "1.5", "2.0", "2.5"])
+# msrmts.boxplot(column=["CO2B um/m"], by="flow_rate_B_cat")
+k12595_flwrts = k12595.groupby(["flow_A SLPM", "flow_B LPM"],
+                               observed=False)
+k12595_mean = (((k12595_flwrts.mean()).loc[:, ["CO2B um/m",
+                                               "H2OB mm/m",
+                                               "P kPa"]])
+               .dropna().round(1))
+# Subset the first level for both flow rates at 1.0
+print(k12595_mean.xs(("1.0", "1.0")).to_string())
+
+#+END_SRC
+
+#+NAME: K12595_flow_rates_N2
+#+BEGIN_SRC python :results output latex :exports results
+caption = (r"\captionof{table}{Effects of changing nitrogen flow rate on "
+           r"LI-7000 measurements.}")
+print(r"\begin{center}\small")
+print(caption)
+print(k12595_mean.xs("1.0", level=1).to_latex())
+print(r"\end{center}")
+#+END_SRC
+
+#+RESULTS: K12595_flow_rates_N2
+#+BEGIN_EXPORT latex
+\begin{center}
+\captionof{table}{Effects of changing nitrogen flow rate on LI-7000 measurements.}
+\begin{tabular}{lrrr}
+\toprule
+{} &  CO2B um/m &  H2OB mm/m &  P kPa \\
+flow\_A SLPM &            &            &        \\
+\midrule
+1.0         &      511.8 &        0.2 &   99.3 \\
+1.5         &      511.8 &        0.1 &   99.4 \\
+2.0         &      511.9 &        0.1 &   99.4 \\
+2.5         &      511.8 &        0.1 &   99.4 \\
+\bottomrule
+\end{tabular}
+
+\end{center}
+#+END_EXPORT
+
+
+#+NAME: K12595_flow_rates_CO2
+#+BEGIN_SRC python :results output latex :exports results
+caption = (r"\captionof{table}{Effects of changing CO$_2$ flow rate on "
+           r"LI-7000 measurements.}")
+print(r"\begin{center}\small")
+print(caption)
+print(k12595_mean.xs("1.0", level=0).to_latex())
+print(r"\end{center}")
+#+END_SRC
+
+#+LATEX: \clearpage{}
+#+RESULTS: K12595_flow_rates_CO2
+#+BEGIN_EXPORT latex
+\begin{center}
+\captionof{table}{Effects of changing CO$_2$ flow rate on LI-7000 measurements.}
+\begin{tabular}{lrrr}
+\toprule
+{} &  CO2B um/m &  H2OB mm/m &  P kPa \\
+flow\_B LPM &            &            &        \\
+\midrule
+1.0        &      511.8 &        0.2 &   99.3 \\
+1.5        &      512.0 &        0.0 &   99.4 \\
+2.0        &      511.9 &        0.0 &   99.4 \\
+2.5        &      511.9 &        0.0 &   99.4 \\
+\bottomrule
+\end{tabular}
+
+\end{center}
+#+END_EXPORT
+
+* Cylinder measurements
+
+#+NAME: cylinder_msrmts
+#+BEGIN_SRC python :results output latex :exports results
+cyls_out = [x for x in cyl_files if x.startswith("CB") |
+            x.startswith("K12595")]
+cyls_in = [x for x in cyl_files if x not in cyls_out]
+
+cyls_l = []
+for f in cyls_in:
+    cyl = pd.read_csv(f, sep="\t", header=0, index_col=0,
+                      parse_dates=True)
+    # Add file name
+    cyl["filename"] = osp.basename(f)
+    cyls_l.append(cyl)
+
+# Add k12595, but only the constant flow rates @ 1.0 SLPM subset
+k12595["filename"] = [x for x in cyl_files if x.startswith("K12595")][0]
+cyls_l.append(k12595[:'2018-10-22 20:00:00'])
+
+cyls = pd.concat(cyls_l, sort=False)
+cyls["cylinder_id"] = (cyls["filename"]
+                       .transform(lambda x: x.split("_")[0]))
+
+# Merge with certified values
+cyls_certs = cyls.merge(cyl_co2_certs, left_on="cylinder_id",
+                        right_index=True)
+# Group by cylinder_id and supplier_gas_concentration (see)
+cyls_grp = cyls_certs.groupby(["cylinder_id",
+                               "supplier_gas_concentration"])
+cyls_mean = (cyls_grp.agg(["mean", "std"])
+             .rename(columns={'mean': "mean", 'std': "SD"})
+             .round(1)
+             .loc[:, ["CO2B um/m", "H2OB mm/m"]])
+cyls_mean.index.rename("CO2 certificate (um/m)", level=1, inplace=True)
+
+caption = (r"\captionof{table}{LI-7000 measurements of cylinders "
+           r"at constant flow rates.}")
+print(r"\begin{center}\small")
+print(caption)
+print(cyls_mean.to_latex())
+print(r"\end{center}")
+# # Or a plot (not working on double index)
+# fig, axs = plt.subplots(1, 3, sharey=False, figsize=(12, 5))
+# cyls_grp.boxplot(column="CO2B um/m", ax=axs, layout=(1, 3))
+#+END_SRC
+
+#+RESULTS: cylinder_msrmts
+#+BEGIN_EXPORT latex
+\begin{center}
+\captionof{table}{LI-7000 measurements of cylinders at constant flow rates.}
+\begin{tabular}{lrrrr}
+\toprule
+{} & \multicolumn{2}{l}{CO2B um/m} & \multicolumn{2}{l}{H2OB mm/m} \\
+{} &      mean &  std &      mean &  std \\
+cylinder\_id &           &      &           &      \\
+\midrule
+CC246768    &     299.0 &  0.1 &       0.1 &  0.0 \\
+CC248350    &     551.7 &  0.1 &       0.0 &  0.0 \\
+CC256587    &     295.8 &  0.1 &       0.1 &  0.0 \\
+CC336575    &     399.4 &  0.1 &       0.1 &  0.0 \\
+CC365940    &     448.6 &  0.2 &       0.0 &  0.0 \\
+CC365958    &     305.1 &  0.1 &       0.1 &  0.0 \\
+CC63822     &     539.8 &  0.2 &       0.1 &  0.0 \\
+CC77141     &     454.9 &  0.1 &       0.1 &  0.0 \\
+CC80035     &     631.1 &  0.2 &       0.0 &  0.0 \\
+CC84653     &     455.5 &  0.1 &       0.1 &  0.0 \\
+EB0067442   &     458.2 &  0.1 &       0.1 &  0.0 \\
+K12595      &     511.8 &  0.1 &       0.2 &  0.0 \\
+K584510     &     720.8 &  0.1 &       0.0 &  0.0 \\
+\bottomrule
+\end{tabular}
+
+\end{center}
+#+END_EXPORT
+
+The difference from the certified value of the cylinder can be summarized
+as:
+
+#+BEGIN_SRC python :results output :exports results
+# CO2 diff
+co2_cert = cyls_mean.index.get_level_values(level="CO2 certificate (um/m)")
+cert_diff = (cyls_mean.xs(("CO2B um/m", "mean"), axis=1) - co2_cert)
+print(cert_diff.describe(percentiles=[0.5]).round().to_string())
+#+END_SRC
+
+#+RESULTS:
+: count    13.0
+: mean     -1.0
+: std      12.0
+: min     -19.0
+: 50%      -1.0
+: max      31.0
+
+Conclusion: the certified value can be off by over =30 ppm= depending on
+the cylinder, and other factors to be determined (e.g.\nbsp{}age of
+certificate, etc.)  However, the absolute difference is expected to be
+src_python{cert_diff.abs().mean().round()} ppm, based on these
+measurements.
