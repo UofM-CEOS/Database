@@ -1,0 +1,434 @@
+#+STARTUP: content indent hideblocks
+#+TITLE: Data assimilation issues
+#+OPTIONS: ^:{} toc:nil
+#+PROPERTY: header-args:python :session *Python* :tangle yes
+#+PROPERTY: header-args:sql :engine postgresql
+#+PROPERTY: header-args:sql+ :dbhost localhost
+#+PROPERTY: header-args:sql+ :cmdline -p5433 :database gases
+#+LATEX_CLASS: koma-article
+#+LATEX_CLASS_OPTIONS: [numbers=noenddot]
+#+LATEX_HEADER: \addtokomafont{caption}{\small}
+#+LATEX_HEADER: \setkomafont{captionlabel}{\sffamily\bfseries}
+#+LATEX_HEADER: \usepackage[margin=3cm]{geometry}
+#+LATEX_HEADER: \RequirePackage{fancyvrb}
+#+LATEX_HEADER: \DefineVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\footnotesize}
+
+#+NAME: session_init
+#+BEGIN_SRC python :session :results silent :exports none
+import matplotlib as mpl
+mpl.use("Agg")
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import psycopg2 as pg
+from mpl_toolkits.basemap import Basemap
+plt.style.use('ggplot')
+conn = pg.connect("host=localhost port=5433 dbname=gases")
+#+END_SRC
+
+* Navigation
+
+- No processed data from POSMV or CNAV are available at time of loading, so
+  data will have to be merged manually via a view on the database.
+  Requested and received complete merged product from U Laval.
+
+* Meteorology
+
+Doubts on which wind direction from AAVOS should be used for loading have
+crept in.  See email to Colline Gombault on 2017-11-03.  Resolved by
+establishing that it was a mistake on the header of their processed files,
+whereby apparent wind was labelled "true" wind.  It is indeed apparent
+wind, as indicated in the raw data format description.
+
+* Radiation
+
+All well.
+
+* Flux
+
+** Offsets
+:PROPERTIES:
+:EXPORT_DATE:
+:EXPORT_FILE_NAME: instrument_offsets
+:EXPORT_OPTIONS: toc:nil
+:EXPORT_AUTHOR:
+:END:
+
+Brian B emailed some estimates of offsets between flux instruments
+
+[[gnus:nnimap+Exchange:INBOX#BD333764-4EB5-4D3B-A84E-0C79593896C1@ucalgary.ca][Email from Brian Butterworth: Re: mounting measurements]]
+
+*** Sonic anemometers
+
+Angular offset from straight forward:
+
+| Anemometer          | Forward offset (degrees from forward) |
+|---------------------+---------------------------------------|
+| CSAT3               |                                     0 |
+| Gill WindMaster Pro |                                     0 |
+
+It was not clear what the angular offset of the Gill WindMaster Pro spar
+is.  In photos, it seems to be zero, which was corroborated by measuring
+mounting arm and plate in relation to mounting position of anemometer.
+
+*** Relative to CSAT3
+
+| Instrument | x (cm) | y (cm) | z (cm) |
+|------------+--------+--------+--------|
+| LGR        |    -30 |      3 |    -20 |
+| LI-7200    |    -23 |      3 |    -18 |
+| LI-7500A   |    -40 |     31 |     30 |
+| Motion Pak | -64.77 |      0 |  -13.5 |
+
+*** Relative to Gill WindMaster Pro
+
+There seems to be a mistake in BB's email regarding the offsets of Gill
+sonic anemometer relative to CSAT3.  The correct interpretation seems to
+be: x=25 cm, y=-43 cm, z=-139 cm.  Therefore, using these, we derive:
+
+| Instrument | x (cm) | y (cm) | z (cm) |
+|------------+--------+--------+--------|
+| LGR        |    -55 |    -46 |    119 |
+| LI-7200    |    -48 |    -46 |    121 |
+| LI-7500A   |    -65 |    -74 |    169 |
+| Motion Pak | -89.77 |    -43 | -125.5 |
+
+** Heights
+
+Actual heights of instruments above deck were not measured, but can be
+derived from photos and comparing with 2016, as well as taking into account
+the offsets determined above.  This leads to the following heights above
+the water line:
+
+| Instrument                      | height (m) |
+|---------------------------------+------------|
+| Motion Pak                      |     16.725 |
+| WindMaster Pro measuring volume |      15.47 |
+| LI-7200 inlet                   |      16.68 |
+| LI-7500A measuring volume       |      17.16 |
+| LGR inlet                       |      16.66 |
+| CSAT3 measuring volume          |      16.86 |
+| RM Young wind monitor           |      17.62 |
+| HMP155A temperature/RH sensor   |      16.13 |
+| SI-111 IR sensor                |        8.4 |
+| BPA4116 barometer               |       9.97 |
+
+** Tower down periods
+
+** Units
+
+Units in data output from LGR are all ppm (umol/mol), dry air moles.
+
+* Underway pCO2
+** DONE Correcting for erroneous gas standards in pCO2 system
+CLOSED: [2018-11-17 Sat 08:19]
+:PROPERTIES:
+:EXPORT_DATE:
+:EXPORT_FILE_NAME: underway_xCO2_correction
+:END:
+
+This is a request to help with [[gnus:nnimap+Exchange:INBOX#C5C9E1B0-C476-4C6D-AC25-EB14EBEFB70C@umanitoba.ca][correcting underway system data]].
+
+With help from Denis Pierrot, who provided access to his pCO2_Sys Matlab
+program, it's possible to correct for this.  However, it raises the
+question: where have we been adjusting the readings for the standard
+concentrations all these years?  I don't see any code where this is taken
+into account.
+
+In an astonishing [[gnus:nnimap+Exchange:INBOX#BE4E99E3-6945-40F4-99F8-E20270D4565C@umanitoba.ca][revelation]], I found out that standards were being misused
+and wasted.  Full details in [[gnus:nnimap+Exchange:INBOX#87d0r7ix5z.fsf@otaria.sebmel.org][my reply]] (whole thread is relevant).
+
+One of the first steps described in Pierrot et al (2009) is to make sure
+the time series for each standard is OK.
+
+#+NAME: underway_stdvals
+#+BEGIN_SRC python :results output :exports results
+l1_file = "/mnt/CEOS_Tim/AMD/2018/FromDB/LowFreq_1min/L1_2018.csv"
+pCO2 = pd.read_csv(l1_file, sep="\t", parse_dates={"timestamp": [0, 1]},
+                   dayfirst=True, index_col="timestamp",
+                   na_values=[-999])
+types = ["EQU", "STD1", "STD2", "STD3", "STD4"]
+pCO2 = pCO2[pCO2["uw_record_type"].isin(types)]
+pCO2_typegrp = pCO2.groupby("uw_record_type")
+pCO2_typegrp_max = pCO2_typegrp["std_value"].aggregate(np.max)
+types = [x for x in pCO2_typegrp_max.index if x in types]
+print(pCO2_typegrp_max[types[1:]].round(1).to_string())
+#+END_SRC
+
+#+RESULTS: underway_stdvals
+: uw_record_type
+: STD1      0.0
+: STD2    315.6
+: STD3    475.0
+: STD4    585.2
+
+#+NAME: underway_stds
+#+BEGIN_SRC python :results file :exports none
+pCO2_equ = pCO2[pCO2["uw_record_type"] == "EQU"]
+pCO2_std1 = pCO2[pCO2["uw_record_type"] == "STD1"]
+pCO2_std2 = pCO2[pCO2["uw_record_type"] == "STD2"]
+pCO2_std3 = pCO2[pCO2["uw_record_type"] == "STD3"]
+pCO2_std4 = pCO2[pCO2["uw_record_type"] == "STD4"]
+
+std1 = pCO2_std1[["uw_CO2_fraction"]]
+std1_msk = (std1 > -1) & (std1 < 1)
+std2 = pCO2_std2[["uw_CO2_fraction"]]
+std2_msk = (std2 > 308) & (std2 < 313)
+std3 = pCO2_std3[["uw_CO2_fraction"]]
+std4 = pCO2_std4[["uw_CO2_fraction"]]
+std4_msk = (std4 > 584) & (std4 < 591)
+std_bad = pCO2_typegrp_max[types[1:]].values  # STD1 - STD4 bad values
+std_ok = np.array([0, 295.8, 448.6, 551.7])   # STD1 - STD4 good values
+
+fig, axs = plt.subplots(4, 1, sharex=True)
+fig.set_size_inches((11, 12.5))
+# Get colors in cycle for axis labels
+color_lefty = plt.rcParams['axes.prop_cycle'].by_key()['color'][0]
+color_righty = plt.rcParams['axes.prop_cycle'].by_key()['color'][1]
+# STD1
+std1.plot(ax=axs[0], title=r"CO$_2$ standards", legend=False, style=".-")
+axs[0].legend(["STD1"], loc="lower left")
+axs[0].axhline(std_bad[0], linestyle="--", color="k", linewidth=0.75)
+axs[0].set_xlabel("")
+flow1ax = axs[0].twinx()
+(pCO2_std1[["air_flow_analyzer"]]).plot(ax=flow1ax, legend=False, style="--",
+                                        color=color_righty, linewidth=0.5)
+flow1ax.tick_params(axis="y", labelcolor=color_righty)
+axs[0].tick_params(axis="y", labelcolor=color_lefty)
+# STD2
+std2[std2_msk].plot(ax=axs[1], legend=False, style=".-")
+axs[1].legend(["STD2"], loc="lower left")
+axs[1].axhline(std_bad[1], linestyle="--", color="k", linewidth=0.75)
+axs[1].set_xlabel("")
+flow2ax = axs[1].twinx()
+(pCO2_std2[["air_flow_analyzer"]]).plot(ax=flow2ax, legend=False, style="--",
+                                        color=color_righty, linewidth=0.5)
+flow2ax.tick_params(axis="y", labelcolor=color_righty)
+axs[1].tick_params(axis="y", labelcolor=color_lefty)
+# STD3
+std3.plot(ax=axs[2], legend=False, style=".-")
+axs[2].legend(["STD3"], loc="lower left")
+axs[2].axhline(std_bad[2], linestyle="--", color="k", linewidth=0.75)
+axs[2].set_ylabel(r"CO$_2$ fraction ($\mu$mol/mol)", color=color_lefty)
+axs[2].set_xlabel("")
+flow3ax = axs[2].twinx()
+flow3ax.set_ylabel("Analyzer air flow (ml/min)", color=color_righty)
+(pCO2_std3[["air_flow_analyzer"]]).plot(ax=flow3ax, legend=False, style="--",
+                                        color=color_righty, linewidth=0.5)
+flow3ax.tick_params(axis="y", labelcolor=color_righty)
+axs[2].tick_params(axis="y", labelcolor=color_lefty)
+# STD4
+std4[std4_msk].plot(ax=axs[3], legend=False, style=".-")
+axs[3].legend(["STD4"], loc="lower left")
+axs[3].axhline(std_bad[3], linestyle="--", color="k", linewidth=0.75)
+axs[3].set_xlabel("")
+flow4ax = axs[3].twinx()
+(pCO2_std4[["air_flow_analyzer"]]).plot(ax=flow4ax, legend=False, style="--",
+                                        color=color_righty, linewidth=0.5)
+flow4ax.tick_params(axis="y", labelcolor=color_righty)
+axs[3].tick_params(axis="y", labelcolor=color_lefty)
+fig.savefig("underway_stds.png", bbox_inches="tight")
+plt.close()
+"underway_stds.png"
+#+END_SRC
+
+#+ATTR_LATEX: :width \textwidth
+#+CAPTION: Underway system measurements of CO$_2$ standards.  Black dotted line
+#+CAPTION: represents erroneously certified concentration (except for standard 1).
+#+RESULTS: underway_stds
+[[file:underway_stds.png]]
+
+For some reason, there was no flow in standard 3 after the mid-July data
+gap.  This happens to be the standard used for spanning.  So all data after
+this time are likely lost.
+
+Therefore, we can only work with data from the first leg.
+
+#+NAME: underway_stds_offsets
+#+BEGIN_SRC python :results file :exports results
+pCO2 = pCO2["2018-05-29":"2018-07-15"]
+pCO2_equ = pCO2[pCO2["uw_record_type"] == "EQU"]
+pCO2_std1 = pCO2[pCO2["uw_record_type"] == "STD1"]
+pCO2_std2 = pCO2[pCO2["uw_record_type"] == "STD2"]
+pCO2_std3 = pCO2[pCO2["uw_record_type"] == "STD3"]
+pCO2_std4 = pCO2[pCO2["uw_record_type"] == "STD4"]
+
+std1 = pCO2_std1[["uw_CO2_fraction"]]
+std1_msk = (std1 > -1) & (std1 < 1)
+std2 = pCO2_std2[["uw_CO2_fraction"]]
+std2_msk = (std2 > 308) & (std2 < 313)
+std3 = pCO2_std3[["uw_CO2_fraction"]]
+std4 = pCO2_std4[["uw_CO2_fraction"]]
+std4_msk = (std4 > 584) & (std4 < 591)
+
+fig, axs = plt.subplots(2, 1, sharex=True)
+fig.set_size_inches((9, 10))
+
+((pCO2_std1["uw_CO2_fraction"] -
+  pCO2_std1["std_value"])[std1_msk["uw_CO2_fraction"]]
+ .plot(ax=axs[0], linewidth=0.75, legend=False))
+((pCO2_std2["uw_CO2_fraction"] -
+  pCO2_std2["std_value"])[std2_msk["uw_CO2_fraction"]]
+ .plot(ax=axs[0], linewidth=0.75, legend=False))
+((pCO2_std3["uw_CO2_fraction"] -
+  pCO2_std3["std_value"])
+ .plot(ax=axs[0], linewidth=0.75, legend=False))
+# ((pCO2_std3["uw_CO2_fraction"] -
+#   pCO2_std3["std_value"])[std3_msk["uw_CO2_fraction"]]
+#  .plot(ax=axs[0], linewidth=0.75, legend=False))
+((pCO2_std4["uw_CO2_fraction"] -
+  pCO2_std4["std_value"])[std4_msk["uw_CO2_fraction"]]
+ .plot(ax=axs[0], linewidth=0.75, legend=False))
+axs[0].axhline(0, linestyle="--", color="k", linewidth=0.5)
+axs[0].set_xlabel("")
+# axs[0].legend(types[1:], loc="upper right", ncol=len(types[1:]))
+ylab = ("Measured - declared\nCO$_2$ fraction ($\mu$mol/mol)")
+axs[0].set_ylabel(ylab)
+
+((pCO2_std1["uw_CO2_fraction"] - std_ok[0])[std1_msk["uw_CO2_fraction"]]
+ .plot(ax=axs[1], linewidth=0.75, legend=False))
+((pCO2_std2["uw_CO2_fraction"] - std_ok[1])[std2_msk["uw_CO2_fraction"]]
+ .plot(ax=axs[1], linewidth=0.75, legend=False))
+((pCO2_std3["uw_CO2_fraction"] - std_ok[2])
+ .plot(ax=axs[1], linewidth=0.75, legend=False))
+# ((pCO2_std3["uw_CO2_fraction"] - std_ok[2])[std3_msk["uw_CO2_fraction"]]
+#  .plot(ax=axs[1], linewidth=0.75, legend=False))
+((pCO2_std4["uw_CO2_fraction"] - std_ok[3])[std4_msk["uw_CO2_fraction"]]
+ .plot(ax=axs[1], linewidth=0.75, legend=False))
+lines = axs[1].get_lines()
+leg = axs[1].legend(types[1:], loc=9, ncol=len(types[1:]),
+                    bbox_to_anchor=(0.5, -0.2), frameon=False)
+axs[1].axhline(0, linestyle="--", color="k", linewidth=0.5)
+axs[1].set_xlabel("")
+ylab = ("Measured - certified\nCO$_2$ fraction ($\mu$mol/mol)")
+axs[1].set_ylabel(ylab)
+
+fig.savefig("underway_stds_offsets.png", bbox_inches="tight",
+            bbox_extra_artists=(leg,))
+plt.close()
+"underway_stds_offsets.png"
+#+END_SRC
+
+#+ATTR_LATEX: :width \textwidth
+#+CAPTION: Underway system CO$_2$ standards' offsets.  Black dotted line
+#+CAPTION: indicates the zero offset.
+#+RESULTS: underway_stds_offsets
+[[file:underway_stds_offsets.png]]
+
+
+#+NAME: underway_xco2_01
+#+BEGIN_SRC python :results file :exports results
+# Interpolation of masked standards at all EQU sample timestamp
+std1_full = (std1[std1_msk].reindex(pCO2.index)
+             .interpolate(method="time", limit_direction="both"))
+std2_full = (std2[std2_msk].reindex(pCO2.index)
+             .interpolate(method="time", limit_direction="both"))
+std3_full = (std3.reindex(pCO2.index)
+             .interpolate(method="time", limit_direction="both"))
+std4_full = (std4[std4_msk].reindex(pCO2.index)
+             .interpolate(method="time", limit_direction="both"))
+# Merge with EQU
+xCO2_equ_stds = (pCO2_equ[["uw_CO2_fraction"]]
+                 .join(std1_full, rsuffix="_STD1")
+                 .join(std2_full, rsuffix="_STD2")
+                 .join(std3_full, rsuffix="_STD3")
+                 .join(std4_full, rsuffix="_STD4"))
+
+# Now sample regressions
+np.random.seed(0)
+rnd = np.random.randint(xCO2_equ_stds.shape[0], size=(3, 3))
+fig, axs = plt.subplots(3, 3, sharey=True)
+fig.set_size_inches((10, 8))
+fig.text(0.04, 0.5, r"Certified CO$_2$ fraction ($\mu$mol/mol)",
+         va="center", rotation="vertical")
+fig.text(0.5, 0.04, r"Measured CO$_2$ fraction ($\mu$mol/mol)",
+         ha="center")
+color1 = plt.rcParams['axes.prop_cycle'].by_key()['color'][0]
+for axidx, dfrow in np.ndenumerate(rnd):
+    xx = xCO2_equ_stds.iloc[dfrow, 1:].values
+    xyfit = np.polyfit(xx, std_ok, 1)
+    xyfit_fn = np.poly1d(xyfit)
+    lstd, = axs[axidx].plot(xx, std_ok, "o")
+    lfit, = axs[axidx].plot(xx, xyfit_fn(xx), "-", color=color1)
+    equx = xCO2_equ_stds.iloc[dfrow, 0]
+    equy = xyfit_fn(equx)
+    lequ, = axs[axidx].plot(equx, equy, "o")
+    axs[axidx].hlines(equy, 0, equx, linestyles="dashed", linewidth=0.5)
+    axs[axidx].vlines(equx, 0, equy, linestyles="dashed", linewidth=0.5)
+    axs[axidx].annotate("{:0.1f}".format(equx), xy=(equx, 0))
+    axs[axidx].annotate("{:0.1f}".format(equy), xy=(0, equy))
+fig.legend((lstd, lfit, lequ), ["STD", "FIT", "EQU"],
+           loc="lower center", ncol=3, frameon=False)
+fig.savefig("xCO2_correction_sample.png", bbox_inches="tight")
+plt.close()
+"xCO2_correction_sample.png"
+#+END_SRC
+
+#+ATTR_LATEX: :width \textwidth
+#+CAPTION: Sample linear regressions of interpolated CO$_2$ standards
+#+CAPTION: for correcting equilibration samples.
+#+RESULTS: underway_xco2_01
+[[file:xCO2_correction_sample.png]]
+
+Now attempt to correct all data using the regressions.
+
+#+NAME: underway_xco2_02
+#+BEGIN_SRC python :results file :exports results
+def correct_xCO2(data, std_ok):
+    """Fit linear regression for certified standards against measured values
+
+    """
+    xx = data[1:]
+    equx = data[0]
+    xyfit = np.polyfit(xx, std_ok, 1)
+    xyfit_fn = np.poly1d(xyfit)
+    return(xyfit_fn(equx))
+
+
+xCO2_corr = xCO2_equ_stds.apply(correct_xCO2, axis=1, std_ok=std_ok)
+xCO2_equ_stds["uw_CO2_fraction_corr"] = xCO2_corr
+
+fig, axs = plt.subplots(1, 1)
+fig.set_size_inches((11, 4))
+axs.set_ylabel(r"CO$_2$ fraction ($\mu$mol/mol)")
+xCO2_equ_stds[["uw_CO2_fraction",
+               "uw_CO2_fraction_corr"]].plot(ax=axs, legend=False)
+axs.legend(["measured", "corrected"])
+axs.set_xlabel("")
+fig.savefig("xCO2_correct.png", bbox_inches="tight")
+plt.close()
+"xCO2_correct.png"
+#+END_SRC
+
+#+ATTR_LATEX: :width \textwidth
+#+CAPTION: Corrected CO$_2$ equilibration samples.
+#+RESULTS: underway_xco2_02
+[[file:xCO2_correct.png]]
+
+The difference measured - corrected values can be summarized as:
+
+#+BEGIN_SRC python :results output :exports results
+xCO2_corr_diff = (xCO2_equ_stds["uw_CO2_fraction"] -
+                  xCO2_equ_stds["uw_CO2_fraction_corr"])
+print(xCO2_corr_diff.describe(percentiles=[0.5]).round(1).to_string())
+#+END_SRC
+
+#+RESULTS:
+: count    24161.0
+: mean        22.5
+: std          4.5
+: min          8.3
+: 50%         22.7
+: max         41.8
+
+The measured values could be over =40 ppm= higher than the corrected ones.
+However, the expected difference is
+src_python{np.round(xCO2_corr_diff.mean())} ppm.  The correction was
+successful and is line with the expected differences between correctly and
+incorrectly certified standards.
+
+* Gas standards
+
+All cylinders of gas standards were not accurately measured due to
+compounding issues with lab LI-7000, poor method of controlling flows, and
+general carelessness historically.  Check [[file:~/Documents/CEOS/Equipment/Instruments/LI-COR/LI-7000/Cylinder_Measurements/cylinder_measurements.pdf][document]] on calibrations.
