@@ -38,7 +38,7 @@ SELECT time_study_1min, longitude_avg, longitude_sd, latitude_avg, latitude_sd,
        speed_over_ground_avg, speed_over_ground_sd, course_over_ground_avg,
        course_over_ground_sd, heading_avg, heading_sd, pitch_avg, roll_avg,
        heave_avg
-FROM amundsen_flux.${NAV};
+FROM amundsen_core.${NAV};
 \cd ${NAVODIR}
 \copy (SELECT * FROM navigation_1min) TO 'navigation_1min.csv' CSV HEADER
 EOF
@@ -51,7 +51,7 @@ SELECT time_study, atmospheric_pressure, air_temperature, relative_humidity,
        surface_temperature, wind_speed, wind_speed_sd, wind_direction,
        wind_direction_sd, bad_barometer_flag, bad_trh_sensor_flag,
        bad_ir_sensor_flag, bad_anemometer_flag, tower_down_flag
-FROM amundsen_flux.${MET};
+FROM amundsen_core.${MET};
 \cd ${METODIR}
 \copy (SELECT * FROM meteorology_1min) TO 'meterology_1min.csv' CSV HEADER
 EOF
@@ -63,7 +63,7 @@ CREATE OR REPLACE TEMPORARY VIEW radiation_1min AS
 SELECT time_study, "PAR", "PAR_sd", "K_down", "K_down_sd", temperature_thermopile,
        temperature_thermopile_sd, temperature_case, temperature_case_sd,
        temperature_dome, temperature_dome_sd, "LW_down", "LW_down_sd"
-FROM amundsen_flux.${RAD};
+FROM amundsen_core.${RAD};
 \cd ${RADODIR}
 \copy (SELECT * FROM radiation_1min) TO 'radiation_1min.csv' CSV HEADER
 EOF
@@ -80,7 +80,7 @@ SELECT time_study, time_1min, equ_temperature, "uw_CO2_fraction",
        bad_ctd_flag, "bad_CO2_flag", "bad_H2O_flag", "bad_H2O_flow_flag",
        bad_pressure_analyzer_flag, bad_temperature_analyzer_flag,
        bad_equ_temperature_flag, bad_temperature_external_flag
-FROM amundsen_flux.${UWPCO2};
+FROM amundsen_core.${UWPCO2};
 \cd ${UWPCO2ODIR}
 \copy (SELECT * FROM underway_1s) TO 'underway_1s.csv' CSV HEADER
 EOF
@@ -119,7 +119,7 @@ ORDER BY time_study;
 SELECT pa.attnum AS "column_position", pa.attname AS "column_name",
     col_description(pa.attrelid, pa.attnum) AS "column_description"
 FROM pg_attribute pa, pg_attribute ta
-WHERE pa.attrelid = 'amundsen_flux.lowfreq_1w20min_2014'::regclass AND
+WHERE pa.attrelid = 'amundsen_UWpCO2.lowfreq_1w20min_2014'::regclass AND
     ta.attrelid = 'pco2sys_1min'::regclass AND
     pa.attname = ta.attname
 ORDER BY pa.attnum;
