@@ -1,0 +1,249 @@
+#+STARTUP: content indent hideblocks
+#+TITLE: Exploration of variables 2015
+#+OPTIONS: ^:{}
+#+LATEX_HEADER: \usepackage[margin=2.5cm]{geometry}
+#+PROPERTY: header-args:python :session *Python* :tangle yes
+
+#+NAME: session_init
+#+BEGIN_SRC python :session :results silent :exports none
+import matplotlib as mpl
+mpl.use("Agg")
+mpl.rcParams['mathtext.fontset']='stix'
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import psycopg2 as pg
+from mpl_toolkits.basemap import Basemap
+plt.style.use('ggplot')
+conn=pg.connect("host=localhost port=5433 dbname=gases")
+#+END_SRC
+
+* Ship track
+
+#+NAME: ship_track
+#+BEGIN_SRC python :session :results file :exports results
+qry="""
+SELECT time_study_1min AS time_study,
+  longitude_avg AS longitude, latitude_avg AS latitude,
+  speed_over_ground_avg AS sog, course_over_ground_avg as cog,
+  heading_avg as heading, pitch_avg as pitch, roll_avg as roll,
+  heave_avg as heave
+FROM amundsen_flux.navigation_1min_2015
+"""
+nav=pd.read_sql(qry, conn, parse_dates=['time_study'],
+                index_col="time_study")
+lonmin=np.min(nav['longitude'])
+latmin=np.min(nav['latitude'])
+lonmax=np.max(nav['longitude'])
+latmax=np.max(nav['latitude'])
+lat_0=(latmin + latmax) / 2.0
+lon_0=(lonmin + lonmax) / 2.0
+lat_1=latmin + ((latmax - latmin) / 6.0)
+lat_2=latmax - ((latmax - latmin) / 6.0)
+parallels=np.arange(45.0, 95, 5)
+meridians=np.arange(-50.0, -170, -10)
+m=Basemap(projection="laea", lon_0=lon_0, lat_0=lat_0,
+          lat_1=lat_1, lat_2=lat_2, width=7e6, height=4.8e6,
+          resolution="l", lat_ts=lat_0)
+x, y = m(nav['longitude'].values, nav['latitude'].values)
+x[x == 1e30]=np.nan
+y[y == 1e30]=np.nan
+m.fillcontinents(color="0.7")
+m.drawparallels(parallels, labels=[0, 1, 1, 0])
+m.drawmeridians(meridians, labels=[1, 0, 0, 1])
+m.plot(x, y, color='r')
+plt.savefig("ship_track.png"); plt.close()
+"ship_track.png"
+#+END_SRC
+
+#+ATTR_LATEX: :width \textwidth
+#+RESULTS: ship_track
+[[file:ship_track.png]]
+
+* Ship motion
+
+As measured by Applanix instrument on the ship.
+
+#+NAME: ship_motion
+#+BEGIN_SRC python :session :results file :exports results
+soglims = (0, 10)
+fig, axs = plt.subplots(3, 1, sharex=True)
+fig.set_size_inches((11, 9))
+nav[['sog']].plot(ax=axs[0], ylim=soglims, legend=False)
+axs[0].set_ylabel('Speed over ground (m/s)'); axs[0].set_xlabel('')
+nav[['cog']].plot(ax=axs[1], legend=False)
+axs[1].set_ylabel("Course over ground ($^\circ$)"); axs[1].set_xlabel('')
+nav[['heading']].plot(ax=axs[2], rot=0, legend=False)
+axs[2].set_ylabel("Heading ($^\circ$)"); axs[2].set_xlabel('')
+fig.tight_layout()
+fig.savefig('navigation.png', bbox_inches='tight'); plt.close()
+'navigation.png'
+#+END_SRC
+
+#+ATTR_LATEX: :width \textwidth
+#+RESULTS: ship_motion
+[[file:navigation.png]]
+
+* Meteorology
+
+Measurements at the tower.
+
+#+NAME: meteorology_01
+#+BEGIN_SRC python :session :results file :exports results
+qry="""
+SELECT time_study, atmospheric_pressure, air_temperature,
+  relative_humidity, surface_temperature,
+  wind_speed, wind_direction
+FROM amundsen_flux.meteorology_ceos_1min_2015
+"""
+met=pd.read_sql(qry, conn, parse_dates=['time_study'],
+                index_col="time_study")
+kPalims = (60, 110)
+tmplims = (-50, 30)
+rhlims = (30, 110)
+sstlims = (-5, 25)
+fig, axs = plt.subplots(4, 1, sharex=True)
+fig.set_size_inches((11, 12.5))
+met[['atmospheric_pressure']].plot(ax=axs[0], ylim=kPalims, legend=False)
+axs[0].set_ylabel('Atmospheric pressure (kPa)'); axs[0].set_xlabel('')
+met[['air_temperature']].plot(ax=axs[1], ylim=tmplims, legend=False)
+axs[1].set_ylabel('Air temperature ($^\circ$C)'); axs[1].set_xlabel('')
+met[['relative_humidity']].plot(ax=axs[2], ylim=rhlims, legend=False)
+axs[2].set_ylabel('Relative humidity (%)'); axs[2].set_xlabel('')
+met[['surface_temperature']].plot(ax=axs[3], ylim=sstlims,
+                                  rot=0, legend=False)
+axs[3].set_ylabel('Surface temperature ($^\circ$C)'); axs[3].set_xlabel('')
+fig.savefig("meteorology_01.png", bbox_inches="tight"); plt.close()
+"meteorology_01.png"
+#+END_SRC
+
+#+ATTR_LATEX: :width \textwidth
+#+RESULTS: meteorology_01
+[[file:meteorology_01.png]]
+
+#+NAME: meteorology_02
+#+BEGIN_SRC python :session :results file :exports results
+wdslims = (0, 25)               # wind speed (m/s)
+fig, axs = plt.subplots(2, 1, sharex=True)
+fig.set_size_inches((11, 7))
+met[['wind_speed']].plot(ax=axs[0], ylim=wdslims, legend=False)
+axs[0].set_ylabel('Wind speed (m/s)'); axs[0].set_xlabel('')
+met[['wind_direction']].plot(ax=axs[1], rot=0, legend=False)
+axs[1].set_ylabel('Wind direction ($^\circ$)'); axs[1].set_xlabel('')
+fig.savefig("meteorology_02.png", bbox_inches="tight"); plt.close()
+"meteorology_02.png"
+#+END_SRC
+
+#+ATTR_LATEX: :width \textwidth
+#+RESULTS: meteorology_02
+[[file:meteorology_02.png]]
+
+* Radiation
+
+#+NAME: radiation_01
+#+BEGIN_SRC python :session :results file :exports results
+qry="""
+SELECT time_study, "PAR", "K_down", "LW_down"
+FROM amundsen_flux.radiation_1min_2015
+"""
+rad=pd.read_sql(qry, conn, parse_dates=['time_study'],
+                index_col="time_study")
+PARlims = (0, 2500)             # umol/m2/s
+Kdnlims = (0, 1200)             # K_down (W/m2)
+LWdlims = (200, 450)            # LW_down (W/m2)
+fig, axs = plt.subplots(3, 1, sharex=True)
+fig.set_size_inches((11, 9))
+rad[['PAR']].plot(ax=axs[0], ylim=PARlims, legend=False)
+axs[0].set_ylabel('PAR ($\mu mol/m^{2}/s$)'); axs[0].set_xlabel('')
+rad[['K_down']].plot(ax=axs[1], ylim=Kdnlims, legend=False)
+axs[1].set_ylabel('K_down ($W/m^{2}$)'); axs[1].set_xlabel('')
+rad[['LW_down']].plot(ax=axs[2], ylim=LWdlims, rot=0, legend=False)
+axs[2].set_ylabel('LW_down ($W/m^{2}$)'); axs[2].set_xlabel('')
+fig.savefig("radiation_01.png", bbox_inches="tight"); plt.close()
+"radiation_01.png"
+#+END_SRC
+
+#+ATTR_LATEX: :width \textwidth
+#+RESULTS: radiation_01
+[[file:radiation_01.png]]
+
+* Underway
+
+#+NAME: underway_01
+#+BEGIN_SRC python :results file :exports results
+qry="""
+SELECT time_study_1min as time_study, equ_temperature, "uw_CO2_fraction",
+  "uw_H2O_fraction", uw_temperature_analyzer, uw_pressure_analyzer,
+  equ_pressure, "H2O_flow", air_flow_analyzer, condensation_equ,
+  ctd_pressure, ctd_temperature, ctd_conductivity, "ctd_O2_saturation",
+  "ctd_O2_concentration", temperature_external, tsg_temperature,
+  nbad_ctd_flag, "nbad_CO2_flag", "nbad_H2O_flag", "nbad_H2O_flow_flag",
+  nbad_pressure_analyzer_flag, nbad_temperature_analyzer_flag,
+  nbad_equ_temperature_flag, nbad_temperature_external_flag
+FROM amundsen_flux.underway_1min_2015;
+"""
+# pCO2=pd.read_sql(qry, conn, parse_dates=['time_study', 'time_1min'],
+#                  index_col="time_study")
+pCO2=pd.read_sql(qry, conn, parse_dates=['time_study'],
+                 index_col="time_study")
+# Y-limits
+uwCO2lims = (100, 700)
+uwH2Olims = (0, 18)
+uwTmplims = (5, 40)
+mbarlims = (970, 1040)
+flowlims = (0, 250)
+fig, axs = plt.subplots(5, 1, sharex=True)
+fig.set_size_inches((11.5, 12.5))
+pCO2[["uw_CO2_fraction"]].dropna().plot(ax=axs[0], title="EQU samples",
+                                        ylim=uwCO2lims, legend=False)
+axs[0].set_ylabel('CO2 fraction\n($\mu$mol/mol)')
+axs[0].set_xlabel('')
+pCO2[["uw_H2O_fraction"]].dropna().plot(ax=axs[1], ylim=uwH2Olims,
+                                        legend=False)
+axs[1].set_ylabel('H2O fraction\n(mmol/mol)')
+axs[1].set_xlabel('')
+pCO2[["uw_temperature_analyzer"]].dropna().plot(ax=axs[2],
+                                                ylim=uwTmplims,
+                                                legend=False)
+axs[2].set_ylabel('Temperature analyzer\n(C$^\circ$)')
+axs[2].set_xlabel('')
+pCO2[["uw_pressure_analyzer"]].dropna().plot(ax=axs[3],
+                                             ylim=mbarlims,
+                                             legend=False)
+axs[3].set_ylabel('Pressure analyzer\n(mbar)')
+axs[3].set_xlabel('')
+pCO2[["air_flow_analyzer"]].dropna().plot(ax=axs[4], rot=0,
+                                          ylim=flowlims,
+                                          legend=False)
+axs[4].set_ylabel('Flow rate analyzer\n(ml/min)')
+axs[4].set_xlabel('')
+fig.tight_layout()
+plt.savefig("underway_equ.png", bbox_inches="tight"); plt.close()
+"underway_equ.png"
+#+END_SRC
+
+#+ATTR_LATEX: :width \textwidth
+#+RESULTS: underway_01
+[[file:underway_equ.png]]
+
+#+NAME: underway_02
+#+BEGIN_SRC python :results file :exports results
+# ax=pCO2[["temperature_external"]].dropna().plot(figsize=(10, 5), rot=0,
+#                                                 style="-.",
+#                                                 ylim=H2O_temp_lims,
+#                                                 legend=False)
+ax=pCO2[["tsg_temperature"]].dropna().plot(figsize=(10, 5), rot=0,
+                                           style="-.",
+                                           ylim=sstlims,
+                                           legend=False)
+# pCO2[["tsg_temperature"]].dropna().plot(ax=ax, style="-", legend=False)
+# ax.legend(ax.get_lines(), ["CR23X", "TSG"])
+ax.set_ylabel('Water temperature\n(C$^\circ$)')
+ax.set_xlabel('')
+plt.savefig("external_temperature.png", bbox_inches="tight"); plt.close()
+"external_temperature.png"
+#+END_SRC
+
+#+ATTR_LATEX: :width \textwidth
+#+RESULTS: underway_02
+[[file:external_temperature.png]]

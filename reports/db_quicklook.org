@@ -6,16 +6,16 @@
 
 #+NAME: session_init
 #+BEGIN_SRC python :results silent :exports none
-  import matplotlib as mpl
-  mpl.use("Agg")
-  import matplotlib.pyplot as plt
-  import numpy as np
-  import pandas as pd
-  import psycopg2 as pg
-  from mpl_toolkits.basemap import Basemap
-  plt.style.use('ggplot')
-  # Set up connection for the session
-  conn=pg.connect("host=localhost port=5433 dbname=gases")
+import matplotlib as mpl
+mpl.use("Agg")
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import psycopg2 as pg
+from mpl_toolkits.basemap import Basemap
+plt.style.use('ggplot')
+# Set up connection for the session
+conn=pg.connect("host=localhost port=5433 dbname=gases")
 #+END_SRC
 
 * Ship track
@@ -220,7 +220,7 @@ As measured by Applanix instrument on the ship.
 #+BEGIN_SRC python :results file :exports results
   qry="""
   SELECT time_study, time_1min, equ_temperature, "uw_CO2_fraction",
-    "uw_H2O_fraction", uw_temperature_analyzer, uw_pressure_analyzer, 
+    "uw_H2O_fraction", uw_temperature_analyzer, uw_pressure_analyzer,
     equ_pressure, "H2O_flow", air_flow_analyzer, condensation_equ,
     ctd_pressure, ctd_temperature, ctd_conductivity, "ctd_O2_saturation",
     "ctd_O2_concentration", temperature_external, tsg_temperature,
