@@ -1,10 +1,8 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2014-02-05T22:44:42+0000
-# Last-Updated: 2015-07-02T18:50:43+0000
-#           By: Sebastian Luque
 # -------------------------------------------------------------------------
-# Commentary: 
+# Commentary:
 #
 # This script is for preparing and loading data onto database, using
 # pgloader.
@@ -12,9 +10,9 @@
 # Code:
 
 # Prepare data
-./tables4db_amundsen_flux.sh
+./tables4db.sh
 
-Load tables
+# Load tables
 
 pgloader -D /var/tmp/pgloader_amundsen_2010 \
     -S navigation_summary.log \
@@ -41,9 +39,9 @@ pgloader -D /var/tmp/pgloader_amundsen_2010 \
     -L /var/tmp/pgloader_amundsen_2010/rad_2010.log \
     --log-min-messages debug --client-min-messages warning \
     pgloader/radiation.pgload
-pgloader -D /var/tmp/pgloader_amundsen_2010 \
+pgloader -D /var/tmp/pgloader/AMD2011 \
     -S UWpCO2_summary.log \
-    -L /var/tmp/pgloader_amundsen_2010/UWpCO2_2010.log \
+    -L /var/tmp/pgloader/AMD2011/UWpCO2_2011.log \
     --log-min-messages debug --client-min-messages warning \
     pgloader/uw_pCO2.pgload
 pgloader -D /var/tmp/pgloader_amundsen_2010 \

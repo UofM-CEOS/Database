@@ -1,20 +1,19 @@
 #! /bin/sh
 # Author: Sebastian Luque
 # Created: 2014-08-28T22:17:42+0000
-# Last-Updated: 2015-07-02T18:51:59+0000
-#           By: Sebastian Luque
-# 
-# Commentary: 
+# -------------------------------------------------------------------------
+# Commentary:
 #
 # Prepare data for loading onto database.
 # -------------------------------------------------------------------------
 # Code:
 
-ROOTDIR=~/Data/ArcticNet/2010
+ROOTDIR=~/Data/ArcticNet/2011
 NAV=${ROOTDIR}/NAV
 NAV_SHIP=${NAV}/Ship/Processed
 MET=${ROOTDIR}/MET
 UNDERWAY=${ROOTDIR}/UW_pCO2
+TSG=${UNDERWAY}/TSG/Processed/Data
 RAD=${ROOTDIR}/RAD
 FLUX=${ROOTDIR}/Flux
 FLUX_AVG=${FLUX}/IRGA
@@ -31,6 +30,8 @@ AWKPATH=${AWKPATH} ./met4db.awk ${MET}/*.dat | \
     awk -F, '!x[$1]++' > ${MET}/MET_all.csv
 ./underway4db.awk ${UNDERWAY}/*.txt | \
     awk '!x[$0]++' > ${UNDERWAY}/AMD_2010.csv
+./TSG_proc4db.awk ${TSG}/TSG_*[0-9].int | \
+    awk 'NR == 1 || !x[$0]++' > ${TSG}/TSG_proc.csv
 AWKPATH=${AWKPATH} ./rad4db.awk ${RAD}/*.dat | \
     awk '!x[$0]++' > ${RAD}/rad_all.csv
 AWKPATH=${AWKPATH} ./flux_avg4db.awk ${FLUX_AVG}/*.dat | \
