@@ -1,0 +1,15 @@
+auto/
+*.csv
+*.png
+*.html
+/misc.sql
+/exploration.R
+/dbload_procedure.*
+!/dbload_procedure.org
+db_quicklook.*
+!db_quicklook.org
+db_exploration.*
+!db_exploration.org
+*.pdf
+*.tex
+/issues.py
